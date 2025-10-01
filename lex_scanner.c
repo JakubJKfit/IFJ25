@@ -180,6 +180,8 @@ State transition(State state, int key, LexemeBuffer* lexeme){
                 case '_':
                     appendChar(lexeme, key);
                     return Id_global0;
+                case '!':
+                    return Not;
                 default:
                     if (isalpha(key)){
                         appendChar(lexeme, key);
@@ -219,7 +221,6 @@ State transition(State state, int key, LexemeBuffer* lexeme){
             removeLast(lexeme);
             createToken(FLOAT, lexeme);
             ungetc(key, stdin);
-            ungetc(key, stdin);
             return Start;
         case Exponent:
             appendChar(lexeme, key);
@@ -257,6 +258,14 @@ State transition(State state, int key, LexemeBuffer* lexeme){
             createToken(INT, lexeme);
             ungetc(key, stdin);
             return Start;
+
+        case Not:
+            if (key == '=') {
+                createToken(NOT_EQUAL, lexeme);
+                return Start;
+            }
+            ungetc(key, stdin);
+            return Error;
 
         case Letter:
             if (isalnum(key) || key == '_'){
@@ -465,6 +474,7 @@ int main(){
     while ((key = getchar()) != EOF){
         state = transition(state, key, lb);
     }
+    transition(state, T_EOF, lb);
     createToken(T_EOF, lb);
     freeBuffer(lb);
     return 0;

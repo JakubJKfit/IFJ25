@@ -25,6 +25,7 @@ typedef enum State{
     String_multi,
     Id_global0,
     Id_global,
+    Not,
     Error
 }State;
 
