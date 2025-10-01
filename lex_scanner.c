@@ -462,7 +462,7 @@ Token createToken(TokenType type, LexemeBuffer* lexeme){
     if (token.type == STRING && token.value.string_val) {
         free(token.value.string_val);
     }*/
-    printf("%s - %s\n", convert(token.type), token.lexeme);
+    printf("%s - %s\n", convert(token.type),token.lexeme ? token.lexeme : "NULL");
     resetBuffer(lexeme);
     return token;
 }

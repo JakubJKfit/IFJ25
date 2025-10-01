@@ -1,2 +1,5 @@
 .vscode/
 examples/
+test.py
+*.o
+compiler
