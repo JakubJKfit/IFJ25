@@ -64,7 +64,28 @@ State transition(State state, int key, LexemeBuffer* lexeme){
 Token createToken(TokenType type, LexemeBuffer* lexeme){
     Token token;
     token.type = type;
-    token.lexeme = copyString(lexeme->buffer);
+
+    switch(type){
+        case IDENTIFIER_GLOBAL:
+        case IDENTIFIER_LOCAL:
+            token.lexeme = copyString(lexeme->buffer);
+            break;
+        case INT:
+            token.lexeme = copyString(lexeme->buffer);
+            token.value.int_val = atoi(lexeme->buffer);
+            break;
+        case FLOAT:
+            token.lexeme = copyString(lexeme->buffer);
+            token.value.float_val = atof(lexeme->buffer);
+            break;
+        case STRING:
+            token.lexeme = copyString(lexeme->buffer);
+            token.value.string_val = copyString(lexeme->buffer);
+            break;
+        default:
+            token.lexeme = NULL;
+            break;
+    }
 
     resetBuffer(lexeme);
     return token;
