@@ -26,6 +26,11 @@ void freeBuffer(LexemeBuffer* lb){
     free(lb);
 } 
 
+void resetBuffer(LexemeBuffer* lb){
+    lb->length = 0;
+    if (lb->buffer) lb->buffer[0] = '\0';
+}
+
 void appendChar(LexemeBuffer* lb, char c){
     if (lb->length + 1 >= lb->capacity){
         lb->capacity *= 2;
@@ -45,22 +50,23 @@ char * copyString(const char * str){
     return copy;
 }
 
-State transition(State state, int key){
+State transition(State state, int key, LexemeBuffer* lexeme){
     switch(state){
         case Start:
             switch(key){
                 case '*':
-                    createToken(TIMES, NULL);
+                    createToken(TIMES, lexeme);
                     return Start;
             }
     }
 }
 
-Token createToken(TokenType type, char* lexeme){
+Token createToken(TokenType type, LexemeBuffer* lexeme){
     Token token;
     token.type = type;
-    token.lexeme = copyString(lexeme);
+    token.lexeme = copyString(lexeme->buffer);
 
+    resetBuffer(lexeme);
     return token;
 }
 
@@ -70,7 +76,7 @@ int main(){
     while (key != EOF){
         key = getchar();
         appendChar(lb, key);
-        state = transition(state, key);
+        state = transition(state, key, lb);
     }
     freeBuffer(lb);
     return 0;
