@@ -5,7 +5,6 @@
 #include <stdlib.h>
 #include "lex_scanner.h"
 
-int key;
 typedef struct{
     char *buffer;
     size_t length;
@@ -57,8 +56,60 @@ State transition(State state, int key, LexemeBuffer* lexeme){
                 case '*':
                     createToken(TIMES, lexeme);
                     return Start;
+                case '/':
+                    return Divide;
+                case '+':
+                    createToken(PLUS, lexeme);
+                    return Start;
+                case '-':
+                    createToken(MINUS, lexeme);
+                    return Start;
+                case '<':
+                    return Lesser;
+                case '>':
+                    return Greater;
+                case '=':
+                    return Assign;
+                case '(':
+                    createToken(L_ROUND, lexeme);
+                    return Start;
+                case ')':
+                    createToken(R_ROUND, lexeme);
+                    return Start;
+                case '{':
+                    createToken(L_CURLY, lexeme);
+                    return Start;
+                case '}':
+                    createToken(R_CURLY, lexeme);
+                    return Start;   
+                default:
+                    return Error;         
             }
+        case Divide:
+            if (key == '/') return Comment;
+            createToken(DIVIDE, lexeme);
+            return Start;
+        case Lesser:
+            if (key == '='){
+                createToken(LESSER_EQUAL, lexeme);
+                return Start;
+            }
+            createToken(LESSER, lexeme);
+            return Start;
+        case Greater:
+            if (key == '=') {
+                createToken(GREATER_EQUAL, lexeme);
+                return Start;
+            }
+            createToken(GREATER, lexeme);
+            return Start;
+        case Error:
+            createToken(ERROR, lexeme);
+            return Start;
+        default:
+            return Error;
     }
+
 }
 
 Token createToken(TokenType type, LexemeBuffer* lexeme){
@@ -94,9 +145,8 @@ Token createToken(TokenType type, LexemeBuffer* lexeme){
 int main(){
     LexemeBuffer* lb = initBuffer(16);
     State state = Start;
-    while (key != EOF){
-        key = getchar();
-        appendChar(lb, key);
+    int key;
+    while ((key = getchar()) != EOF){
         state = transition(state, key, lb);
     }
     freeBuffer(lb);

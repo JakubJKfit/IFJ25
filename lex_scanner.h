@@ -3,6 +3,12 @@
 
 typedef enum State{
     Start,
+    Divide,
+    Lesser,
+    Greater,
+    Assign,
+    Comment,
+    Error
 }State;
 
 typedef enum TokenType{
@@ -52,6 +58,7 @@ typedef enum TokenType{
     IFJ_STRCMP,
     IFJ_ORD,
     IFJ_CHR,
+    ERROR,
     T_EOF
 }TokenType;
 
@@ -62,7 +69,7 @@ typedef struct Token{
         int int_val;
         double float_val;
         char *string_val;
-    };
+    }value;
 }Token;
 
 #endif
