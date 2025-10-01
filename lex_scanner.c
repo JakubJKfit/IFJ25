@@ -119,6 +119,27 @@ State keywords(LexemeBuffer* lexeme){
     return Start;
 }
 
+char escapeChar(){
+    int c = getchar();
+    if (c == EOF) return -1;
+
+    switch(c){
+        case 'n': return '\n';
+        case 't': return '\t';
+        case 'r': return '\r';
+        case '\\': return '\\';
+        case '"': return '"';
+        case 'x': {
+            int h1 = getchar();
+            int h2 = getchar();
+            if(h1 == EOF || h2 == EOF || !isxdigit(h1) || !isxdigit(h2)) return -1;
+            char hex[3] = {h1, h2, '\0'};
+            return (char) strtol(hex, NULL, 16);
+        }
+        default: return c;
+    }
+}
+
 State transition(State state, int key, LexemeBuffer* lexeme){
     static int quote_count = 0;
     switch(state){
@@ -262,6 +283,7 @@ State transition(State state, int key, LexemeBuffer* lexeme){
             }
             createToken(IDENTIFIER_GLOBAL, lexeme);
             return Start;
+
         case String_detect:
             if (key == '"'){
                 quote_count++;
@@ -278,7 +300,7 @@ State transition(State state, int key, LexemeBuffer* lexeme){
                     return Start;
                 }
                 resetBuffer(lexeme);
-                appendChar(lexeme, key);
+                ungetc(key, stdin);
                 quote_count = 0;
                 return String_single;
             }
@@ -286,9 +308,30 @@ State transition(State state, int key, LexemeBuffer* lexeme){
             if (key == '"'){
                 createToken(STRING, lexeme);
                 return Start;
+            }if (key == '\\'){
+                int escaped = escapeChar();
+                if (escaped == -1) {
+                    createToken(ERROR, lexeme);
+                    return Start;
+                }
+                appendChar(lexeme, (char)escaped);
+                return String_single;
             }
             appendChar(lexeme, key);
             return String_single;
+        case String_multi:
+            if (key == '"'){
+                quote_count++;
+                if (quote_count == 3){
+                    quote_count = 0;
+                    createToken(STRING, lexeme);
+                    return Start;
+                }
+                return String_multi;
+            }
+            quote_count = 0;
+            appendChar(lexeme, key);
+            return String_multi;
 
         // Built-in funkce
         case BuiltIn:
@@ -401,6 +444,15 @@ Token createToken(TokenType type, LexemeBuffer* lexeme){
             break;
     }
 
+    // Vypisovani tokenu na debuging
+    /*if (token.lexeme) {
+        printf("%s - %s\n", convert(token.type), token.lexeme);
+        free(token.lexeme);
+    }
+
+    if (token.type == STRING && token.value.string_val) {
+        free(token.value.string_val);
+    }*/
     printf("%s - %s\n", convert(token.type), token.lexeme);
     resetBuffer(lexeme);
     return token;
