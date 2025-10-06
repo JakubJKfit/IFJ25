@@ -1,5 +1,44 @@
-.vscode/
-examples/
-test.py
-*.o
+# --- Build artefakty (C/Make) ---
+ifj
 compiler
+*.o
+*.a
+*.so
+*.dylib
+*.dll
+*.exe
+*.out
+*.d          # GCC/Clang dependency files
+
+# --- Debug / logy / core dumps ---
+trace.txt
+*.log
+core
+core.*
+vgcore.*
+*.gcda
+*.gcno
+*.gcov
+
+# --- Složky pro build ---
+/build/
+/bin/
+/obj/
+/dist/
+
+# --- Editor/OS dočasné soubory ---
+.vscode/
+.idea/
+*.swp
+*~
+*.tmp
+.DS_Store
+Thumbs.db
+tags
+TAGS
+
+# --- Python cache (pro test.py) ---
+__pycache__/
+*.py[cod]
+.venv/
+.env/

@@ -1,17 +1,22 @@
-CC = gcc
-CFLAGS = -Wall -Wextra -Werror -pedantic -std=c11
+CC      = gcc
+CFLAGS  = -std=c11 -Wall -Wextra -Werror -pedantic
+TARGET  = ifj
 
-TARGET = compiler
+SRC     = lex_scanner.c parser.c main.c
+OBJ     = $(SRC:.c=.o)
 
 all: $(TARGET)
 
-$(TARGET): lex_scanner.o
-	$(CC) $(CFLAGS) -o compiler lex_scanner.o
+$(TARGET): $(OBJ)
+	$(CC) $(CFLAGS) -o $@ $(OBJ)
 
-lex_scanner.o: lex_scanner.c lex_scanner.h
-	$(CC) $(CFLAGS) -c lex_scanner.c -o lex_scanner.o
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+test: $(TARGET)
+	python3 test.py
 
 clean:
-	rm -f lex_scanner.o compiler
+	rm -f $(OBJ) $(TARGET)
 
-.PHONY: all clean
+.PHONY: all clean test
