@@ -22,7 +22,7 @@
 extern Token ifj_get_token(void);
 
 // Parser state
-
+int ifj_error_code = 0;
 static Token ifj_cur;
 static bool ifj_seen_main = false; // to verify existence of static main()
 
@@ -45,7 +45,8 @@ static const char *tname(TokenType t)
         return "EOL";
     case ERROR:
         return "LEXERR";
-
+    case KEYWORD_Ifj:
+        return "Ifj";
     case KEYWORD_class:
         return "class";
     case KEYWORD_static:
@@ -72,7 +73,8 @@ static const char *tname(TokenType t)
         return "String";
     case KEYWORD_Null:
         return "Null";
-
+    case KEYWORD_var:
+        return "var";
     case IDENTIFIER_LOCAL:
         return "identifier";
     case IDENTIFIER_GLOBAL:
@@ -218,7 +220,6 @@ static bool parse_expr_bp_after_primary(IfjPrec minbp);
 static bool parse_expr(void);
 static bool parse_expr_bp(IfjPrec minbp);
 static bool parse_primary(void);
-static bool parse_term(void);
 static int lbp_of(TokenType t);
 
 // Public entry
@@ -233,6 +234,7 @@ bool ifj_parse_program(void)
     if (!ifj_seen_main)
     {
         fprintf(stderr, "[SEMANTIC] missing static main() without params (error 3)\n");
+        ifj_error_code = 3;
         return false;
     }
     return true;
@@ -270,30 +272,46 @@ static bool parse_prolog(void)
 {
     // import "ifj25" for Ifj
     skip_eol_star();
+
     if (ifj_cur.type != KEYWORD_import)
     {
         fprintf(stderr, "[SYNTAX] missing prolog 'import' (error 2)\n");
+        ifj_error_code = 2;
         return false;
     }
     next();
-    if (ifj_cur.type != STRING)
+
+    // presne ifj25
+    if (ifj_cur.type != STRING || !ifj_cur.lexeme || strcmp(ifj_cur.lexeme, "ifj25") != 0)
     {
         fprintf(stderr, "[SYNTAX] expected string literal \"ifj25\" after import (error 2)\n");
+        ifj_error_code = 2;
         return false;
     }
     next();
-    if (!expect(KEYWORD_for, "for"))
-        return false;
 
-    if (ifj_cur.type == KEYWORD_Ifj || ifj_cur.type == IDENTIFIER_LOCAL)
+    if (!expect(KEYWORD_for, "for"))
+    {
+        ifj_error_code = 2;
+        return false;
+    }
+
+    // Po 'for' očekáváme Ifj
+    if (ifj_cur.type == KEYWORD_Ifj)
+    {
+        next();
+    }
+    else if (ifj_cur.type == IDENTIFIER_LOCAL && ifj_cur.lexeme && strcmp(ifj_cur.lexeme, "Ifj") == 0)
     {
         next();
     }
     else
     {
         fprintf(stderr, "[SYNTAX] expected 'Ifj' after 'for' (error 2)\n");
+        ifj_error_code = 2;
         return false;
     }
+
     return consume_eol(EOL_ONE_EXACT);
 }
 
@@ -333,11 +351,11 @@ static bool parse_call_args_terms(void)
         return false;
     if (ifj_cur.type != R_ROUND)
     {
-        if (!parse_term())
+        if (!parse_expr())
             return false;
         while (accept(COMMA))
         {
-            if (!parse_term())
+            if (!parse_expr())
                 return false;
         }
         if (!expect(R_ROUND, ")"))
@@ -383,7 +401,7 @@ static bool parse_class(void)
     if (!expect(KEYWORD_class, "class"))
         return false;
 
-    if (ifj_cur.type != IDENTIFIER_LOCAL)
+    if (ifj_cur.type != IDENTIFIER_LOCAL || !ifj_cur.lexeme || strcmp(ifj_cur.lexeme, "Program") != 0)
     {
         fprintf(stderr, "[SYNTAX] expected class name 'Program' (error 2)\n");
         return false;
@@ -392,8 +410,7 @@ static bool parse_class(void)
 
     if (!expect(L_CURLY, "{"))
         return false;
-    if (!consume_eol(EOL_ONE_EXACT))
-        return false;
+    consume_eol(EOL_ZERO_OR_MORE);
 
     if (!parse_func_list())
         return false;
@@ -411,11 +428,9 @@ static bool parse_func_list(void)
         if (!parse_funcdef())
             return false;
 
-        if (ifj_cur.type == R_CURLY || ifj_cur.type == T_EOF)
-            continue;
-
-        if (!consume_eol(EOL_ONE_EXACT))
-            return false;
+        // dřív tu bylo: if (... R_CURLY/EOF) continue; else consume_eol(EOL_ONE_EXACT)
+        // Povolit libovolný počet prázdných řádků i žádný.
+        consume_eol(EOL_ZERO_OR_MORE);
     }
     return true;
 }
@@ -487,18 +502,25 @@ static bool parse_funcdef(void)
 
 static bool parse_block(void)
 {
-    skip_eol_star();
-
     if (!expect(L_CURLY, "{"))
         return false;
-    if (!consume_eol(EOL_ONE_EXACT))
-        return false;
+
+    if (ifj_cur.type == R_CURLY) {
+        next();
+        return true;
+    }
+
+    consume_eol(EOL_ZERO_OR_MORE);
+
     if (!parse_stmt_list())
         return false;
+
     if (!expect(R_CURLY, "}"))
         return false;
+
     return true;
 }
+
 
 static bool parse_stmt_list(void)
 {
@@ -585,11 +607,11 @@ static bool parse_assign_or_call_stmt(void)
         {
             if (ifj_cur.type != R_ROUND)
             {
-                if (!parse_term())
+                if (!parse_expr())
                     return false;
                 while (accept(COMMA))
                 {
-                    if (!parse_term())
+                    if (!parse_expr())
                         return false;
                 }
                 if (!expect(R_ROUND, ")"))
@@ -664,8 +686,7 @@ static bool parse_while_stmt(void)
 
 static bool parse_return_stmt(void)
 {
-    next(); // sežer return
-
+    next(); // sežer 'return'
     if (can_start_expr(ifj_cur.type))
     {
         if (!parse_expr())
@@ -673,7 +694,6 @@ static bool parse_return_stmt(void)
     }
     return true;
 }
-
 // Expressions
 static int lbp_of(TokenType t)
 {
@@ -742,11 +762,6 @@ static bool parse_primary(void)
         fprintf(stderr, "[SYNTAX] expected term in expression, got %s\n", tname(ifj_cur.type));
         return false;
     }
-}
-
-static bool parse_term(void)
-{
-    return parse_primary();
 }
 
 static bool parse_expr(void) { return parse_expr_bp(PREC_LOWEST); }

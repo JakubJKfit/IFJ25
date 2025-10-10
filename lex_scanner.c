@@ -228,12 +228,16 @@ char escapeChar()
 // Slije sekvenci '\n\n\n' na jeden EOL načte další znaky a první ne \n vrátí
 static void compress_newlines(void)
 {
-    int c;
+    int c, extra = 0;
     while ((c = getchar()) == '\n')
     {
+        extra++;
     }
     if (c != EOF)
+    {
         ungetc(c, stdin);
+    }
+    g_line += extra;
 }
 
 State transition(State state, int key, LexemeBuffer *lexeme)
@@ -535,7 +539,7 @@ State transition(State state, int key, LexemeBuffer *lexeme)
         if (isalnum(key) || key == '_')
         {
             appendChar(lexeme, key);
-            return BuiltIn_fun; 
+            return BuiltIn_fun;
         }
         // konec vestavěné funkce, emituj IFJ_* token
         {

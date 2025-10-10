@@ -1,64 +1,58 @@
 #!/usr/bin/env python3
-import subprocess
-import os
-import sys
-from pathlib import Path
+import subprocess as sp
+import sys, os, re, glob
 
-# Cesta k binárce překladače
-BIN = "./ifj"
-# Cesta ke složce s testy
-EXAMPLES_DIR = Path("examples")
+BIN = os.environ.get("IFJ_BIN", "./ifj")
+EX_DIR = "examples"
 
-# Očekávané návratové kódy pro jednotlivé testy
-EXPECTED = {
-    "ex0-vsechny-konstrukce.wren": 0,
-    "ex1-faktorial-iterativne.wren": 0,
-    "ex2-faktorial-rekurzivne.wren": 0,
-    "ex3-prace-s-retezci.wren": 0,
-}
-
-def run_test(file: Path) -> tuple[int, str]:
-    """Spustí překladač na daném souboru a vrátí návratový kód a stdout."""
+def expected_exit(path):
+    # Bezpečně načti prvních pár řádků a hledej // EXPECT-EXIT: <kód>
+    head = ""
     try:
-        result = subprocess.run(
-            [BIN],
-            input=file.read_bytes(),
-            capture_output=True,
-            timeout=5
-        )
-        return result.returncode, result.stdout.decode(errors="ignore") + result.stderr.decode(errors="ignore")
-    except subprocess.TimeoutExpired:
-        return -1, "Timeout"
-    except FileNotFoundError:
-        print(f"❌ Nenalezen binární soubor {BIN}. Spusť nejdřív `make`.")
-        sys.exit(1)
+        with open(path, "r", encoding="utf-8") as f:
+            for _ in range(12):  # stačí pár řádků na začátku
+                line = f.readline()
+                if not line:
+                    break
+                head += line
+    except Exception:
+        return 0
+    m = re.search(r"(?m)^\s*//\s*EXPECT-EXIT\s*:\s*(\d+)\s*$", head)
+    return int(m.group(1)) if m else 0
+
+def run_one(path):
+    exp = expected_exit(path)
+    with open(path, "rb") as fin:
+        p = sp.run([BIN], stdin=fin, stdout=sp.PIPE, stderr=sp.PIPE)
+    ok = (p.returncode == exp)
+    name = os.path.basename(path)
+    if ok:
+        print(f"✅ {name:<32} [OK]  (exit {p.returncode})")
+    else:
+        print(f"❌ {name:<32} [FAIL] (exit {p.returncode}, expected {exp})")
+        if p.stdout:
+            print("   --- Stdout ---")
+            sys.stdout.buffer.write(p.stdout)
+            print()
+        if p.stderr:
+            print("   --- Stderr ---")
+            sys.stdout.buffer.write(p.stderr)
+            print()
+    return ok
 
 def main():
-    if not Path(BIN).exists():
-        print("❌ Překladač nebyl nalezen. Spusť nejdřív `make`.")
+    if not os.path.exists(BIN):
+        print(f"Chybí binárka '{BIN}'. Nejdřív proveď 'make'.")
+        sys.exit(2)
+
+    print(f"Spouštím testy ve složce '{EX_DIR}'...\n")
+    files = sorted(glob.glob(os.path.join(EX_DIR, "*.wren")))
+    if not files:
+        print("Nenalezeny žádné .wren testy.")
         sys.exit(1)
-
-    total = 0
-    passed = 0
-
-    print(f"Spouštím testy ve složce '{EXAMPLES_DIR}/'...\n")
-
-    for file in sorted(EXAMPLES_DIR.glob("*.wren")):
-        total += 1
-        expected = EXPECTED.get(file.name, 0)
-        rc, output = run_test(file)
-        if rc == expected:
-            print(f"✅ {file.name:35} [OK]  (exit {rc})")
-            passed += 1
-        else:
-            print(f"❌ {file.name:35} [FAIL] (exit {rc}, expected {expected})")
-            if output.strip():
-                print("   --- Výstup ---")
-                print("   " + "\n   ".join(output.splitlines()[:5]))  # ukáže max 5 řádků
-
-    print("\nShrnutí:")
-    print(f"   Úspěšné: {passed}/{total}")
-    sys.exit(0 if passed == total else 1)
+    ok = sum(run_one(f) for f in files)
+    print(f"\nShrnutí:\n   Úspěšné: {ok}/{len(files)}")
+    sys.exit(0 if ok == len(files) else 1)
 
 if __name__ == "__main__":
     main()
