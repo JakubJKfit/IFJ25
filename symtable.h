@@ -4,7 +4,7 @@
 #include <stdbool.h>
 
 // uzel stromu
-typdef struct tree_node{
+typedef struct tree_node{
     struct tree_node *left;
     struct tree_node *right;
     int height;
