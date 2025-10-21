@@ -3,8 +3,24 @@
 
 #include <stdbool.h>
 
+typedef enum{
+    VARIABLE_ID,
+    FUNC_ID,
+    CLASS_ID
+}symbol_id_type;
+
+typedef enum{
+    Undefined,
+    Null,
+    String,
+    Num
+}symbol_data_type;
+
+
 //TODO: doplnit vsechna potrebna data k ulozeni
 typedef struct{
+    symbol_id_type id_type;
+    symbol_data_type data_type;
     char *identifier;
 } symbol_data;
 

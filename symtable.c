@@ -9,6 +9,20 @@ static int maximum(int a, int b){
     return (a > b ? a : b);
 }
 
+static void load_data(symbol_data *target, symbol_data *source){
+    target->id_type = source->id_type;
+    target->data_type = source->data_type;
+    
+    if(target->identifier != NULL) free(target->identifier);
+    target->identifier = malloc(strlen(source->identifier) + 1);
+    if(target->identifier == NULL){
+        fprintf(stderr, "Malloc error while loading symbol data to node\n");
+            exit(EXIT_FAILURE);
+        }
+    strcpy(target->identifier, source->identifier);
+    return;
+}
+
 void tree_init(tree_node **tree){
     *tree = NULL;
 }
@@ -75,7 +89,7 @@ void balance_tree(tree_node **tree){
 
     if(balance > 1){
         if(get_balance((*tree)->left) < 0){
-            rotate_right(&(*tree)->left);
+            rotate_left(&(*tree)->left);
         }
         rotate_right(tree);
     }
@@ -109,21 +123,14 @@ void insert_symbol(tree_node **tree, symbol_data *data){
     if(*tree == NULL){
         *tree = (tree_node *)malloc(sizeof(tree_node));
         if(*tree == NULL){
-            fprintf(stderr, "Malloc error for inserting symbol");
+            fprintf(stderr, "Malloc error for inserting symbol\n");
             exit(EXIT_FAILURE);
         }
 
-        (*tree)->data.identifier = malloc(strlen(data->identifier) + 1);
-        if ((*tree)->data.identifier == NULL){
-            fprintf(stderr, "Malloc error for identifier for inserting symbol");
-            free(*tree);
-            exit(EXIT_FAILURE);
-        }
+        load_data(&(*tree)->data, data);
         (*tree)->left = NULL;
         (*tree)->right = NULL;
         (*tree)->height = 1;
-
-        strcpy((*tree)->data.identifier, data->identifier);
 
         return;
     }
@@ -143,16 +150,10 @@ void insert_symbol(tree_node **tree, symbol_data *data){
 void replace_by_rightmost(tree_node *target, tree_node **tree){
     if (*tree != NULL){
         if ((*tree)->right == NULL){
-            free(target->data.identifier);
-            target->data.identifier = malloc(strlen((*tree)->data.identifier) + 1);
-            if(target->data.identifier == NULL){
-                fprintf(stderr, "Malloc error for replace by rightmost");
-                exit(EXIT_FAILURE);
-            }
-            strcpy(target->data.identifier, (*tree)->data.identifier);
-
+            load_data(&target->data, &(*tree)->data);
             tree_node *to_delete = *tree;
             *tree = (*tree)->left;
+            free(to_delete->data.identifier);
             free(to_delete);
         }
         else
