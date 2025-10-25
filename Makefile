@@ -2,7 +2,7 @@ CC      = gcc
 CFLAGS  = -std=c11 -Wall -Wextra -Werror -pedantic
 TARGET  = ifj
 
-SRC     = lex_scanner.c parser.c main.c
+SRC     = lex_scanner.c parser.c main.c ast.c ast_printer.c
 OBJ     = $(SRC:.c=.o)
 
 all: $(TARGET)

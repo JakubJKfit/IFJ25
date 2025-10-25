@@ -1,10 +1,16 @@
+/**
+ * @file    parser.h
+ * @brief   Hlavičkový soubor pro syntaktický analyzátor (parser)
+ */
+
 #ifndef IFJ_PARSER_H
 #define IFJ_PARSER_H
-#include <stdbool.h>
 
-// Entry point for the syntactic analysis (LL + precedence for expressions).
-// Returns true on success. On syntax error, prints to stderr and returns false.
-bool ifj_parse_program(void);
+#include <stdbool.h>
+#include "ast.h" // Přidán include AST
+
+// Entry point nyní vrací kořen AST nebo NULL při chybě
+AstNode *ifj_parse_program(void);
 
 // globální kód chyby
 extern int ifj_error_code;

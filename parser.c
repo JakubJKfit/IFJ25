@@ -1,10 +1,18 @@
+/**
+ * @file    parser.c
+ * @brief   Syntaktická analýza (rekurzivní sestup + precedenční pro výrazy)
+ * a generování AST pro jazyk IFJ25
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <assert.h>
 
 #include "lex_scanner.h"
 #include "parser.h"
+#include "ast.h"
 
 #ifdef PARSE_TRACE
 #define TRACEF(...)                   \
@@ -24,132 +32,27 @@ extern Token ifj_get_token(void);
 // Parser state
 int ifj_error_code = 0;
 static Token ifj_cur;
-static bool ifj_seen_main = false; // to verify existence of static main()
+static bool ifj_seen_main = false;
 
 static void next(void)
 {
+    // Před načtením nového tokenu uvolníme starý
+    free_token_lexeme(&ifj_cur);
+
     ifj_cur = ifj_get_token();
     TRACEF("[TOK l%03d] %-12s %s\n",
            ifj_get_line(),
-           tname(ifj_cur.type),
+           convert(ifj_cur.type),
            (ifj_cur.lexeme ? ifj_cur.lexeme : ""));
-}
-
-static const char *tname(TokenType t)
-{
-    switch (t)
-    {
-    case T_EOF:
-        return "EOF";
-    case EOL:
-        return "EOL";
-    case ERROR:
-        return "LEXERR";
-    case KEYWORD_Ifj:
-        return "Ifj";
-    case KEYWORD_class:
-        return "class";
-    case KEYWORD_static:
-        return "static";
-    case KEYWORD_import:
-        return "import";
-    case KEYWORD_for:
-        return "for";
-    case KEYWORD_if:
-        return "if";
-    case KEYWORD_else:
-        return "else";
-    case KEYWORD_while:
-        return "while";
-    case KEYWORD_return:
-        return "return";
-    case KEYWORD_is:
-        return "is";
-    case KEYWORD_null:
-        return "null";
-    case KEYWORD_Num:
-        return "Num";
-    case KEYWORD_String:
-        return "String";
-    case KEYWORD_Null:
-        return "Null";
-    case KEYWORD_var:
-        return "var";
-    case IDENTIFIER_LOCAL:
-        return "identifier";
-    case IDENTIFIER_GLOBAL:
-        return "__identifier";
-    case INT:
-        return "int";
-    case FLOAT:
-        return "float";
-    case STRING:
-        return "string";
-
-    case L_ROUND:
-        return "(";
-    case R_ROUND:
-        return ")";
-    case L_CURLY:
-        return "{";
-    case R_CURLY:
-        return "}";
-    case COMMA:
-        return ",";
-    case ASSIGN:
-        return "=";
-    case PLUS:
-        return "+";
-    case MINUS:
-        return "-";
-    case TIMES:
-        return "*";
-    case DIVIDE:
-        return "/";
-    case LESSER:
-        return "<";
-    case GREATER:
-        return ">";
-    case LESSER_EQUAL:
-        return "<=";
-    case GREATER_EQUAL:
-        return ">=";
-    case EQUAL:
-        return "==";
-    case NOT_EQUAL:
-        return "!=";
-    case IFJ_READ_STR:
-        return "Ifj.read_str";
-    case IFJ_READ_NUM:
-        return "Ifj.read_num";
-    case IFJ_WRITE:
-        return "Ifj.write";
-    case IFJ_FLOOR:
-        return "Ifj.floor";
-    case IFJ_STR:
-        return "Ifj.str";
-    case IFJ_LENGTH:
-        return "Ifj.length";
-    case IFJ_SUBSTRING:
-        return "Ifj.substring";
-    case IFJ_STRCMP:
-        return "Ifj.strcmp";
-    case IFJ_ORD:
-        return "Ifj.ord";
-    case IFJ_CHR:
-        return "Ifj.chr";
-    default:
-        return "token";
-    }
 }
 
 static bool expect(TokenType t, const char *ctx)
 {
     if (ifj_cur.type != t)
     {
-        fprintf(stderr, "[SYNTAX] l%d: expected %s ('%s'), got %s\n", ifj_get_line(), tname(t), ctx ? ctx : "", tname(ifj_cur.type));
-
-        return false; // error 2
+        fprintf(stderr, "[SYNTAX] l%d: expected %s ('%s'), got %s\n", ifj_get_line(), convert(t), ctx ? ctx : "", convert(ifj_cur.type));
+        ifj_error_code = 2;
+        return false;
     }
     next();
     return true;
@@ -161,7 +64,6 @@ static void skip_eol_star(void)
         next();
 }
 
-// Exactly one statement per line enforcement
 enum EOL_POLICY
 {
     EOL_ZERO_OR_MORE,
@@ -179,7 +81,8 @@ static bool consume_eol(enum EOL_POLICY p)
     {
         fprintf(stderr,
                 "[SYNTAX] l%d: expected end-of-line, got %s\n",
-                ifj_get_line(), tname(ifj_cur.type));
+                ifj_get_line(), convert(ifj_cur.type));
+        ifj_error_code = 2;
         return false;
     }
     do
@@ -189,7 +92,6 @@ static bool consume_eol(enum EOL_POLICY p)
     return true;
 }
 
-// Expressions
 typedef enum
 {
     PREC_LOWEST = 0,
@@ -200,47 +102,50 @@ typedef enum
     PREC_MUL_OP  // * /
 } IfjPrec;
 
-// Forward declarations
+// Forward deklarace
 static bool parse_prolog(void);
-static bool parse_class(void);
-static bool parse_func_list(void);
-static bool parse_funcdef(void);
-static bool parse_block(void);
-static bool parse_stmt_list(void);
-static bool parse_stmt(void);
-static bool parse_vardecl_stmt(void);
-static bool parse_assign_or_call_stmt(void);
-static bool parse_if_stmt(void);
-static bool parse_while_stmt(void);
-static bool parse_return_stmt(void);
-static bool parse_ifj_call_stmt(void);
-static bool is_ifj_builtin(TokenType t);
-static bool parse_call_args_terms(void);
-static bool parse_expr_bp_after_primary(IfjPrec minbp);
-static bool parse_expr(void);
-static bool parse_expr_bp(IfjPrec minbp);
-static bool parse_primary(void);
+static AstNode *parse_class(void);
+static bool parse_func_list(AstNodeProgram *prog);
+static AstNode *parse_funcdef(void);
+static AstNodeBlock *parse_block(void);
+static AstNode *parse_stmt_list(AstNodeBlock *block);
+static AstNode *parse_stmt(void);
+static AstNode *parse_vardecl_stmt(void);
+static AstNode *parse_assign_or_call_stmt(void);
+static AstNode *parse_if_stmt(void);
+static AstNode *parse_while_stmt(void);
+static AstNode *parse_return_stmt(void);
+static AstNodeList *parse_call_args_terms(void);
+static AstNode *parse_expr(void);
+static AstNode *parse_expr_bp(IfjPrec minbp);
+static AstNode *parse_primary(void);
 static int lbp_of(TokenType t);
 
 // Public entry
-bool ifj_parse_program(void)
+AstNode *ifj_parse_program(void)
 {
     ifj_seen_main = false;
+    ifj_error_code = 0;
     next();
+
     if (!parse_prolog())
-        return false;
-    if (!parse_class())
-        return false;
+        return NULL;
+
+    AstNode *program_node = parse_class();
+    if (program_node == NULL)
+        return NULL;
+
     if (!ifj_seen_main)
     {
         fprintf(stderr, "[SEMANTIC] missing static main() without params (error 3)\n");
         ifj_error_code = 3;
-        return false;
+        free_ast_node(program_node);
+        return NULL;
     }
-    return true;
+
+    return program_node;
 }
 
-// Grammar
 static bool can_start_expr(TokenType t)
 {
     switch (t)
@@ -270,7 +175,6 @@ static bool can_start_expr(TokenType t)
 
 static bool parse_prolog(void)
 {
-    // import "ifj25" for Ifj
     skip_eol_star();
 
     if (ifj_cur.type != KEYWORD_import)
@@ -281,7 +185,6 @@ static bool parse_prolog(void)
     }
     next();
 
-    // presne ifj25
     if (ifj_cur.type != STRING || !ifj_cur.lexeme || strcmp(ifj_cur.lexeme, "ifj25") != 0)
     {
         fprintf(stderr, "[SYNTAX] expected string literal \"ifj25\" after import (error 2)\n");
@@ -292,11 +195,9 @@ static bool parse_prolog(void)
 
     if (!expect(KEYWORD_for, "for"))
     {
-        ifj_error_code = 2;
         return false;
     }
 
-    // Po 'for' očekáváme Ifj
     if (ifj_cur.type == KEYWORD_Ifj)
     {
         next();
@@ -325,142 +226,129 @@ static bool accept(TokenType t)
     return false;
 }
 
-static bool is_ifj_builtin(TokenType t)
-{
-    switch (t)
-    {
-    case IFJ_READ_STR:
-    case IFJ_READ_NUM:
-    case IFJ_WRITE:
-    case IFJ_FLOOR:
-    case IFJ_STR:
-    case IFJ_LENGTH:
-    case IFJ_SUBSTRING:
-    case IFJ_STRCMP:
-    case IFJ_ORD:
-    case IFJ_CHR:
-        return true;
-    default:
-        return false;
-    }
-}
 
-static bool parse_call_args_terms(void)
+static AstNodeList *parse_call_args_terms(void)
 {
     if (!expect(L_ROUND, "("))
-        return false;
+        return NULL;
+
+    AstNodeList *args = create_list();
+
     if (ifj_cur.type != R_ROUND)
     {
-        if (!parse_expr())
-            return false;
+        AstNode *arg_expr = parse_expr();
+        if (!arg_expr)
+        {
+            free_ast_node((AstNode *)args);
+            return NULL;
+        }
+        add_to_list(args, arg_expr);
+
         while (accept(COMMA))
         {
-            if (!parse_expr())
-                return false;
-        }
-        if (!expect(R_ROUND, ")"))
-            return false;
-    }
-    else
-    {
-        next();
-    }
-    return true;
-}
-
-static bool parse_expr_bp_after_primary(IfjPrec minbp)
-{
-    while (1)
-    {
-        int lbp = lbp_of(ifj_cur.type);
-        if (lbp < 0 || lbp < (int)minbp)
-            break;
-
-        TokenType op = ifj_cur.type;
-        next();
-        IfjPrec rbp = (IfjPrec)(lbp + 1);
-
-        if (op == KEYWORD_is)
-        {
-            if (!(ifj_cur.type == KEYWORD_Num || ifj_cur.type == KEYWORD_String || ifj_cur.type == KEYWORD_Null))
+            arg_expr = parse_expr();
+            if (!arg_expr)
             {
-                fprintf(stderr, "[SYNTAX] right side of 'is' must be type keyword (Num/String/Null)\n");
-                return false;
+                free_ast_node((AstNode *)args);
+                return NULL;
             }
-            next();
-            continue;
+            add_to_list(args, arg_expr);
         }
-        if (!parse_expr_bp(rbp))
-            return false;
     }
-    return true;
+
+    if (!expect(R_ROUND, ")"))
+    {
+        free_ast_node((AstNode *)args);
+        return NULL;
+    }
+
+    return args;
 }
 
-static bool parse_class(void)
+static AstNode *parse_class(void)
 {
     if (!expect(KEYWORD_class, "class"))
-        return false;
+        return NULL;
 
     if (ifj_cur.type != IDENTIFIER_LOCAL || !ifj_cur.lexeme || strcmp(ifj_cur.lexeme, "Program") != 0)
     {
         fprintf(stderr, "[SYNTAX] expected class name 'Program' (error 2)\n");
-        return false;
+        ifj_error_code = 2;
+        return NULL;
     }
     next();
 
     if (!expect(L_CURLY, "{"))
-        return false;
+        return NULL;
     consume_eol(EOL_ZERO_OR_MORE);
 
-    if (!parse_func_list())
-        return false;
+    AstNodeProgram *prog = create_program();
+
+    if (!parse_func_list(prog))
+    {
+        free_ast_node((AstNode *)prog);
+        return NULL;
+    }
 
     if (!expect(R_CURLY, "}"))
-        return false;
+    {
+        free_ast_node((AstNode *)prog);
+        return NULL;
+    }
     consume_eol(EOL_ZERO_OR_MORE);
-    return true;
+    return (AstNode *)prog;
 }
 
-static bool parse_func_list(void)
+static bool parse_func_list(AstNodeProgram *prog)
 {
     while (ifj_cur.type == KEYWORD_static)
     {
-        if (!parse_funcdef())
+        AstNodeFuncDef *func = (AstNodeFuncDef *)parse_funcdef();
+        if (!func)
             return false;
 
-        // dřív tu bylo: if (... R_CURLY/EOF) continue; else consume_eol(EOL_ONE_EXACT)
-        // Povolit libovolný počet prázdných řádků i žádný.
+        add_func_to_program(prog, func);
+
         consume_eol(EOL_ZERO_OR_MORE);
     }
     return true;
 }
 
-static bool parse_funcdef(void)
+static AstNode *parse_funcdef(void)
 {
     if (!expect(KEYWORD_static, "static"))
-        return false;
+        return NULL;
 
     if (ifj_cur.type != IDENTIFIER_LOCAL)
     {
         fprintf(stderr, "[SYNTAX] expected function identifier after 'static'\n");
-        return false;
+        ifj_error_code = 2;
+        return NULL;
     }
-    const char *fname = ifj_cur.lexeme;
+    Token fname_id = ifj_cur;
+    ifj_cur.lexeme = NULL;
     next();
 
-    // dovol volitelné EOL/whitespace mezi jménem a dalším znakem
     skip_eol_star();
 
     // 1) GETTER
     if (ifj_cur.type == L_CURLY)
     {
-        return parse_block();
+        AstNodeBlock *body = parse_block();
+        if (!body)
+        {
+            free_token_lexeme(&fname_id);
+            return NULL;
+        }
+        return (AstNode *)create_func_def(fname_id, create_list(), body);
     }
 
     // 2) FUNKCE
     if (accept(L_ROUND))
     {
+        AstNodeList *params = create_list();
         int arity = 0;
+
         if (ifj_cur.type != R_ROUND)
         {
             do
@@ -468,79 +356,145 @@ static bool parse_funcdef(void)
                 if (ifj_cur.type != IDENTIFIER_LOCAL)
                 {
                     fprintf(stderr, "[SYNTAX] expected parameter name\n");
-                    return false;
+                    ifj_error_code = 2;
+                    free_ast_node((AstNode *)params);
+                    free_token_lexeme(&fname_id);
+                    return NULL;
                 }
+
+                add_to_list(params, create_variable(ifj_cur));
+                ifj_cur.lexeme = NULL;
+
                 arity++;
                 next();
             } while (accept(COMMA));
+
             if (!expect(R_ROUND, ")"))
-                return false;
+            {
+                free_ast_node((AstNode *)params);
+                free_token_lexeme(&fname_id);
+                return NULL;
+            }
         }
         else
         {
-            next();
+            next(); // sežer R_ROUND
         }
-        if (fname && strcmp(fname, "main") == 0 && arity == 0)
+
+        if (fname_id.lexeme && strcmp(fname_id.lexeme, "main") == 0 && arity == 0)
             ifj_seen_main = true;
 
-        return parse_block();
+        AstNodeBlock *body = parse_block();
+        if (!body)
+        {
+            free_ast_node((AstNode *)params);
+            free_token_lexeme(&fname_id);
+            return NULL;
+        }
+        return (AstNode *)create_func_def(fname_id, params, body);
     }
 
     // 3) SETTER
     if (accept(ASSIGN))
     {
         if (!expect(L_ROUND, "("))
-            return false;
-        if (!expect(IDENTIFIER_LOCAL, "setter param id"))
-            return false;
+        {
+            free_token_lexeme(&fname_id);
+            return NULL;
+        }
+
+        if (ifj_cur.type != IDENTIFIER_LOCAL)
+        {
+            fprintf(stderr, "[SYNTAX] l%d: expected parameter name in setter definition\n", ifj_get_line());
+            ifj_error_code = 2;
+            free_token_lexeme(&fname_id);
+            return NULL;
+        }
+
+        Token param_id = ifj_cur;
+        ifj_cur.lexeme = NULL;
+        next();
+
         if (!expect(R_ROUND, ")"))
-            return false;
-        return parse_block();
+        {
+            free_token_lexeme(&fname_id);
+            free_token_lexeme(&param_id);
+            return NULL;
+        }
+
+        AstNodeBlock *body = parse_block();
+        if (!body)
+        {
+            free_token_lexeme(&fname_id);
+            free_token_lexeme(&param_id);
+            return NULL;
+        }
+
+        AstNodeList *params = create_list();
+        add_to_list(params, create_variable(param_id));
+
+        return (AstNode *)create_func_def(fname_id, params, body);
     }
-    return parse_block();
+
+    // Pokud to nebylo nic z výše uvedeného, je to chyba
+    fprintf(stderr, "[SYNTAX] l%d: expected '(', '{' or '=' after function name '%s'\n",
+            ifj_get_line(), fname_id.lexeme ? fname_id.lexeme : "<unknown>");
+    ifj_error_code = 2;
+    free_token_lexeme(&fname_id);
+    return NULL;
 }
 
-static bool parse_block(void)
+static AstNodeBlock *parse_block(void)
 {
+    int line = ifj_get_line();
     if (!expect(L_CURLY, "{"))
-        return false;
+        return NULL;
 
-    if (ifj_cur.type == R_CURLY) {
+    AstNodeBlock *block = create_block(line);
+
+    if (ifj_cur.type == R_CURLY)
+    {
         next();
-        return true;
+        return block;
     }
 
     consume_eol(EOL_ZERO_OR_MORE);
 
-    if (!parse_stmt_list())
-        return false;
+    if (!parse_stmt_list(block))
+    {
+        free_ast_node((AstNode *)block);
+        return NULL;
+    }
 
     if (!expect(R_CURLY, "}"))
-        return false;
+    {
+        free_ast_node((AstNode *)block);
+        return NULL;
+    }
 
-    return true;
+    return block;
 }
 
-
-static bool parse_stmt_list(void)
+static AstNode *parse_stmt_list(AstNodeBlock *block)
 {
     while (1)
     {
-        // přeskoč prázdné řádky / komentářové EOL
         skip_eol_star();
 
         if (ifj_cur.type == R_CURLY || ifj_cur.type == T_EOF)
-            return true;
+            return (AstNode *)block;
 
-        if (!parse_stmt())
-            return false;
+        AstNode *stmt = parse_stmt();
+        if (!stmt)
+            return NULL;
 
-        // po příkazu toleruj libovolný počet EOL
+        add_stmt_to_block(block, stmt);
+
         skip_eol_star();
     }
 }
 
-static bool parse_stmt(void)
+static AstNode *parse_stmt(void)
 {
     switch (ifj_cur.type)
     {
@@ -553,8 +507,55 @@ static bool parse_stmt(void)
     case KEYWORD_return:
         return parse_return_stmt();
     case L_CURLY:
-        return parse_block();
+        return (AstNode *)parse_block();
+
+    case IDENTIFIER_LOCAL:
+    case IDENTIFIER_GLOBAL:
+        return parse_assign_or_call_stmt();
+
     case IFJ_WRITE:
+    {
+        Token func_id = ifj_cur;
+        ifj_cur.lexeme = NULL;
+        next();
+        AstNodeList *args = parse_call_args_terms();
+        if (!args)
+        {
+            free_token_lexeme(&func_id);
+            return NULL;
+        }
+        return create_func_call(func_id, args);
+    }
+
+    case KEYWORD_class:
+    case KEYWORD_else:
+    case KEYWORD_is:
+    case KEYWORD_null:
+    case KEYWORD_Ifj:
+    case KEYWORD_static:
+    case KEYWORD_import:
+    case KEYWORD_for:
+    case KEYWORD_Num:
+    case KEYWORD_String:
+    case KEYWORD_Null:
+    case INT:
+    case FLOAT:
+    case STRING:
+    case PROLOG:
+    case TIMES:
+    case DIVIDE:
+    case PLUS:
+    case MINUS:
+    case LESSER:
+    case GREATER:
+    case LESSER_EQUAL:
+    case GREATER_EQUAL:
+    case EQUAL:
+    case NOT_EQUAL:
+    case ASSIGN:
+    case L_ROUND:
+    case R_ROUND:
+    case R_CURLY:
     case IFJ_READ_STR:
     case IFJ_READ_NUM:
     case IFJ_FLOOR:
@@ -564,137 +565,171 @@ static bool parse_stmt(void)
     case IFJ_STRCMP:
     case IFJ_ORD:
     case IFJ_CHR:
-        return parse_ifj_call_stmt();
+    case ERROR:
+    case COMMA:
+    case EOL:
+    case T_EOF:
     default:
-        return parse_assign_or_call_stmt();
+        fprintf(stderr, "[SYNTAX] l%d: expected statement (id/if/while/return/var), got %s\n", ifj_get_line(), convert(ifj_cur.type));
+        ifj_error_code = 2;
+        return NULL;
     }
 }
 
-static bool parse_vardecl_stmt(void)
+static AstNode *parse_vardecl_stmt(void)
 {
+    int line = ifj_get_line();
+    next(); // sežer 'var'
+    if (ifj_cur.type != IDENTIFIER_LOCAL)
+    {
+        fprintf(stderr, "[SYNTAX] l%d: expected identifier after 'var', got %s\n", line, convert(ifj_cur.type));
+        ifj_error_code = 2;
+        return NULL;
+    }
+
+    Token var_id = ifj_cur;
+    ifj_cur.lexeme = NULL;
     next();
-    if (!expect(IDENTIFIER_LOCAL, "identifier after 'var'"))
-        return false;
-    return true;
+
+    return create_vardecl(var_id);
 }
 
-static bool parse_ifj_call_stmt(void)
+static AstNode *parse_assign_or_call_stmt(void)
 {
-    // na vstupu je IFJ_*
-    next();
-    return parse_call_args_terms(); // vyžaduje '(' ... ')'
-}
+    int line = ifj_get_line();
 
-static bool parse_assign_or_call_stmt(void)
-{
     if (!(ifj_cur.type == IDENTIFIER_LOCAL || ifj_cur.type == IDENTIFIER_GLOBAL))
     {
-        fprintf(stderr, "[SYNTAX] expected statement (id/if/while/return/var)\n");
-        return false;
+        fprintf(stderr, "[SYNTAX] l%d: expected identifier at start of assignment\n", ifj_get_line());
+        ifj_error_code = 2;
+        return NULL;
     }
+
+    Token target_id = ifj_cur;
+    ifj_cur.lexeme = NULL;
     next();
 
     if (!expect(ASSIGN, "="))
-        return false;
-
-    // 1) volání uživatelské funkce
-    if (ifj_cur.type == IDENTIFIER_LOCAL)
     {
-        // sežer primární výraz (identifikátor)
-        next();
-
-        if (accept(L_ROUND))
-        {
-            if (ifj_cur.type != R_ROUND)
-            {
-                if (!parse_expr())
-                    return false;
-                while (accept(COMMA))
-                {
-                    if (!parse_expr())
-                        return false;
-                }
-                if (!expect(R_ROUND, ")"))
-                    return false;
-            }
-            else
-            {
-                next();
-            }
-            return true;
-        }
-
-        return parse_expr_bp_after_primary(PREC_LOWEST);
+        free_token_lexeme(&target_id);
+        return NULL;
     }
 
-    if (is_ifj_builtin(ifj_cur.type))
+    AstNode *rvalue = parse_expr();
+    if (!rvalue)
     {
-        next();
-        if (!parse_call_args_terms())
-            return false;
-        return parse_expr_bp_after_primary(PREC_LOWEST);
+        free_token_lexeme(&target_id);
+        return NULL;
     }
 
-    return parse_expr();
+    AstNodeVariable *lvalue = (AstNodeVariable *)create_variable(target_id);
+
+    return create_assign_stmt(lvalue, rvalue, line);
 }
 
-static bool parse_if_stmt(void)
+static AstNode *parse_if_stmt(void)
 {
-    next();
+    int line = ifj_get_line();
+    next(); // přeskoč 'if'
+
     if (!expect(L_ROUND, "("))
-        return false;
-    if (!parse_expr())
-        return false;
+        return NULL;
+
+    AstNode *condition = parse_expr();
+    if (condition == NULL)
+        return NULL;
+
     if (!expect(R_ROUND, ")"))
-        return false;
+    {
+        free_ast_node(condition);
+        return NULL;
+    }
+
     if (ifj_cur.type == EOL)
     {
-        fprintf(stderr, "[SYNTAX] newline not allowed between ')' and '{' in if\n");
-        return false;
+        fprintf(stderr, "[SYNTAX] l%d: newline not allowed between ')' and '{' in if\n", line);
+        ifj_error_code = 2;
+        free_ast_node(condition);
+        return NULL;
     }
-    if (!parse_block())
-        return false;
-    // EOL před else povolíme
+
+    AstNodeBlock *then_block = parse_block();
+    if (then_block == NULL)
+    {
+        free_ast_node(condition);
+        return NULL;
+    }
+
+    AstNodeBlock *else_block = NULL;
     consume_eol(EOL_ZERO_OR_MORE);
+
     if (ifj_cur.type == KEYWORD_else)
     {
         next();
-        if (!parse_block())
-            return false;
+        else_block = parse_block();
+        if (else_block == NULL)
+        {
+            free_ast_node(condition);
+            free_ast_node((AstNode *)then_block);
+            return NULL;
+        }
     }
-    return true;
+
+    return create_if_stmt(condition, then_block, else_block, line);
 }
 
-static bool parse_while_stmt(void)
+static AstNode *parse_while_stmt(void)
 {
-    next();
+    int line = ifj_get_line();
+    next(); // sežer 'while'
+
     if (!expect(L_ROUND, "("))
-        return false;
-    if (!parse_expr())
-        return false;
+        return NULL;
+
+    AstNode *condition = parse_expr();
+    if (!condition)
+        return NULL;
+
     if (!expect(R_ROUND, ")"))
-        return false;
+    {
+        free_ast_node(condition);
+        return NULL;
+    }
+
     if (ifj_cur.type == EOL)
     {
         fprintf(stderr, "[SYNTAX] newline not allowed between ')' and '{' in while\n");
-        return false;
+        ifj_error_code = 2;
+        free_ast_node(condition);
+        return NULL;
     }
-    if (!parse_block())
-        return false;
-    return true;
+
+    AstNodeBlock *body = parse_block();
+    if (!body)
+    {
+        free_ast_node(condition);
+        return NULL;
+    }
+
+    return create_while_stmt(condition, body, line);
 }
 
-static bool parse_return_stmt(void)
+static AstNode *parse_return_stmt(void)
 {
+    int line = ifj_get_line();
     next(); // sežer 'return'
+
+    AstNode *expr = NULL;
     if (can_start_expr(ifj_cur.type))
     {
-        if (!parse_expr())
-            return false;
+        expr = parse_expr();
+        if (!expr)
+            return NULL;
     }
-    return true;
+
+    return create_return_stmt(expr, line);
 }
-// Expressions
+
 static int lbp_of(TokenType t)
 {
     switch (t)
@@ -720,7 +755,7 @@ static int lbp_of(TokenType t)
     }
 }
 
-static bool parse_primary(void)
+static AstNode *parse_primary(void)
 {
     switch (ifj_cur.type)
     {
@@ -728,8 +763,15 @@ static bool parse_primary(void)
     case FLOAT:
     case STRING:
     case KEYWORD_null:
+    {
+        Token t = ifj_cur;
+        ifj_cur.lexeme = NULL;
+        if (t.type == STRING)
+            ifj_cur.value.string_val = NULL;
         next();
-        return true;
+        return create_literal(t);
+    }
+
     case IFJ_READ_STR:
     case IFJ_READ_NUM:
     case IFJ_WRITE:
@@ -740,36 +782,69 @@ static bool parse_primary(void)
     case IFJ_STRCMP:
     case IFJ_ORD:
     case IFJ_CHR:
+    {
+        Token func_id = ifj_cur;
+        ifj_cur.lexeme = NULL;
         next();
-        if (!parse_call_args_terms())
-            return false;
-        return true;
+        AstNodeList *args = parse_call_args_terms();
+        if (!args)
+        {
+            free_token_lexeme(&func_id);
+            return NULL;
+        }
+        return create_func_call(func_id, args);
+    }
 
     case IDENTIFIER_LOCAL:
     case IDENTIFIER_GLOBAL:
+    {
+        Token id_token = ifj_cur;
+        ifj_cur.lexeme = NULL;
         next();
-        return true;
+
+        if (ifj_cur.type == L_ROUND)
+        {
+            AstNodeList *args = parse_call_args_terms();
+            if (!args)
+            {
+                free_token_lexeme(&id_token);
+                return NULL;
+            }
+            return create_func_call(id_token, args);
+        }
+        return create_variable(id_token);
+    }
 
     case L_ROUND:
+    {
         next();
-        if (!parse_expr())
-            return false;
+        AstNode *expr = parse_expr();
+        if (!expr)
+            return NULL;
         if (!expect(R_ROUND, ")"))
-            return false;
-        return true;
+        {
+            free_ast_node(expr);
+            return NULL;
+        }
+        return expr;
+    }
 
     default:
-        fprintf(stderr, "[SYNTAX] expected term in expression, got %s\n", tname(ifj_cur.type));
-        return false;
+        fprintf(stderr, "[SYNTAX] l%d: expected term in expression, got %s\n", ifj_get_line(), convert(ifj_cur.type));
+        ifj_error_code = 2;
+        return NULL;
     }
 }
 
-static bool parse_expr(void) { return parse_expr_bp(PREC_LOWEST); }
+static AstNode *parse_expr(void) { return parse_expr_bp(PREC_LOWEST); }
 
-static bool parse_expr_bp(IfjPrec minbp)
+static AstNode *parse_expr_bp(IfjPrec minbp)
 {
-    if (!parse_primary())
-        return false;
+    int line = ifj_get_line();
+
+    AstNode *left = parse_primary();
+    if (!left)
+        return NULL;
 
     while (1)
     {
@@ -779,21 +854,35 @@ static bool parse_expr_bp(IfjPrec minbp)
 
         TokenType op = ifj_cur.type;
         next();
-        IfjPrec rbp = (IfjPrec)(lbp + 1); // left-assoc
+        IfjPrec rbp = (IfjPrec)(lbp + 1);
 
         if (op == KEYWORD_is)
         {
             if (!(ifj_cur.type == KEYWORD_Num || ifj_cur.type == KEYWORD_String || ifj_cur.type == KEYWORD_Null))
             {
-                fprintf(stderr, "[SYNTAX] right side of 'is' must be type keyword (Num/String/Null)\n");
-                return false;
+                fprintf(stderr, "[SYNTAX] l%d: right side of 'is' must be type keyword (Num/String/Null)\n", ifj_get_line());
+                ifj_error_code = 2;
+                free_ast_node(left);
+                return NULL;
             }
+
+            Token type_token = ifj_cur;
+            type_token.lexeme = NULL;
             next();
+
+            AstNode *right = create_literal(type_token);
+            left = create_binary_expr(op, left, right, line);
             continue;
         }
 
-        if (!parse_expr_bp(rbp))
-            return false;
+        AstNode *right = parse_expr_bp(rbp);
+        if (!right)
+        {
+            free_ast_node(left);
+            return NULL;
+        }
+
+        left = create_binary_expr(op, left, right, line);
     }
-    return true;
+    return left;
 }

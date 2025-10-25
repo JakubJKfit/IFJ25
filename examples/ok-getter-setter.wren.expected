@@ -1,0 +1,14 @@
+--- Začátek AST ---
+[Program]
+  [Functions] (count: 3)
+    [FuncDef] (value)
+      [Params] (count: 0)
+      [Block] (count: 1)
+        [VarDecl] (x)
+    [Program]
+      [Functions] (count: 0)
+    [FuncDef] (main)
+      [Params] (count: 0)
+      [Block] (count: 1)
+        [VarDecl] (z)
+--- Konec AST ---

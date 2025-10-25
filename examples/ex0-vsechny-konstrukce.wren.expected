@@ -1,0 +1,250 @@
+--- Začátek AST ---
+[Program]
+  [Functions] (count: 6)
+    [FuncDef] (getAnswer)
+      [Params] (count: 0)
+      [Block] (count: 1)
+        [ReturnStmt]
+          [Literal] (42)
+    [FuncDef] (getAnswer)
+      [Params] (count: 1)
+        [Variable] (arg)
+      [Block] (count: 1)
+        [IfStmt]
+          (Condition)
+            [BinaryExpr: KEYWORD_is]
+              [Variable] (arg)
+              [Literal]
+          (Then)
+            [Block] (count: 5)
+              [IfStmt]
+                (Condition)
+                  [BinaryExpr: GREATER]
+                    [BinaryExpr: MINUS]
+                      [Variable] (arg)
+                      [Literal] (1)
+                    [BinaryExpr: DIVIDE]
+                      [BinaryExpr: TIMES]
+                        [Literal] (32)
+                        [Literal] (84.1)
+                      [Literal] (2.4)
+                (Then)
+                  [Block] (count: 1)
+                    [FuncCall]
+                      [Args] (count: 1)
+                        [Literal] (Celkem velke cislo!
+)
+                (Else)
+                  [NULL Node]
+              [AssignStmt]
+                [Variable] (arg)
+                [BinaryExpr: TIMES]
+                  [Variable] (arg)
+                  [Literal] (42)
+              [VarDecl] (ansStr)
+              [AssignStmt]
+                [Variable] (ansStr)
+                [FuncCall]
+                  [Args] (count: 1)
+                    [Variable] (arg)
+              [ReturnStmt]
+                [BinaryExpr: PLUS]
+                  [Literal] (Odpoved je )
+                  [Variable] (ansStr)
+          (Else)
+            [Block] (count: 2)
+              [FuncCall]
+                [Args] (count: 1)
+                  [Literal] (Neplatny argument
+)
+              [ReturnStmt]
+                [Literal]
+    [FuncDef] (unicorn)
+      [Params] (count: 0)
+      [Block] (count: 1)
+        [IfStmt]
+          (Condition)
+            [Variable] (__a)
+          (Then)
+            [Block] (count: 1)
+              [ReturnStmt]
+                [BinaryExpr: PLUS]
+                  [Variable] (__a)
+                  [Literal] (10)
+          (Else)
+            [Block] (count: 1)
+              [ReturnStmt]
+                [Literal]
+    [Program]
+      [Functions] (count: 0)
+    [FuncDef] (unicorn)
+      [Params] (count: 0)
+      [Block] (count: 1)
+        [FuncCall]
+          [Args] (count: 1)
+            [Literal] (Jsem ve funkci unicorn, ne v getteru
+)
+    [FuncDef] (main)
+      [Params] (count: 0)
+      [Block] (count: 20)
+        [FuncCall]
+          [Args] (count: 1)
+            [Variable] (unicorn)
+        [FuncCall]
+          [Args] (count: 1)
+            [Literal] (
+)
+        [AssignStmt]
+          [Variable] (unicorn)
+          [Literal] (5)
+        [VarDecl] (myValue)
+        [AssignStmt]
+          [Variable] (myValue)
+          [Variable] (unicorn)
+        [FuncCall]
+          [Args] (count: 1)
+            [Variable] (myValue)
+        [FuncCall]
+          [Args] (count: 1)
+            [Literal] (
+)
+        [AssignStmt]
+          [Variable] (myValue)
+          [FuncCall] (unicorn)
+            [Args] (count: 0)
+        [FuncCall]
+          [Args] (count: 1)
+            [Variable] (myValue)
+        [FuncCall]
+          [Args] (count: 1)
+            [Literal] (
+)
+        [FuncCall]
+          [Args] (count: 1)
+            [Literal] (Napis cislo:
+)
+        [VarDecl] (valueFromUser)
+        [AssignStmt]
+          [Variable] (valueFromUser)
+          [FuncCall]
+            [Args] (count: 0)
+        [AssignStmt]
+          [Variable] (myValue)
+          [FuncCall] (getAnswer)
+            [Args] (count: 1)
+              [Variable] (valueFromUser)
+        [IfStmt]
+          (Condition)
+            [BinaryExpr: EQUAL]
+              [Variable] (myValue)
+              [Literal]
+          (Then)
+            [Block] (count: 2)
+              [FuncCall]
+                [Args] (count: 1)
+                  [Literal] (ODPOVED NENI!
+)
+              [ReturnStmt]
+          (Else)
+            [Block] (count: 1)
+              [IfStmt]
+                (Condition)
+                  [BinaryExpr: KEYWORD_is]
+                    [Variable] (myValue)
+                    [Literal]
+                (Then)
+                  [Block] (count: 0)
+                (Else)
+                  [Block] (count: 0)
+        [FuncCall]
+          [Args] (count: 1)
+            [Variable] (myValue)
+        [FuncCall]
+          [Args] (count: 1)
+            [Literal] (
+)
+        [WhileStmt]
+          (Condition)
+            [BinaryExpr: GREATER]
+              [Variable] (valueFromUser)
+              [BinaryExpr: MINUS]
+                [Literal] (0)
+                [Literal] (2)
+          (Body)
+            [Block] (count: 8)
+              [FuncCall]
+                [Args] (count: 1)
+                  [Literal] (Jedeme dolu! )
+              [FuncCall]
+                [Args] (count: 1)
+                  [Variable] (valueFromUser)
+              [FuncCall]
+                [Args] (count: 1)
+                  [Literal] ( -> )
+              [AssignStmt]
+                [Variable] (valueFromUser)
+                [BinaryExpr: MINUS]
+                  [Variable] (valueFromUser)
+                  [Literal] (1)
+              [VarDecl] (valStr)
+              [AssignStmt]
+                [Variable] (valStr)
+                [FuncCall]
+                  [Args] (count: 1)
+                    [Variable] (valueFromUser)
+              [FuncCall]
+                [Args] (count: 1)
+                  [Variable] (valStr)
+              [FuncCall]
+                [Args] (count: 1)
+                  [Literal] (
+)
+        [Block] (count: 4)
+          [VarDecl] (x)
+          [AssignStmt]
+            [Variable] (x)
+            [Literal] (1)
+          [Block] (count: 6)
+            [VarDecl] (x)
+            [AssignStmt]
+              [Variable] (x)
+              [Literal] (cervena panda + )
+            [FuncCall]
+              [Args] (count: 1)
+                [Literal] (()
+            [IfStmt]
+              (Condition)
+                [BinaryExpr: EQUAL]
+                  [Literal] (1)
+                  [Literal] (1)
+              (Then)
+                [Block] (count: 5)
+                  [VarDecl] (y)
+                  [AssignStmt]
+                    [Variable] (y)
+                    [BinaryExpr: TIMES]
+                      [Variable] (x)
+                      [Literal] (3)
+                  [VarDecl] (x)
+                  [AssignStmt]
+                    [Variable] (x)
+                    [Variable] (y)
+                  [FuncCall]
+                    [Args] (count: 1)
+                      [Variable] (x)
+              (Else)
+                [Block] (count: 0)
+            [FuncCall]
+              [Args] (count: 1)
+                [Literal] (konec) )
+            [FuncCall]
+              [Args] (count: 1)
+                [Variable] (x)
+          [FuncCall]
+            [Args] (count: 1)
+              [Variable] (x)
+        [FuncCall]
+          [Args] (count: 1)
+            [Literal] (
+)
+--- Konec AST ---
