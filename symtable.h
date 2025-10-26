@@ -3,6 +3,8 @@
 
 #include <stdbool.h>
 
+#define ERR_INTERNAL 99
+
 typedef enum{
     VARIABLE_ID,
     FUNC_ID,

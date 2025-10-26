@@ -17,10 +17,9 @@ static void load_data(symbol_data *target, symbol_data *source){
     target->identifier = malloc(strlen(source->identifier) + 1);
     if(target->identifier == NULL){
         fprintf(stderr, "Malloc error while loading symbol data to node\n");
-            exit(EXIT_FAILURE);
+            exit(ERR_INTERNAL);
         }
     strcpy(target->identifier, source->identifier);
-    return;
 }
 
 void tree_init(tree_node **tree){
@@ -124,7 +123,7 @@ void insert_symbol(tree_node **tree, symbol_data *data){
         *tree = (tree_node *)malloc(sizeof(tree_node));
         if(*tree == NULL){
             fprintf(stderr, "Malloc error for inserting symbol\n");
-            exit(EXIT_FAILURE);
+            exit(ERR_INTERNAL);
         }
 
         load_data(&(*tree)->data, data);
