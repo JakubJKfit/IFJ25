@@ -1,0 +1,17 @@
+--- Začátek AST ---
+[Program]
+  [Functions] (count: 1)
+    [FuncDef] (main)
+      [Params] (count: 0)
+      [Block] (count: 2)
+        [FuncCall]
+          [Args] (count: 1)
+            [Literal] (A)
+        [FuncCall]
+          [Args] (count: 1)
+            [FuncCall]
+              [Args] (count: 1)
+                [BinaryExpr: PLUS]
+                  [Literal] (1)
+                  [Literal] (2)
+--- Konec AST ---
