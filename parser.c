@@ -226,7 +226,6 @@ static bool accept(TokenType t)
     return false;
 }
 
-
 static AstNodeList *parse_call_args_terms(void)
 {
     if (!expect(L_ROUND, "("))
@@ -458,7 +457,14 @@ static AstNodeBlock *parse_block(void)
         return block;
     }
 
-    consume_eol(EOL_ZERO_OR_MORE);
+    // If not empty, require at least one EOL
+    if (!consume_eol(EOL_ONE_EXACT))
+    { // Changed from EOL_ZERO_OR_MORE
+        free_ast_node((AstNode *)block);
+        fprintf(stderr, "[SYNTAX] l%d: Expected newline after '{' in block\n", line);
+        ifj_error_code = 2; // Ensure error code is set
+        return NULL;
+    }
 
     if (!parse_stmt_list(block))
     {
