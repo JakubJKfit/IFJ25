@@ -29,7 +29,7 @@ LexemeBuffer *initBuffer(size_t initial_size)
     LexemeBuffer *lb = malloc(sizeof(LexemeBuffer));
     if (!lb)
     {
-        fprintf(stderr, "Nedostatek paměti *lb při malloc!\n");
+        fprintf(stderr, "Nedostatek paměti lb při malloc!\n");
         exit(99);
     }
     lb->buffer = malloc(initial_size);
