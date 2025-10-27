@@ -27,7 +27,17 @@ Token createToken(TokenType type, LexemeBuffer *lexeme);
 LexemeBuffer *initBuffer(size_t initial_size)
 {
     LexemeBuffer *lb = malloc(sizeof(LexemeBuffer));
+    if (!lb)
+    {
+        fprintf(stderr, "Nedostatek paměti *lb při malloc!\n");
+        exit(99);
+    }
     lb->buffer = malloc(initial_size);
+    if (!lb->buffer)
+    {
+        fprintf(stderr, "Nedostatek paměti lb->buffer při malloc!\n");
+        exit(99);
+    }
     lb->buffer[0] = '\0';
     lb->length = 0;
     lb->capacity = initial_size;
@@ -55,8 +65,8 @@ void appendChar(LexemeBuffer *lb, char c)
         lb->buffer = realloc(lb->buffer, lb->capacity);
         if (!lb->buffer)
         {
-            fprintf(stderr, "Nedostatek paměti při realloc!\n");
-            exit(1);
+            fprintf(stderr, "Nedostatek paměti lb->buffer při realloc!\n");
+            exit(99);
         }
     }
     lb->buffer[lb->length++] = c;
@@ -76,6 +86,11 @@ char *copyString(const char *str)
     char *copy = malloc(strlen(str) + 1);
     if (copy)
         strcpy(copy, str);
+    else
+    {
+        fprintf(stderr, "Nedostatek paměti copy při malloc!\n");
+        exit(99);
+    }
     return copy;
 }
 
@@ -472,7 +487,8 @@ State transition(State state, int key, LexemeBuffer *lexeme)
             if (escaped == -1)
             {
                 createToken(ERROR, lexeme);
-                return Start;
+                fprintf(stderr, "Lexikální chyba na řádku %d\n", g_line);
+                exit(1);
             }
             appendChar(lexeme, (char)escaped);
             return String_single;
@@ -648,7 +664,8 @@ State transition(State state, int key, LexemeBuffer *lexeme)
         return Start;
     case Error:
         createToken(ERROR, lexeme);
-        return Start;
+        fprintf(stderr, "Lexikální chyba na řádku %d\n", g_line);
+        exit(1);
     default:
         ungetc(key, stdin);
         return Error;
