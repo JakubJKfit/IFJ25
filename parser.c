@@ -12,6 +12,7 @@
 #include <stdarg.h>
 
 #include "lex_scanner.h"
+#include "err.h"
 #include "parser.h"
 #include "ast.h"
 
@@ -28,9 +29,6 @@
     } while (0)
 #endif
 
-// === Exit kódy ==================================================
-#define ERR_SYN 2
-#define ERR_SEM 3
 
 // Globální proměnná ponechána kvůli kompatibilitě linkování (jinak se nepoužije)
 int ifj_error_code = 0;
@@ -44,7 +42,7 @@ _Noreturn static void die_syn(const char *fmt, ...)
     vfprintf(stderr, fmt, ap);
     va_end(ap);
     fputc('\n', stderr);
-    exit(ERR_SYN);
+    ifjexit(ERR_SYN);
 }
 _Noreturn static void die_sem(const char *fmt, ...)
 {
@@ -54,7 +52,7 @@ _Noreturn static void die_sem(const char *fmt, ...)
     vfprintf(stderr, fmt, ap);
     va_end(ap);
     fputc('\n', stderr);
-    exit(ERR_SEM);
+    //TODO: wtf is this? ifjexit(ERR_SEM);
 }
 
 // Alias makra

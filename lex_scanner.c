@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include "lex_scanner.h"
+#include "err.h"
 typedef struct
 {
     char *buffer;
@@ -30,13 +31,13 @@ LexemeBuffer *initBuffer(size_t initial_size)
     if (!lb)
     {
         fprintf(stderr, "Nedostatek paměti lb při malloc!\n");
-        exit(99);
+        ifjexit(ERR_INTERNAL);
     }
     lb->buffer = malloc(initial_size);
     if (!lb->buffer)
     {
         fprintf(stderr, "Nedostatek paměti lb->buffer při malloc!\n");
-        exit(99);
+        ifjexit(ERR_INTERNAL);
     }
     lb->buffer[0] = '\0';
     lb->length = 0;
@@ -66,7 +67,7 @@ void appendChar(LexemeBuffer *lb, char c)
         if (!lb->buffer)
         {
             fprintf(stderr, "Nedostatek paměti lb->buffer při realloc!\n");
-            exit(99);
+            ifjexit(ERR_INTERNAL);
         }
     }
     lb->buffer[lb->length++] = c;
@@ -89,7 +90,7 @@ char *copyString(const char *str)
     else
     {
         fprintf(stderr, "Nedostatek paměti copy při malloc!\n");
-        exit(99);
+        ifjexit(ERR_INTERNAL);
     }
     return copy;
 }
@@ -488,7 +489,7 @@ State transition(State state, int key, LexemeBuffer *lexeme)
             {
                 createToken(ERROR, lexeme);
                 fprintf(stderr, "Lexikální chyba na řádku %d\n", g_line);
-                exit(1);
+                ifjexit(ERR_LEX);
             }
             appendChar(lexeme, (char)escaped);
             return String_single;
@@ -665,7 +666,7 @@ State transition(State state, int key, LexemeBuffer *lexeme)
     case Error:
         createToken(ERROR, lexeme);
         fprintf(stderr, "Lexikální chyba na řádku %d\n", g_line);
-        exit(1);
+        ifjexit(ERR_LEX);
     default:
         ungetc(key, stdin);
         return Error;

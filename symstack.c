@@ -2,6 +2,7 @@
 
 #include "symtable.h"
 #include "symstack.h"
+#include "err.h"
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -9,7 +10,7 @@ static void alloc_identif(stack_node *node, char *identifier){
     node->identifier = malloc(strlen(identifier) + 1);
     if(node->identifier == NULL){
         fprintf(stderr, "Stack indentifier malloc error\n");
-        exit(ERR_INTERNAL);
+        ifjexit(ERR_INTERNAL);
     }
     strcpy(node->identifier, identifier);
 }
@@ -22,7 +23,7 @@ void stack_push(symstack *stack, char *identifier){
     stack_node *new_node = (stack_node *)malloc(sizeof(stack_node));
     if(new_node == NULL){
         fprintf(stderr, "Stack malloc error\n");
-        exit(ERR_INTERNAL);
+        ifjexit(ERR_INTERNAL);
     }
 
     new_node->symtable = NULL;
@@ -46,7 +47,7 @@ void stack_pop(symstack *stack){
 tree_node **stack_top(symstack *stack){
     if(stack->top == NULL){
         fprintf(stderr, "Stack is empty!\n");
-        exit(ERR_INTERNAL);
+        ifjexit(ERR_INTERNAL);
     }
     return &(stack->top->symtable);
 }

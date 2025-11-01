@@ -1,6 +1,7 @@
 // tabulka symbolu
 
 #include "symtable.h"
+#include "err.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -17,7 +18,7 @@ static void load_data(symbol_data *target, symbol_data *source){
     target->identifier = malloc(strlen(source->identifier) + 1);
     if(target->identifier == NULL){
         fprintf(stderr, "Malloc error while loading symbol data to node\n");
-            exit(ERR_INTERNAL);
+            ifjexit(ERR_INTERNAL);
         }
     strcpy(target->identifier, source->identifier);
 }
@@ -123,7 +124,7 @@ void insert_symbol(tree_node **tree, symbol_data *data){
         *tree = (tree_node *)malloc(sizeof(tree_node));
         if(*tree == NULL){
             fprintf(stderr, "Malloc error for inserting symbol\n");
-            exit(ERR_INTERNAL);
+            ifjexit(ERR_INTERNAL);
         }
 
         load_data(&(*tree)->data, data);
