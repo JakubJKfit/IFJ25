@@ -15,6 +15,8 @@
 #include "err.h"
 #include "parser.h"
 #include "ast.h"
+#include "symtable.h"
+#include "symstack.h"
 
 #ifdef PARSE_TRACE
 #define TRACEF(...)                   \
@@ -30,9 +32,6 @@
 #endif
 
 
-// Globální proměnná ponechána kvůli kompatibilitě linkování (jinak se nepoužije)
-int ifj_error_code = 0;
-
 // Vararg ukončovací funkce (čisté C11, s _Noreturn)
 _Noreturn static void die_syn(const char *fmt, ...)
 {
@@ -42,26 +41,17 @@ _Noreturn static void die_syn(const char *fmt, ...)
     vfprintf(stderr, fmt, ap);
     va_end(ap);
     fputc('\n', stderr);
-    ifjexit(ERR_SYN);
+    ifjexit(ERR_SYN); //todo: werror chyba ze does return, tady to _Noreturn je pekuliarni, radsi bych to odstranil, blame jakub
 }
-_Noreturn static void die_sem(const char *fmt, ...)
-{
-    va_list ap;
-    fprintf(stderr, "[SEMANTIC] ");
-    va_start(ap, fmt);
-    vfprintf(stderr, fmt, ap);
-    va_end(ap);
-    fputc('\n', stderr);
-    //TODO: wtf is this? ifjexit(ERR_SEM);
-}
+
 
 // Alias makra
 #define DIE_SYN(...) die_syn(__VA_ARGS__)
-#define DIE_SEM(...) die_sem(__VA_ARGS__)
 
 // Stav parseru
 static Token ifj_cur;
 static bool ifj_seen_main = false;
+symstack global_symstack;
 
 // Lexer API
 extern Token ifj_get_token(void);
@@ -107,8 +97,27 @@ static AstNode *parse_expr(void);
 static AstNode *parse_expr_bp(IfjPrec minbp);
 static AstNode *parse_primary(void);
 static int lbp_of(TokenType t);
+// semanticke funkce
+static void semantic_firstpass(AstNode *node, symstack *stack);
+static void semantic_recurs(AstNode *node, symstack *stack, int *current_offset);
 
 // === Utilitní funkce ===========================================
+
+
+// prochazeni symtable pro kazdy scope
+bool search_scopes(symstack *stack, char *identifier, symbol_data **found){
+    
+    stack_node *current_symtable = stack->top;
+    while(current_symtable != NULL){
+        if(search_symbol(current_symtable->symtable, identifier, found)){
+            return true;
+        }
+        current_symtable = current_symtable->next;
+    }
+
+    *found = NULL;
+    return false;
+}
 
 static void next(void)
 {
@@ -202,23 +211,36 @@ AstNode *ifj_parse_program(void)
     ifj_seen_main = false;
     next();
 
+    // stack pro semantickou analyzu
+    stack_init(&global_symstack);
+    stack_push(&global_symstack, "global");
+
     if (!parse_prolog())
     {
+        stack_dispose(&global_symstack);
         return NULL; // v praxi se neprovede, parse_prolog() končí DIE_SYN
     }
 
     AstNode *program_node = parse_class();
     if (program_node == NULL)
     {
+        stack_dispose(&global_symstack);
         return NULL;
     }
+
+    semantic_firstpass(program_node, &global_symstack);
+    semantic_recurs(program_node, &global_symstack, 0);
 
     if (!ifj_seen_main)
     {
         // Semantická chyba dle zadání
         free_ast_node(program_node);
-        DIE_SEM("missing static main() without params");
+        stack_dispose(&global_symstack);
+        //TODO: fprintf chybi main, mozna jiny err code
+        exit(ERR_SEM_OTHER);
     }
+
+    stack_dispose(&global_symstack);
 
     return program_node;
 }
@@ -320,7 +342,7 @@ static AstNode *parse_funcdef(void)
             free_token_lexeme(&fname_id);
             return NULL;
         }
-        return (AstNode *)create_func_def(fname_id, create_list(), body);
+        return (AstNode *)create_func_def(fname_id, create_list(), body, FUNC_IS_GETTER);
     }
 
     // FUNKCE
@@ -362,7 +384,7 @@ static AstNode *parse_funcdef(void)
             free_token_lexeme(&fname_id);
             return NULL;
         }
-        return (AstNode *)create_func_def(fname_id, params, body);
+        return (AstNode *)create_func_def(fname_id, params, body, FUNC_IS_FUNC);
     }
 
     // SETTER
@@ -393,7 +415,7 @@ static AstNode *parse_funcdef(void)
         AstNodeList *params = create_list();
         add_to_list(params, create_variable(param_id));
 
-        return (AstNode *)create_func_def(fname_id, params, body);
+        return (AstNode *)create_func_def(fname_id, params, body, FUNC_IS_SETTER);
     }
 
     // Nic z výše uvedeného
@@ -821,4 +843,114 @@ static AstNodeList *parse_call_args_terms(void)
         return NULL;
     }
     return args;
+}
+
+// semanticka analyza
+
+
+static void semantic_firstpass(AstNode *node, symstack *stack){
+
+    if(node->type != AST_PROGRAM) return;
+
+    AstNodeProgram *program = (AstNodeProgram *)node;
+    AstNodeList *funcs = program->functions;
+    tree_node **global_table = stack_top(stack);
+
+    char identif_buffer[256];
+    symbol_data func_data;
+
+    for(int i = 0; i < funcs->count; i++){
+        AstNodeFuncDef *func = (AstNodeFuncDef *)funcs->items[i];
+
+        char *func_name = func->func_id.lexeme;
+        int arity = func->params->count;
+
+        int temp = 0;
+        switch(func->kind){
+            case FUNC_IS_FUNC:
+                temp = snprintf(identif_buffer, 256, "%s@%d", func_name, arity);
+                break;
+            case FUNC_IS_GETTER:
+                temp = snprintf(identif_buffer, 256, "%s@GET", func_name);
+                break;
+            case FUNC_IS_SETTER:
+                temp = snprintf(identif_buffer, 256, "%s@SET", func_name);
+                break;
+            default:
+                fprintf(stderr, "Unknown function kind\n");
+                ifjexit(ERR_INTERNAL);
+        }
+        if(temp < 0 || temp >= 256){
+            fprintf(stderr, "Line %d, %s function identifier too long for parsing\n", func->base.line_number, func_name);
+            ifjexit(ERR_SEM_OTHER);
+        }
+        
+        symbol_data *found;
+        if(search_symbol(*global_table, identif_buffer, &found)){
+            //semanticka chyba redefinice funkce
+            fprintf(stderr, "Line: %d, redefinition of function %s\n", func->base.line_number, func_name);
+            ifjexit(ERR_SEM_REDEFINED);
+        }
+
+        func_data.identifier = identif_buffer;
+        func_data.id_type = FUNC_ID;
+        func_data.data_type = Undefined; //return type
+        func_data.arity = arity;
+        func_data.is_init = true;
+        func_data.offset = 0;
+
+        insert_symbol(global_table, &func_data);
+    }
+}   
+
+
+static void semantic_recurs(AstNode *node, symstack *stack, int *current_offset){
+    if(!node) return;
+
+    switch(node->type){
+        case AST_PROGRAM:{
+            AstNodeProgram *program = (AstNodeProgram *)node;
+            for(int i = 0; i < program->functions->count; i++){
+                semantic_recurs(program->functions->items[i], stack, NULL);
+            }
+            break;
+        }
+        //TODO: DOKONCIT, musi se zmenit ast.h pro anotaci
+        case AST_FUNC_DEF:{
+            AstNodeFuncDef *func = (AstNodeFuncDef *)node;
+
+            int func_offset = 0;
+            stack_push(stack, func->func_id.lexeme); // func scope
+            tree_node **param_table = stack_top(stack);
+
+            for(int i=0; i<func->params->count; i++){
+                AstNodeVariable *param = (AstNodeVariable *)func->params->items[i];
+                char *param_name = param->token.lexeme;
+
+                symbol_data *found;
+                if(search_symbol(*param_table, param_name, &found)){
+                    fprintf(stderr, "Line: %d, duplicate parameter %s in function definition\n", param->base.line_number, param_name);
+                    ifjexit(ERR_SEM_REDEFINED);
+                }
+
+                func_offset -= 8; //byte pro pram
+
+                symbol_data param_data;
+                param_data.identifier = param_name;
+                param_data.id_type = VARIABLE_ID;
+                param_data.data_type = Undefined; // todo: uvidim
+                param_data.is_init = true;
+                param_data.offset = func_offset;
+
+                insert_symbol(param_table, &param_data);
+
+                // AST anotace
+                // TODO:
+            }
+            break;
+        }
+        default:
+            break;
+            // todo: uvidime co zbyde
+    }
 }

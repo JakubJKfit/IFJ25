@@ -667,6 +667,7 @@ State transition(State state, int key, LexemeBuffer *lexeme)
         createToken(ERROR, lexeme);
         fprintf(stderr, "Lexikální chyba na řádku %d\n", g_line);
         ifjexit(ERR_LEX);
+        return Error; // Todo: nechutny, udelany pro Werror, blame jakub :p
     default:
         ungetc(key, stdin);
         return Error;

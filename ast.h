@@ -27,6 +27,13 @@ typedef enum
     AST_NODE_LIST,     // Obecný seznam (pro argumenty, parametry, příkazy)
 } AstNodeType;
 
+// typ funkce
+typedef enum{
+    FUNC_IS_FUNC,
+    FUNC_IS_GETTER,
+    FUNC_IS_SETTER
+} AstFuncKind;
+
 // --- Základní struktura ---
 typedef struct AstNode
 {
@@ -122,9 +129,7 @@ typedef struct
     Token func_id;
     AstNodeList *params; // Seznam IDENTIFIERů
     AstNodeBlock *body;
-    // POZNÁMKA: Gettery (0 params) a Settery (1 param, stejné jméno jako getter)
-    // jsou zde reprezentovány stejně jako běžné funkce.
-    // Sémantická analýza je musí rozlišit.
+    AstFuncKind kind; // pro semantiku
 } AstNodeFuncDef;
 
 typedef struct
@@ -152,7 +157,7 @@ void add_to_list(AstNodeList *list, AstNode *item);
 AstNodeBlock *create_block(int line);
 void add_stmt_to_block(AstNodeBlock *block, AstNode *stmt);
 
-AstNodeFuncDef *create_func_def(Token func_id, AstNodeList *params, AstNodeBlock *body);
+AstNodeFuncDef *create_func_def(Token func_id, AstNodeList *params, AstNodeBlock *body, AstFuncKind kind);
 AstNodeProgram *create_program(void);
 void add_func_to_program(AstNodeProgram *prog, AstNodeFuncDef *func);
 

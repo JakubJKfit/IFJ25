@@ -147,12 +147,13 @@ AstNode *create_assign_stmt(AstNodeVariable *lvalue, AstNode *rvalue, int line)
 }
 
 // --- Top Level ---
-AstNodeFuncDef *create_func_def(Token func_id, AstNodeList *params, AstNodeBlock *body)
+AstNodeFuncDef *create_func_def(Token func_id, AstNodeList *params, AstNodeBlock *body, AstFuncKind kind)
 {
     AstNodeFuncDef *node = (AstNodeFuncDef *)ast_node_alloc(AST_FUNC_DEF, sizeof(AstNodeFuncDef));
     node->func_id = func_id;
     node->params = params;
     node->body = body;
+    node->kind = kind;
     return node;
 }
 

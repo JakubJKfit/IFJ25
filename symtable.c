@@ -127,6 +127,7 @@ void insert_symbol(tree_node **tree, symbol_data *data){
             ifjexit(ERR_INTERNAL);
         }
 
+        (*tree)->data.identifier = NULL;
         load_data(&(*tree)->data, data);
         (*tree)->left = NULL;
         (*tree)->right = NULL;
