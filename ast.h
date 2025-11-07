@@ -7,6 +7,7 @@
 #define AST_H
 
 #include "lex_scanner.h" // Pro přístup k Token
+#include "symtable.h"
 #include <stdlib.h>
 
 // --- Typy uzlů ---
@@ -62,6 +63,9 @@ typedef struct
 {
     AstNode base;
     Token token; // Uložíme si token s IDENTIFIER
+    // semantika
+    int stack_offset;
+    symbol_data_type data_type;
 } AstNodeVariable;
 
 typedef struct
@@ -106,6 +110,9 @@ typedef struct
 {
     AstNode base;
     Token var_id; // Token s IDENTIFIER
+    // semantika
+    int stack_offset;
+    symbol_data_type data_type;
 } AstNodeVarDecl;
 
 typedef struct

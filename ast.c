@@ -65,6 +65,9 @@ AstNode *create_variable(Token token)
 {
     AstNodeVariable *node = (AstNodeVariable *)ast_node_alloc(AST_EXPR_VARIABLE, sizeof(AstNodeVariable));
     node->token = token; // Kopíruje strukturu
+
+    node->stack_offset = 0;
+    node->data_type = Undefined;
     return (AstNode *)node;
 }
 
@@ -134,6 +137,9 @@ AstNode *create_vardecl(Token var_id)
 {
     AstNodeVarDecl *node = (AstNodeVarDecl *)ast_node_alloc(AST_STMT_VAR_DECL, sizeof(AstNodeVarDecl));
     node->var_id = var_id;
+
+    node->stack_offset = 0;
+    node->data_type = Undefined;
     return (AstNode *)node;
 }
 

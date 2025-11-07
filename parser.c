@@ -31,23 +31,6 @@
     } while (0)
 #endif
 
-
-// Vararg ukončovací funkce (čisté C11, s _Noreturn)
-_Noreturn static void die_syn(const char *fmt, ...)
-{
-    va_list ap;
-    fprintf(stderr, "[SYNTAX] ");
-    va_start(ap, fmt);
-    vfprintf(stderr, fmt, ap);
-    va_end(ap);
-    fputc('\n', stderr);
-    ifjexit(ERR_SYN); //todo: werror chyba ze does return, tady to _Noreturn je pekuliarni, radsi bych to odstranil, blame jakub
-}
-
-
-// Alias makra
-#define DIE_SYN(...) die_syn(__VA_ARGS__)
-
 // Stav parseru
 static Token ifj_cur;
 static bool ifj_seen_main = false;
@@ -135,8 +118,9 @@ static bool expect(TokenType t, const char *ctx)
 {
     if (ifj_cur.type != t)
     {
-        DIE_SYN("l%d: expected %s ('%s'), got %s",
+        fprintf(stderr, "l%d: expected %s ('%s'), got %s",
                 ifj_get_line(), convert(t), ctx ? ctx : "", convert(ifj_cur.type));
+        ifjexit(ERR_SYN);
     }
     next();
     return true;
@@ -157,7 +141,7 @@ static bool consume_eol(enum EOL_POLICY p)
     }
     if (ifj_cur.type != EOL)
     {
-        DIE_SYN("l%d: expected end-of-line, got %s",
+        fprintf(stderr, "l%d: expected end-of-line, got %s",
                 ifj_get_line(), convert(ifj_cur.type));
     }
     do
@@ -218,7 +202,7 @@ AstNode *ifj_parse_program(void)
     if (!parse_prolog())
     {
         stack_dispose(&global_symstack);
-        return NULL; // v praxi se neprovede, parse_prolog() končí DIE_SYN
+        return NULL; // v praxi se neprovede, parse_prolog() končí ifjexit
     }
 
     AstNode *program_node = parse_class();
@@ -251,12 +235,16 @@ static bool parse_prolog(void)
 {
     skip_eol_star();
 
-    if (ifj_cur.type != KEYWORD_import)
-        DIE_SYN("missing prolog 'import'");
+    if (ifj_cur.type != KEYWORD_import){
+        fprintf(stderr, "missing prolog 'import'");
+        ifjexit(ERR_SYN);
+    }
     next();
 
-    if (ifj_cur.type != STRING || !ifj_cur.lexeme || strcmp(ifj_cur.lexeme, "ifj25") != 0)
-        DIE_SYN("expected string literal \"ifj25\" after import");
+    if (ifj_cur.type != STRING || !ifj_cur.lexeme || strcmp(ifj_cur.lexeme, "ifj25") != 0){
+        fprintf(stderr, "expected string literal \"ifj25\" after import");
+        ifjexit(ERR_SYN);
+    }
     next();
 
     expect(KEYWORD_for, "for");
@@ -271,7 +259,8 @@ static bool parse_prolog(void)
     }
     else
     {
-        DIE_SYN("expected 'Ifj' after 'for'");
+        fprintf(stderr, "expected 'Ifj' after 'for'");
+        ifjexit(ERR_SYN);
     }
 
     return consume_eol(EOL_ONE_EXACT);
@@ -284,7 +273,10 @@ static AstNode *parse_class(void)
     expect(KEYWORD_class, "class");
 
     if (ifj_cur.type != IDENTIFIER_LOCAL || !ifj_cur.lexeme || strcmp(ifj_cur.lexeme, "Program") != 0)
-        DIE_SYN("expected class name 'Program'");
+    {
+        fprintf(stderr, "expected class name 'Program'");
+        ifjexit(ERR_SYN);
+    }
     next();
 
     expect(L_CURLY, "{");
@@ -325,8 +317,10 @@ static AstNode *parse_funcdef(void)
     expect(KEYWORD_static, "static");
 
     if (ifj_cur.type != IDENTIFIER_LOCAL)
-        DIE_SYN("expected function identifier after 'static'");
-
+    {
+        fprintf(stderr, "expected function identifier after 'static'");
+        ifjexit(ERR_SYN);
+    }
     Token fname_id = ifj_cur; // přenecháme lexém do AST
     ifj_cur.lexeme = NULL;
     next();
@@ -359,7 +353,8 @@ static AstNode *parse_funcdef(void)
                 {
                     free_ast_node((AstNode *)params);
                     free_token_lexeme(&fname_id);
-                    DIE_SYN("expected parameter name");
+                    fprintf(stderr, "expected parameter name");
+                    ifjexit(ERR_SYN);
                 }
                 add_to_list(params, create_variable(ifj_cur));
                 ifj_cur.lexeme = NULL;
@@ -395,7 +390,8 @@ static AstNode *parse_funcdef(void)
         if (ifj_cur.type != IDENTIFIER_LOCAL)
         {
             free_token_lexeme(&fname_id);
-            DIE_SYN("l%d: expected parameter name in setter definition", ifj_get_line());
+            fprintf(stderr, "l%d: expected parameter name in setter definition", ifj_get_line());
+            ifjexit(ERR_SYN);
         }
 
         Token param_id = ifj_cur;
@@ -422,8 +418,9 @@ static AstNode *parse_funcdef(void)
     {
         const char *fn = fname_id.lexeme ? fname_id.lexeme : "<unknown>";
         free_token_lexeme(&fname_id);
-        DIE_SYN("l%d: expected '(', '{' or '=' after function name '%s'",
+        fprintf(stderr, "l%d: expected '(', '{' or '=' after function name '%s'",
                 ifj_get_line(), fn);
+        ifjexit(ERR_SYN);
     }
 
     // pro -Wreturn-type (neproveditelné)
@@ -517,8 +514,9 @@ static AstNode *parse_stmt(void)
     }
 
     default:
-        DIE_SYN("l%d: expected statement (id/if/while/return/var), got %s",
+        fprintf(stderr, "l%d: expected statement (id/if/while/return/var), got %s",
                 ifj_get_line(), convert(ifj_cur.type));
+        ifjexit(ERR_SYN);
     }
 
     // pro -Wreturn-type (neproveditelné)
@@ -531,8 +529,10 @@ static AstNode *parse_vardecl_stmt(void)
     next(); // 'var'
 
     if (ifj_cur.type != IDENTIFIER_LOCAL)
-        DIE_SYN("l%d: expected identifier after 'var', got %s", line, convert(ifj_cur.type));
-
+    {
+        fprintf(stderr, "l%d: expected identifier after 'var', got %s", line, convert(ifj_cur.type));
+        ifjexit(ERR_SYN);
+    }
     Token var_id = ifj_cur;
     ifj_cur.lexeme = NULL;
     next();
@@ -545,8 +545,10 @@ static AstNode *parse_assign_or_call_stmt(void)
     int line = ifj_get_line();
 
     if (!(ifj_cur.type == IDENTIFIER_LOCAL || ifj_cur.type == IDENTIFIER_GLOBAL))
-        DIE_SYN("l%d: expected identifier at start of assignment", ifj_get_line());
-
+    {
+        fprintf(stderr, "l%d: expected identifier at start of assignment", ifj_get_line());
+        ifjexit(ERR_SYN);
+    }
     Token target_id = ifj_cur;
     ifj_cur.lexeme = NULL;
     next();
@@ -576,8 +578,10 @@ static AstNode *parse_if_stmt(void)
     expect(R_ROUND, ")");
 
     if (ifj_cur.type == EOL)
-        DIE_SYN("l%d: newline not allowed between ')' and '{' in if", line);
-
+    {
+        fprintf(stderr, "l%d: newline not allowed between ')' and '{' in if", line);
+        ifjexit(ERR_SYN);
+    }
     AstNodeBlock *then_block = parse_block();
     if (!then_block)
     {
@@ -615,8 +619,10 @@ static AstNode *parse_while_stmt(void)
     expect(R_ROUND, ")");
 
     if (ifj_cur.type == EOL)
-        DIE_SYN("l%d: newline not allowed between ')' and '{' in while", line);
-
+    {
+        fprintf(stderr, "l%d: newline not allowed between ')' and '{' in while", line);
+        ifjexit(ERR_SYN);
+    }
     AstNodeBlock *body = parse_block();
     if (!body)
     {
@@ -745,8 +751,9 @@ static AstNode *parse_primary(void)
     }
 
     default:
-        DIE_SYN("l%d: expected term in expression, got %s",
+        fprintf(stderr, "l%d: expected term in expression, got %s",
                 ifj_get_line(), convert(ifj_cur.type));
+        ifjexit(ERR_SYN);
     }
 
     // pro -Wreturn-type (neproveditelné)
@@ -783,7 +790,8 @@ static AstNode *parse_expr_bp(IfjPrec minbp)
                   ifj_cur.type == KEYWORD_Null))
             {
                 free_ast_node(left);
-                DIE_SYN("l%d: right side of 'is' must be type keyword (Num/String/Null)", ifj_get_line());
+                fprintf(stderr, "l%d: right side of 'is' must be type keyword (Num/String/Null)", ifj_get_line());
+                ifjexit(ERR_SYN);
             }
 
             Token type_token = ifj_cur;
@@ -915,7 +923,6 @@ static void semantic_recurs(AstNode *node, symstack *stack, int *current_offset)
             }
             break;
         }
-        //TODO: DOKONCIT, musi se zmenit ast.h pro anotaci
         case AST_FUNC_DEF:{
             AstNodeFuncDef *func = (AstNodeFuncDef *)node;
 
@@ -941,13 +948,79 @@ static void semantic_recurs(AstNode *node, symstack *stack, int *current_offset)
                 param_data.data_type = Undefined; // todo: uvidim
                 param_data.is_init = true;
                 param_data.offset = func_offset;
+                param_data.arity = 0; // neni fce
 
                 insert_symbol(param_table, &param_data);
 
                 // AST anotace
-                // TODO:
+                param->stack_offset = param_data.offset;
+                param->data_type = param_data.data_type;
             }
+            semantic_recurs((AstNode*)func->body, stack, &func_offset);
+            stack_pop(stack);
             break;
+        }
+        case AST_STMT_BLOCK:{
+           AstNodeBlock *block = (AstNodeBlock *)node;
+           
+           // nemelo by nastat, block ma automaticky offset
+           if(current_offset == NULL){
+                fprintf(stderr, "Block in global scope\n");
+                ifjexit(ERR_INTERNAL);
+           }
+
+           stack_push(stack, "block");
+           for(int i=0; i<block->statements->count; i++){
+                semantic_recurs(block->statements->items[i], stack, current_offset);
+           }
+           stack_pop(stack);
+           break;
+        }
+        case AST_STMT_VAR_DECL:{
+            AstNodeVarDecl *decl = (AstNodeVarDecl *)node;
+            char *var_name = decl->var_id.lexeme;
+
+            tree_node **current_table = stack_top(stack);
+            symbol_data *found;
+            if(search_symbol(*current_table, var_name, &found)){
+                fprintf(stderr, "Line> %d, redefinition of variable %s\n", decl->base.line_number, var_name);
+                ifjexit(ERR_SEM_REDEFINED);
+            }
+
+            if(current_offset == NULL){
+                *current_offset -= 8;
+            }
+
+            symbol_data var_data;
+            var_data.identifier = var_name;
+            var_data.id_type = VARIABLE_ID;
+            var_data.data_type = Null;
+            var_data.is_init = false;
+            var_data.offset = *current_offset;
+            var_data.arity = 0;
+
+            insert_symbol(current_table, &var_data);
+            decl->stack_offset = var_data.offset;
+            decl->data_type = var_data.data_type;
+
+            break;
+        }
+        case AST_EXPR_VARIABLE:{
+            AstNodeVariable *var = (AstNodeVariable *)node;
+            char *var_name = var->token.lexeme;
+
+            symbol_data *found;
+            if(!search_scopes(stack, var_name, &found)){
+                fprintf(stderr, "Line: %d, undefined var %s\n", var->base.line_number, var_name);
+                ifjexit(ERR_SEM_UNDEFINED);
+            }
+            if(found->id_type == FUNC_ID){
+                fprintf(stderr, "Cannot use function %s as variable\n", var_name);
+                ifjexit(ERR_SEM_OTHER);
+            }
+
+            var->stack_offset = found->offset;
+            var->data_type = found->data_type;
         }
         default:
             break;

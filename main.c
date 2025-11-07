@@ -16,7 +16,7 @@ int main(int argc, char *argv[]) // <--- UPRAV SIGNATURU FUNKCE
 
     AstNode *ast_root = ifj_parse_program();
 
-    if (ast_root != NULL && ifj_error_code == 0)
+    if (ast_root != NULL)
     {
         if (dump_ast)
         {
@@ -34,10 +34,6 @@ int main(int argc, char *argv[]) // <--- UPRAV SIGNATURU FUNKCE
         return 0;
     }
 
-    if (ifj_error_code != 0)
-    {
-        return ifj_error_code;
-    }
 
     // Obecná syntaktická chyba
     return 2;

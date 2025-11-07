@@ -5,6 +5,7 @@
 #include "err.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 static void alloc_identif(stack_node *node, char *identifier){
     node->identifier = malloc(strlen(identifier) + 1);
