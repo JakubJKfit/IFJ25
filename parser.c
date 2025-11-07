@@ -1036,6 +1036,12 @@ static void semantic_recurs(AstNode *node, symstack *stack, int *current_offset,
             AstNodeVariable *var = (AstNodeVariable *)node;
             char *var_name = var->token.lexeme;
 
+            if(var->token.type == IDENTIFIER_GLOBAL){
+                var->stack_offset = -1; // global
+                var->data_type = Undefined;
+                break;
+            }
+
             symbol_data *found;
             if(search_scopes(stack, var_name, &found)){
                 
@@ -1091,6 +1097,12 @@ static void semantic_recurs(AstNode *node, symstack *stack, int *current_offset,
             AstNodeVariable *left = assign->lvalue;
             char *left_name = left->token.lexeme;
             symbol_data *found;
+
+            if(left->token.type == IDENTIFIER_GLOBAL){
+                left->stack_offset = -1;
+                left->data_type = right_type;
+                break;
+            }
 
             if(search_scopes(stack, left_name, &found)){
                 if(found->id_type != VARIABLE_ID){
@@ -1207,6 +1219,12 @@ static void semantic_recurs(AstNode *node, symstack *stack, int *current_offset,
                         binary_expr->data_type = Num;
                     }
                     else if(left_type == String && right_type == Num){
+                        if (binary_expr->right->type == AST_EXPR_LITERAL &&
+                            ((AstNodeLiteral*)binary_expr->right)->token.type != INT)
+                        {
+                            fprintf(stderr, "Line %d, Operands for string iteration must be an Integer, not Float\n", binary_expr->base.line_number);
+                            ifjexit(ERR_SEM_INCOMP);
+                        }
                         binary_expr->data_type = String;
                     }
                     else{
@@ -1263,7 +1281,8 @@ static void semantic_recurs(AstNode *node, symstack *stack, int *current_offset,
                     }
                     if(!search_scopes(stack, key, &found)){
                         fprintf(stderr, "Line %d, %s func call with wrong arity\n", func->base.line_number, func_name);
-                        ifjexit(ERR_SEM_PARAM); // tady potenc ta chyba mozna muze nastat kvuli jinymu duvodu nez arita, takze potenc todo
+                        ifjexit(ERR_SEM_PARAM); // todo: tady je spatnej kod, ma to byt 3 a 5 az potom co zjistim jestli calluju
+                                                // se spatnou aritou, ale jdu spat
                     }
                     func->data_type = found->data_type;
                     break;
@@ -1282,6 +1301,10 @@ static void semantic_recurs(AstNode *node, symstack *stack, int *current_offset,
                     break;
                 case IFJ_FLOOR:
                     if(arity != 1) ifjexit(ERR_SEM_PARAM);
+                    if (get_type(func->args->items[0]) != Num && get_type(func->args->items[0]) != Undefined) {
+                        fprintf(stderr, "Line %d: Type Error: Ifj.floor expects parameter 'term' to be a Num.\n", func->base.line_number);
+                        ifjexit(ERR_SEM_PARAM);
+                    }
                     func->data_type = Num;
                     break;
                 case IFJ_STR:
@@ -1290,22 +1313,87 @@ static void semantic_recurs(AstNode *node, symstack *stack, int *current_offset,
                     break;
                 case IFJ_LENGTH:
                     if(arity != 1) ifjexit(ERR_SEM_PARAM);
+                    if (get_type(func->args->items[0]) != String && 
+                        get_type(func->args->items[0]) != Undefined) {
+                        fprintf(stderr, "Line %d: Type Error: Ifj.length expects parameter 's' to be a String.\n", func->base.line_number);
+                        ifjexit(ERR_SEM_PARAM);
+                    }
                     func->data_type = Num;
                     break;
                 case IFJ_CHR:
                     if(arity != 1) ifjexit(ERR_SEM_PARAM);
+                    if (get_type(func->args->items[0]) != Num && get_type(func->args->items[0]) != Undefined) {
+                        fprintf(stderr, "Line %d: Type Error: Ifj.chr param 'i' must be Num.\n", func->base.line_number);
+                        ifjexit(ERR_SEM_PARAM);
+                    }
+                    if (get_type(func->args->items[0]) == Num &&
+                        func->args->items[0]->type == AST_EXPR_LITERAL &&
+                        ((AstNodeLiteral*)func->args->items[0])->token.type == FLOAT)
+                    {
+                        fprintf(stderr, "Line %d: Type Error: Parameter 'i' for Ifj.chr must be an Integer, not Float.\n", func->base.line_number);
+                        ifjexit(ERR_SEM_INCOMP);
+                    }
                     func->data_type = String;
                     break;
                 case IFJ_STRCMP:
                     if(arity != 2) ifjexit(ERR_SEM_PARAM);
+                    if (get_type(func->args->items[0]) != String && get_type(func->args->items[0]) != Undefined) {
+                        fprintf(stderr, "Line %d: Type Error: Ifj.strcmp param 's1' must be String.\n", func->base.line_number);
+                        ifjexit(ERR_SEM_PARAM);
+                    }
+                    if (get_type(func->args->items[1]) != String && get_type(func->args->items[1]) != Undefined) {
+                        fprintf(stderr, "Line %d: Type Error: Ifj.strcmp param 's2' must be String.\n", func->base.line_number);
+                        ifjexit(ERR_SEM_PARAM);
+                    }
                     func->data_type = Num;
                     break;
                 case IFJ_ORD:
                     if(arity != 2) ifjexit(ERR_SEM_PARAM);
+                    if (get_type(func->args->items[0]) != String && get_type(func->args->items[0]) != Undefined) {
+                        fprintf(stderr, "Line %d: Type Error: Ifj.ord param 's' must be String.\n", func->base.line_number);
+                        ifjexit(ERR_SEM_PARAM);
+                    }
+                    if (get_type(func->args->items[1]) != Num && get_type(func->args->items[1]) != Undefined) {
+                        fprintf(stderr, "Line %d: Type Error: Ifj.ord param 'i' must be Num.\n", func->base.line_number);
+                        ifjexit(ERR_SEM_PARAM);
+                    }
+                    if (get_type(func->args->items[1]) == Num &&
+                        func->args->items[1]->type == AST_EXPR_LITERAL &&
+                        ((AstNodeLiteral*)func->args->items[1])->token.type != INT)
+                    {
+                        fprintf(stderr, "Line %d, Parameter 'i' for Ifj.ord must be an Integer.\n", func->base.line_number);
+                        ifjexit(ERR_SEM_INCOMP);
+                    }
                     func->data_type = Num;
                     break;
                 case IFJ_SUBSTRING:
                     if(arity != 3) ifjexit(ERR_SEM_PARAM);
+                    if (get_type(func->args->items[0]) != String && get_type(func->args->items[0]) != Undefined) {
+                        fprintf(stderr, "Line %d: Type Error: Ifj.substring param 's' must be String.\n", func->base.line_number);
+                        ifjexit(ERR_SEM_PARAM);
+                    }
+                    if (get_type(func->args->items[1]) != Num && get_type(func->args->items[1]) != Undefined) {
+                        fprintf(stderr, "Line %d: Type Error: Ifj.substring param 'i' must be Num.\n", func->base.line_number);
+                        ifjexit(ERR_SEM_PARAM);
+                    }
+                    if (get_type(func->args->items[2]) != Num && get_type(func->args->items[2]) != Undefined) {
+                        fprintf(stderr, "Line %d: Type Error: Ifj.substring param 'j' must be Num.\n", func->base.line_number);
+                        ifjexit(ERR_SEM_PARAM);
+                    }
+                    if (get_type(func->args->items[1]) == Num &&
+                        func->args->items[1]->type == AST_EXPR_LITERAL &&
+                        ((AstNodeLiteral*)func->args->items[1])->token.type == FLOAT)
+                    {
+                        fprintf(stderr, "Line %d: Type Error: Parameter 'i' for Ifj.substring must be an Integer, not Float.\n", func->base.line_number);
+                        ifjexit(ERR_SEM_INCOMP);
+                    }
+                    if (get_type(func->args->items[2]) == Num &&
+                        func->args->items[2]->type == AST_EXPR_LITERAL &&
+                        ((AstNodeLiteral*)func->args->items[2])->token.type == FLOAT)
+                    {
+                        fprintf(stderr, "Line %d: Type Error: Parameter 'j' for Ifj.substring must be an Integer, not Float.\n", func->base.line_number);
+                        ifjexit(ERR_SEM_INCOMP);
+                    }
                     func->data_type = String; // muze Null
                     break;
                 default:
