@@ -33,7 +33,6 @@
 
 // Stav parseru
 static Token ifj_cur;
-static bool ifj_seen_main = false;
 symstack global_symstack;
 
 // Lexer API
@@ -82,7 +81,7 @@ static AstNode *parse_primary(void);
 static int lbp_of(TokenType t);
 // semanticke funkce
 static void semantic_firstpass(AstNode *node, symstack *stack);
-static void semantic_recurs(AstNode *node, symstack *stack, int *current_offset);
+static void semantic_recurs(AstNode *node, symstack *stack, int *current_offset, symbol_data *current_func_data);
 
 // === Utilitní funkce ===========================================
 
@@ -100,6 +99,24 @@ bool search_scopes(symstack *stack, char *identifier, symbol_data **found){
 
     *found = NULL;
     return false;
+}
+
+// ziskani datoveho typu literalu
+symbol_data_type get_type(AstNode *node){
+    if(!node) return Undefined;
+
+    switch(node->type){
+        case AST_EXPR_LITERAL:
+            return ((AstNodeLiteral *)node)->data_type;
+        case AST_EXPR_VARIABLE:
+            return ((AstNodeVariable *)node)->data_type;
+        case AST_EXPR_BINARY:
+            return ((AstNodeBinaryExpr *)node)->data_type;
+        case AST_FUNC_CALL:
+            return ((AstNodeFuncCall *)node)->data_type;
+        default:
+            return Undefined;
+    }
 }
 
 static void next(void)
@@ -192,7 +209,6 @@ static bool accept(TokenType t)
 
 AstNode *ifj_parse_program(void)
 {
-    ifj_seen_main = false;
     next();
 
     // stack pro semantickou analyzu
@@ -213,16 +229,16 @@ AstNode *ifj_parse_program(void)
     }
 
     semantic_firstpass(program_node, &global_symstack);
-    semantic_recurs(program_node, &global_symstack, 0);
 
-    if (!ifj_seen_main)
+    symbol_data *main_func;
+    if (!search_symbol(*stack_top(&global_symstack), "main@0", &main_func))
     {
-        // Semantická chyba dle zadání
         free_ast_node(program_node);
         stack_dispose(&global_symstack);
-        //TODO: fprintf chybi main, mozna jiny err code
-        exit(ERR_SEM_OTHER);
+        fprintf(stderr, "No main function with 0 params found\n");
+        exit(ERR_SEM_UNDEFINED);
     }
+    semantic_recurs(program_node, &global_symstack, 0, NULL);
 
     stack_dispose(&global_symstack);
 
@@ -369,8 +385,6 @@ static AstNode *parse_funcdef(void)
             next(); // sežer ')'
         }
 
-        if (fname_id.lexeme && strcmp(fname_id.lexeme, "main") == 0 && arity == 0)
-            ifj_seen_main = true;
 
         AstNodeBlock *body = parse_block();
         if (!body)
@@ -904,7 +918,6 @@ static void semantic_firstpass(AstNode *node, symstack *stack){
         func_data.id_type = FUNC_ID;
         func_data.data_type = Undefined; //return type
         func_data.arity = arity;
-        func_data.is_init = true;
         func_data.offset = 0;
 
         insert_symbol(global_table, &func_data);
@@ -912,14 +925,14 @@ static void semantic_firstpass(AstNode *node, symstack *stack){
 }   
 
 
-static void semantic_recurs(AstNode *node, symstack *stack, int *current_offset){
+static void semantic_recurs(AstNode *node, symstack *stack, int *current_offset, symbol_data *current_func_data){
     if(!node) return;
 
     switch(node->type){
         case AST_PROGRAM:{
             AstNodeProgram *program = (AstNodeProgram *)node;
             for(int i = 0; i < program->functions->count; i++){
-                semantic_recurs(program->functions->items[i], stack, NULL);
+                semantic_recurs(program->functions->items[i], stack, NULL, NULL);
             }
             break;
         }
@@ -927,6 +940,19 @@ static void semantic_recurs(AstNode *node, symstack *stack, int *current_offset)
             AstNodeFuncDef *func = (AstNodeFuncDef *)node;
 
             int func_offset = 0;
+            char func_key[256];
+            int arity = func->params->count;
+            switch(func->kind){
+                case FUNC_IS_FUNC:   snprintf(func_key, 256, "%s@%d", func->func_id.lexeme, arity); break;
+                case FUNC_IS_GETTER: snprintf(func_key, 256, "%s@GET", func->func_id.lexeme); break;
+                case FUNC_IS_SETTER: snprintf(func_key, 256, "%s@SET", func->func_id.lexeme); break;
+            }//todo: potenc velikost check
+            symbol_data *func_data;
+            if(!search_scopes(stack, func_key, &func_data)){
+                fprintf(stderr, "Function %s not found in secondpass\n", func_key);
+                ifjexit(ERR_INTERNAL);
+            }
+            func_data->data_type = Null;
             stack_push(stack, func->func_id.lexeme); // func scope
             tree_node **param_table = stack_top(stack);
 
@@ -945,8 +971,7 @@ static void semantic_recurs(AstNode *node, symstack *stack, int *current_offset)
                 symbol_data param_data;
                 param_data.identifier = param_name;
                 param_data.id_type = VARIABLE_ID;
-                param_data.data_type = Undefined; // todo: uvidim
-                param_data.is_init = true;
+                param_data.data_type = Undefined;
                 param_data.offset = func_offset;
                 param_data.arity = 0; // neni fce
 
@@ -956,7 +981,7 @@ static void semantic_recurs(AstNode *node, symstack *stack, int *current_offset)
                 param->stack_offset = param_data.offset;
                 param->data_type = param_data.data_type;
             }
-            semantic_recurs((AstNode*)func->body, stack, &func_offset);
+            semantic_recurs((AstNode*)func->body, stack, &func_offset, func_data);
             stack_pop(stack);
             break;
         }
@@ -971,7 +996,7 @@ static void semantic_recurs(AstNode *node, symstack *stack, int *current_offset)
 
            stack_push(stack, "block");
            for(int i=0; i<block->statements->count; i++){
-                semantic_recurs(block->statements->items[i], stack, current_offset);
+                semantic_recurs(block->statements->items[i], stack, current_offset, current_func_data);
            }
            stack_pop(stack);
            break;
@@ -988,14 +1013,16 @@ static void semantic_recurs(AstNode *node, symstack *stack, int *current_offset)
             }
 
             if(current_offset == NULL){
-                *current_offset -= 8;
+                fprintf(stderr, "VAR declaretion found in global scope\n");
+                ifjexit(ERR_INTERNAL);
             }
+
+            *current_offset -= 8;
 
             symbol_data var_data;
             var_data.identifier = var_name;
             var_data.id_type = VARIABLE_ID;
             var_data.data_type = Null;
-            var_data.is_init = false;
             var_data.offset = *current_offset;
             var_data.arity = 0;
 
@@ -1010,20 +1037,305 @@ static void semantic_recurs(AstNode *node, symstack *stack, int *current_offset)
             char *var_name = var->token.lexeme;
 
             symbol_data *found;
-            if(!search_scopes(stack, var_name, &found)){
-                fprintf(stderr, "Line: %d, undefined var %s\n", var->base.line_number, var_name);
-                ifjexit(ERR_SEM_UNDEFINED);
+            if(search_scopes(stack, var_name, &found)){
+                
+                var->stack_offset = found->offset;
+                var->data_type = found->data_type;        
             }
-            if(found->id_type == FUNC_ID){
-                fprintf(stderr, "Cannot use function %s as variable\n", var_name);
-                ifjexit(ERR_SEM_OTHER);
+            else{
+                char getter_key[256];
+                int temp = snprintf(getter_key, 256, "%s@GET", var_name);
+                if(temp < 0 || temp >= 256){
+                    fprintf(stderr, "Identifier too long for parsing\n");
+                    ifjexit(ERR_SEM_OTHER);
+                }
+                if(search_scopes(stack, getter_key, &found)){
+                    if(found->id_type != FUNC_ID){
+                        fprintf(stderr, "%s not FUNC_ID and cant be getter\n", getter_key);
+                        ifjexit(ERR_INTERNAL);    
+                    }
+                    var->stack_offset = 0;
+                    var->data_type = found->data_type;
+                }
+                else{
+                    fprintf(stderr, "Line: %d, undefined var %s\n", var->base.line_number, var_name);
+                    ifjexit(ERR_SEM_UNDEFINED);
+                }
+            }
+            break;
+        }
+        case AST_STMT_ASSIGN:{
+            AstNodeAssignStmt *assign = (AstNodeAssignStmt *)node;
+            
+            semantic_recurs(assign->rvalue, stack, current_offset, current_func_data);//zavolat s pravym potomkem
+            symbol_data_type right_type = Undefined;
+            switch(assign->rvalue->type){
+                case AST_EXPR_LITERAL:
+                    right_type = ((AstNodeLiteral*)assign->rvalue)->data_type;
+                    break;
+                case AST_EXPR_VARIABLE:
+                    right_type = ((AstNodeVariable*)assign->rvalue)->data_type;
+                    break;
+                case AST_EXPR_BINARY:
+                    right_type = ((AstNodeBinaryExpr*)assign->rvalue)->data_type;
+                    break;
+                case AST_FUNC_CALL:
+                    right_type = ((AstNodeFuncCall*)assign->rvalue)->data_type;
+                    break;
+                default: 
+                    fprintf(stderr, "Internal Error: Invalid rvalue in assignment\n");
+                    ifjexit(ERR_INTERNAL);
+            }
+            
+            // analyza leveho potomka
+            AstNodeVariable *left = assign->lvalue;
+            char *left_name = left->token.lexeme;
+            symbol_data *found;
+
+            if(search_scopes(stack, left_name, &found)){
+                if(found->id_type != VARIABLE_ID){
+                    fprintf(stderr, "%s can't be non var\n", left_name);
+                    ifjexit(ERR_SEM_OTHER);
+                }
+
+                left->stack_offset = found->offset;
+                left->data_type = right_type;
+                found->data_type = right_type;
+            }
+            // setter
+            else{
+                char setter_key[256];
+                int temp = snprintf(setter_key, 256, "%s@SET", left_name);
+                if(temp < 0 || temp >= 256){
+                    fprintf(stderr, "Identifier too long for parsing\n");
+                    ifjexit(ERR_SEM_OTHER);
+                }
+                if(search_scopes(stack, setter_key, &found)){
+                    if(found->id_type != FUNC_ID){
+                        fprintf(stderr, "%s not FUNC_ID and cant be setter\n", setter_key);
+                        ifjexit(ERR_INTERNAL);    
+                    }
+                    left->stack_offset = 0;
+                    left->data_type = Undefined; // pro setter je to jedno
+                }
+                else{
+                    fprintf(stderr, "Line %d, Cannot assign to undefined var or setter %s\n", left->base.line_number, left_name);
+                    ifjexit(ERR_SEM_UNDEFINED);
+                }
+            }
+            break;
+        }
+        case AST_STMT_IF:{
+            AstNodeIfStmt *if_stmt = (AstNodeIfStmt *)node;
+            semantic_recurs(if_stmt->condition, stack, current_offset, current_func_data);
+            semantic_recurs((AstNode*)if_stmt->then_block, stack, current_offset, current_func_data);
+            semantic_recurs((AstNode*)if_stmt->else_block, stack, current_offset, current_func_data);
+            break;
+        }
+        case AST_STMT_WHILE:{
+            AstNodeWhileStmt *while_stmt = (AstNodeWhileStmt *)node;
+            semantic_recurs(while_stmt->condition, stack, current_offset, current_func_data);
+            semantic_recurs((AstNode*)while_stmt->body_block, stack, current_offset, current_func_data);
+            break;
+        }
+        case AST_STMT_RETURN:{
+            AstNodeReturnStmt *ret = (AstNodeReturnStmt *)node;
+            symbol_data_type return_type = Null;
+            if(current_func_data == NULL){
+                fprintf(stderr, "Line %d: 'return' statement found outside of a function.\n", ret->base.line_number);
+                ifjexit(ERR_SYN); // syntakticka chyba, takze nemela by nastat
+            }
+            if(ret->expr){
+                semantic_recurs(ret->expr, stack, current_offset, current_func_data);
+                return_type = (get_type(ret->expr));
+            }
+            if(current_func_data->data_type == Null){
+                current_func_data->data_type = return_type;
+            }
+            else if(current_func_data->data_type != return_type && return_type != Undefined &&
+                    current_func_data->data_type != Undefined){
+                current_func_data->data_type = Undefined; // vraci odlisny typ, tak se nastavi na undefined a pri behu se na to podiva
+            }
+            
+            break;
+        }
+        case AST_EXPR_BINARY:{
+            AstNodeBinaryExpr *binary_expr = (AstNodeBinaryExpr *)node;
+            semantic_recurs(binary_expr->left, stack, current_offset, current_func_data);
+            semantic_recurs(binary_expr->right, stack, current_offset, current_func_data);
+            
+            symbol_data_type left_type = get_type(binary_expr->left);
+            symbol_data_type right_type = get_type(binary_expr->right);
+            
+            // musi se urcit za behu
+            if(left_type == Undefined || right_type == Undefined){
+                binary_expr->data_type = Undefined;
+                break;
             }
 
-            var->stack_offset = found->offset;
-            var->data_type = found->data_type;
+            if(binary_expr->op != EQUAL && binary_expr->op != NOT_EQUAL){
+                if(left_type == Null || right_type == Null){
+                    fprintf(stderr, "Line %d: Type Error: Cannot use 'null' in this operation.\n", binary_expr->base.line_number);
+                    ifjexit(ERR_SEM_INCOMP);
+                }
+            }
+            switch(binary_expr->op){
+                case PLUS:
+                    if(left_type == Num && right_type == Num){
+                        binary_expr->data_type = Num;
+                    }
+                    else if(left_type == String && right_type == String){
+                        binary_expr->data_type = String;
+                    }
+                    else{
+                        fprintf(stderr, "Line %d, Operands for addition must be both Num or both String\n", binary_expr->base.line_number);
+                        ifjexit(ERR_SEM_INCOMP);
+                    }
+                    break;
+                case MINUS:
+                case DIVIDE:
+                    if(left_type == Num && right_type == Num){
+                        binary_expr->data_type = Num;
+                    }
+                    else{
+                        fprintf(stderr, "Line %d, Operands for subtraction or division must be both Num\n", binary_expr->base.line_number);
+                        ifjexit(ERR_SEM_INCOMP);
+                    }
+                    break;
+                case TIMES:
+                    if(left_type == Num && right_type == Num){
+                        binary_expr->data_type = Num;
+                    }
+                    else if(left_type == String && right_type == Num){
+                        binary_expr->data_type = String;
+                    }
+                    else{
+                        fprintf(stderr, "Line %d, Operands for multipication must be both Num or String * Num\n", binary_expr->base.line_number);
+                        ifjexit(ERR_SEM_INCOMP);
+                    }
+                    break;
+                case LESSER:
+                case GREATER:
+                case LESSER_EQUAL:
+                case GREATER_EQUAL:
+                    if(left_type == Num && right_type == Num){
+                        binary_expr->data_type = Num;
+                    }
+                    else{
+                       fprintf(stderr, "Line %d: Operands for comparison need to be both Num\n", binary_expr->base.line_number); 
+                        ifjexit(ERR_SEM_INCOMP);
+                    }
+                    break;
+                case EQUAL:
+                case NOT_EQUAL:
+                    binary_expr->data_type = Num;
+                    break;
+                case KEYWORD_is:
+                    binary_expr->data_type = Num;
+                    break;
+                default://asi nenastane
+                    binary_expr->data_type = Undefined;
+                    break;
+            }
+
+            break;
+        }
+        case AST_FUNC_CALL:{
+            AstNodeFuncCall *func = (AstNodeFuncCall *)node;
+
+            for(int i=0; i<func->args->count; i++){
+                semantic_recurs(func->args->items[i], stack, current_offset, current_func_data);
+            }
+            
+            int arity = func->args->count;
+            char *func_name = func->func_id.lexeme;
+            symbol_data *found;
+
+            // uzivatelska nebo vestavena
+            switch(func->func_id.type){
+                case IDENTIFIER_GLOBAL:
+                case IDENTIFIER_LOCAL:{
+                    char key[256];
+                    int temp = snprintf(key, 256, "%s@%d", func_name, arity);
+                    if(temp < 0 || temp >= 256){
+                        fprintf(stderr, "%s identifier too long to parse\n", func_name);
+                        ifjexit(ERR_SEM_OTHER);
+                    }
+                    if(!search_scopes(stack, key, &found)){
+                        fprintf(stderr, "Line %d, %s func call with wrong arity\n", func->base.line_number, func_name);
+                        ifjexit(ERR_SEM_PARAM); // tady potenc ta chyba mozna muze nastat kvuli jinymu duvodu nez arita, takze potenc todo
+                    }
+                    func->data_type = found->data_type;
+                    break;
+                }
+                case IFJ_READ_NUM:
+                    if(arity != 0) ifjexit(ERR_SEM_PARAM);
+                    func->data_type = Num; // Null
+                    break;
+                case IFJ_READ_STR:
+                    if(arity != 0) ifjexit(ERR_SEM_PARAM);
+                    func->data_type = String; // Null
+                    break;
+                case IFJ_WRITE:
+                    if(arity != 1) ifjexit(ERR_SEM_PARAM);
+                    func->data_type = Null;
+                    break;
+                case IFJ_FLOOR:
+                    if(arity != 1) ifjexit(ERR_SEM_PARAM);
+                    func->data_type = Num;
+                    break;
+                case IFJ_STR:
+                    if(arity != 1) ifjexit(ERR_SEM_PARAM);
+                    func->data_type = String;
+                    break;
+                case IFJ_LENGTH:
+                    if(arity != 1) ifjexit(ERR_SEM_PARAM);
+                    func->data_type = Num;
+                    break;
+                case IFJ_CHR:
+                    if(arity != 1) ifjexit(ERR_SEM_PARAM);
+                    func->data_type = String;
+                    break;
+                case IFJ_STRCMP:
+                    if(arity != 2) ifjexit(ERR_SEM_PARAM);
+                    func->data_type = Num;
+                    break;
+                case IFJ_ORD:
+                    if(arity != 2) ifjexit(ERR_SEM_PARAM);
+                    func->data_type = Num;
+                    break;
+                case IFJ_SUBSTRING:
+                    if(arity != 3) ifjexit(ERR_SEM_PARAM);
+                    func->data_type = String; // muze Null
+                    break;
+                default:
+                    fprintf(stderr, "Invalid token sem parsing in AST_FUNC_CALL\n");
+                    ifjexit(ERR_INTERNAL);
+            }
+            break;
+        }
+        case AST_EXPR_LITERAL:{
+            AstNodeLiteral *literal = (AstNodeLiteral *)node;
+
+            switch(literal->token.type){
+                case INT:
+                case FLOAT:
+                    literal->data_type = Num;
+                    break;
+                case STRING:
+                    literal->data_type = String;
+                    break;
+                case KEYWORD_null:
+                    literal->data_type = Null;
+                    break;
+                default:
+                    literal->data_type = Undefined;
+                    break;
+            }
+            break;
         }
         default:
-            break;
-            // todo: uvidime co zbyde
+            fprintf(stderr, "Unhandled ast node in semantic analysis\n");
+            ifjexit(ERR_INTERNAL);//jestli nastane toto tak je to moje chyba oops 
     }
 }

@@ -58,6 +58,7 @@ AstNode *create_literal(Token token)
 {
     AstNodeLiteral *node = (AstNodeLiteral *)ast_node_alloc(AST_EXPR_LITERAL, sizeof(AstNodeLiteral));
     node->token = token; // Kopíruje strukturu, vč. lexeme (pokud byl alokován)
+    node->data_type = Undefined;
     return (AstNode *)node;
 }
 
@@ -78,6 +79,7 @@ AstNode *create_binary_expr(TokenType op, AstNode *left, AstNode *right, int lin
     node->op = op;
     node->left = left;
     node->right = right;
+    node->data_type = Undefined;
     return (AstNode *)node;
 }
 
@@ -86,6 +88,7 @@ AstNode *create_func_call(Token func_id, AstNodeList *args)
     AstNodeFuncCall *node = (AstNodeFuncCall *)ast_node_alloc(AST_FUNC_CALL, sizeof(AstNodeFuncCall));
     node->func_id = func_id;
     node->args = args;
+    node->data_type = Undefined;
     return (AstNode *)node;
 }
 

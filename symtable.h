@@ -25,7 +25,6 @@ typedef struct{
     char *identifier;
     int arity;
     int offset; // pro lokalni promenne
-    bool is_init;
 } symbol_data;
 
 

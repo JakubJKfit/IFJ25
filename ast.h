@@ -57,6 +57,7 @@ typedef struct
 {
     AstNode base;
     Token token; // Uložíme si celý token s hodnotou (INT, FLOAT, STRING, null)
+    symbol_data_type data_type; // pro semantiku
 } AstNodeLiteral;
 
 typedef struct
@@ -74,6 +75,7 @@ typedef struct
     TokenType op; // Např. PLUS, LESSER, KEYWORD_is
     struct AstNode *left;
     struct AstNode *right;
+    symbol_data_type data_type; // semantika
 } AstNodeBinaryExpr;
 
 typedef struct
@@ -81,6 +83,7 @@ typedef struct
     AstNode base;
     Token func_id;     // IDENTIFIER nebo IFJ_WRITE, atd.
     AstNodeList *args; // Seznam argumentů (výrazů)
+    symbol_data_type data_type;
 } AstNodeFuncCall;
 
 // --- Uzly příkazů (Statements) ---
