@@ -1,11 +1,12 @@
 // main.c
 #include <stdio.h>
-#include <string.h>     // <--- PŘIDEJ TENTO INCLUDE
+#include <string.h>     
 #include "parser.h"
 #include "ast.h"
-#include "ast_printer.h" // <--- PŘIDEJ TENTO INCLUDE
+#include "ast_printer.h" 
+#include "codegen.h"
 
-int main(int argc, char *argv[]) // <--- UPRAV SIGNATURU FUNKCE
+int main(int argc, char *argv[]) 
 {
     // Zjistíme, jestli chceme tisknout AST
     int dump_ast = 0;
@@ -27,7 +28,8 @@ int main(int argc, char *argv[]) // <--- UPRAV SIGNATURU FUNKCE
         {
             // Jinak vypíšeme jen tichý úspěch (pro test.py)
             // Můžeš smazat i ten printf, aby byl program úplně tichý
-            printf("Parsing successful. AST root created.\n");
+            generate_code(ast_root);
+            
         }
 
         free_ast_node(ast_root);
