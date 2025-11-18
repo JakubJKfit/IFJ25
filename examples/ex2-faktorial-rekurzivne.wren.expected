@@ -1,0 +1,116 @@
+--- Začátek AST ---
+[Program]
+  [Functions] (count: 2)
+    [FuncDef] (main)
+      [Params] (count: 0)
+      [Block] (count: 4)
+        [FuncCall]
+          [Args] (count: 1)
+            [Literal] (Zadejte cislo pro vypocet faktorialu: )
+        [VarDecl] (inp)
+        [AssignStmt]
+          [Variable] (inp)
+          [FuncCall]
+            [Args] (count: 0)
+        [IfStmt]
+          (Condition)
+            [BinaryExpr: NOT_EQUAL]
+              [Variable] (inp)
+              [Literal]
+          (Then)
+            [Block] (count: 1)
+              [IfStmt]
+                (Condition)
+                  [BinaryExpr: LESSER]
+                    [Variable] (inp)
+                    [Literal] (0)
+                (Then)
+                  [Block] (count: 1)
+                    [FuncCall]
+                      [Args] (count: 1)
+                        [Literal] (Faktorial nelze spocitat!
+)
+                (Else)
+                  [Block] (count: 3)
+                    [VarDecl] (inpFloored)
+                    [AssignStmt]
+                      [Variable] (inpFloored)
+                      [FuncCall]
+                        [Args] (count: 1)
+                          [Variable] (inp)
+                    [IfStmt]
+                      (Condition)
+                        [BinaryExpr: EQUAL]
+                          [Variable] (inp)
+                          [Variable] (inpFloored)
+                      (Then)
+                        [Block] (count: 6)
+                          [VarDecl] (vysl)
+                          [AssignStmt]
+                            [Variable] (vysl)
+                            [FuncCall] (factorial)
+                              [Args] (count: 1)
+                                [Variable] (inp)
+                          [AssignStmt]
+                            [Variable] (vysl)
+                            [FuncCall]
+                              [Args] (count: 1)
+                                [Variable] (vysl)
+                          [FuncCall]
+                            [Args] (count: 1)
+                              [Literal] (Vysledek: )
+                          [FuncCall]
+                            [Args] (count: 1)
+                              [Variable] (vysl)
+                          [FuncCall]
+                            [Args] (count: 1)
+                              [Literal] (
+)
+                      (Else)
+                        [Block] (count: 1)
+                          [FuncCall]
+                            [Args] (count: 1)
+                              [Literal] (Cislo neni cele!
+)
+          (Else)
+            [Block] (count: 1)
+              [FuncCall]
+                [Args] (count: 1)
+                  [Literal] (Chyba pri nacitani celeho cisla!
+)
+    [FuncDef] (factorial)
+      [Params] (count: 1)
+        [Variable] (n)
+      [Block] (count: 3)
+        [VarDecl] (result)
+        [IfStmt]
+          (Condition)
+            [BinaryExpr: LESSER]
+              [Variable] (n)
+              [Literal] (2)
+          (Then)
+            [Block] (count: 1)
+              [AssignStmt]
+                [Variable] (result)
+                [Literal] (1)
+          (Else)
+            [Block] (count: 4)
+              [VarDecl] (decremented_n)
+              [AssignStmt]
+                [Variable] (decremented_n)
+                [BinaryExpr: MINUS]
+                  [Variable] (n)
+                  [Literal] (1)
+              [AssignStmt]
+                [Variable] (result)
+                [FuncCall] (factorial)
+                  [Args] (count: 1)
+                    [Variable] (decremented_n)
+              [AssignStmt]
+                [Variable] (result)
+                [BinaryExpr: TIMES]
+                  [Variable] (n)
+                  [Variable] (result)
+        [ReturnStmt]
+          [Variable] (result)
+--- Konec AST ---

@@ -1,1 +1,65 @@
+# --- Build artefakty (C/Make) ---
+ifj
+compiler
+*.o
+*.a
+*.so
+*.dylib
+*.dll
+*.exe
+*.out
+*.d          # GCC/Clang dependency files
+
+# --- Debug / logy / core dumps ---
+trace.txt
+*.log
+core
+core.*
+vgcore.*
+*.gcda
+*.gcno
+*.gcov
+
+# --- Složky pro build ---
+/build/
+/bin/
+/obj/
+/dist/
+
+# --- Editor/OS dočasné soubory ---
 .vscode/
+.idea/
+*.swp
+*~
+*.tmp
+.DS_Store
+Thumbs.db
+tags
+TAGS
+
+# --- Python cache (pro test.py) ---
+__pycache__/
+*.py[cod]
+.venv/
+.env/
+output.ifjcode
+.gitignore
+IFJcode25_examples/example_push_pops.ifjcode
+.gitignore
+IFJcode25_examples/example_recursive_fibonacci.ifjcode
+IFJcode25_examples/example_return.ifjcode
+IFJcode25_examples/example_demo.ifjcode
+IFJcode25_examples/example_type.ifjcode
+IFJcode25_examples/example_while.ifjcode
+IFJcode25_examples/README
+IFJcode25_examples.zip:Zone.Identifier
+ic25int-linux-x86_64:Zone.Identifier
+ic25int-linux-x86_64
+AST.txt
+output2.txt
+.gitignore
+test2.txt
+test.txt
+examples/ok-builtins-and-spaces.wren
+
+is_it_ok.sh

@@ -1,0 +1,101 @@
+--- Začátek AST ---
+[Program]
+  [Functions] (count: 1)
+    [FuncDef] (main)
+      [Params] (count: 0)
+      [Block] (count: 15)
+        [VarDecl] (str1)
+        [AssignStmt]
+          [Variable] (str1)
+          [Literal] (Toto je text v programu jazyka IFJ25)
+        [VarDecl] (str2)
+        [AssignStmt]
+          [Variable] (str2)
+          [Literal] (, ktery jeste trochu obohatime)
+        [AssignStmt]
+          [Variable] (str2)
+          [BinaryExpr: PLUS]
+            [Variable] (str1)
+            [BinaryExpr: TIMES]
+              [Variable] (str2)
+              [Literal] (3)
+        [FuncCall]
+          [Args] (count: 1)
+            [Variable] (str1)
+        [FuncCall]
+          [Args] (count: 1)
+            [Literal] (
+)
+        [FuncCall]
+          [Args] (count: 1)
+            [Variable] (str2)
+        [FuncCall]
+          [Args] (count: 1)
+            [Literal] (
+)
+        [FuncCall]
+          [Args] (count: 1)
+            [Literal] (Zadejte serazenou posloupnost malych pismen a-h:
+)
+        [VarDecl] (input)
+        [AssignStmt]
+          [Variable] (input)
+          [FuncCall]
+            [Args] (count: 0)
+        [VarDecl] (all)
+        [AssignStmt]
+          [Variable] (all)
+          [Literal] ()
+        [WhileStmt]
+          (Condition)
+            [BinaryExpr: NOT_EQUAL]
+              [Variable] (input)
+              [Literal]
+          (Body)
+            [Block] (count: 3)
+              [VarDecl] (strcmpResult)
+              [AssignStmt]
+                [Variable] (strcmpResult)
+                [FuncCall]
+                  [Args] (count: 2)
+                    [Variable] (input)
+                    [Literal] (abcdefgh)
+              [IfStmt]
+                (Condition)
+                  [BinaryExpr: EQUAL]
+                    [Variable] (strcmpResult)
+                    [Literal] (0)
+                (Then)
+                  [Block] (count: 4)
+                    [FuncCall]
+                      [Args] (count: 1)
+                        [Literal] (Spravne zadano! Predchozi pokusy:
+)
+                    [AssignStmt]
+                      [Variable] (all)
+                      [BinaryExpr: PLUS]
+                        [Variable] (all)
+                        [Literal] (
+)
+                    [FuncCall]
+                      [Args] (count: 1)
+                        [Variable] (all)
+                    [AssignStmt]
+                      [Variable] (input)
+                      [Literal]
+                (Else)
+                  [Block] (count: 3)
+                    [FuncCall]
+                      [Args] (count: 1)
+                        [Literal] (Spatne zadana posloupnost, zkuste znovu:
+)
+                    [AssignStmt]
+                      [Variable] (all)
+                      [BinaryExpr: PLUS]
+                        [Variable] (all)
+                        [Variable] (input)
+                    [AssignStmt]
+                      [Variable] (input)
+                      [FuncCall]
+                        [Args] (count: 0)
+--- Konec AST ---

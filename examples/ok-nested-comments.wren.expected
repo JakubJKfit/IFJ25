@@ -1,0 +1,10 @@
+--- Začátek AST ---
+[Program]
+  [Functions] (count: 1)
+    [FuncDef] (main)
+      [Params] (count: 0)
+      [Block] (count: 1)
+        [FuncCall]
+          [Args] (count: 1)
+            [Literal] (ok)
+--- Konec AST ---
