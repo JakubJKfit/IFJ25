@@ -5,15 +5,24 @@
 #include "ast.h"
 #include "ast_printer.h" 
 #include "codegen.h"
+#include "codegenhelp.h"
 
 int main(int argc, char *argv[]) 
 {
     // Zjistíme, jestli chceme tisknout AST
     int dump_ast = 0;
+    
     if (argc == 2 && strcmp(argv[1], "--dump-ast") == 0)
     {
         dump_ast = 1;
     }
+
+    int help_ast = 0;
+    if (argc == 2 && strcmp(argv[1], "--help-ast") == 0)
+    {
+        help_ast = 1;
+    }
+
 
     AstNode *ast_root = ifj_parse_program();
 
@@ -23,6 +32,12 @@ int main(int argc, char *argv[])
         {
             // Pokud je přepínač aktivní, vytiskneme AST
             ast_print_program(ast_root);
+        }
+        else if (help_ast)
+        {
+            // Pokud je přepínač aktivní, vytiskneme pomocnou informaci o AST
+            generate_help(ast_root);
+            
         }
         else
         {

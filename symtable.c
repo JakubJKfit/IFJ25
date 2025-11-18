@@ -13,6 +13,8 @@ static int maximum(int a, int b){
 static void load_data(symbol_data *target, symbol_data *source){
     target->id_type = source->id_type;
     target->data_type = source->data_type;
+    target->offset = source->offset;
+    target->arity = source->arity;
     
     if(target->identifier != NULL) free(target->identifier);
     target->identifier = malloc(strlen(source->identifier) + 1);

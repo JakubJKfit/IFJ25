@@ -56,3 +56,9 @@ IFJcode25_examples.zip:Zone.Identifier
 ic25int-linux-x86_64:Zone.Identifier
 ic25int-linux-x86_64
 AST.txt
+output2.txt
+.gitignore
+test2.txt
+test.txt
+examples/ok-builtins-and-spaces.wren
+
