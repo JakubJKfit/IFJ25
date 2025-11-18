@@ -85,13 +85,15 @@ static void semantic_recurs(AstNode *node, symstack *stack, int *current_offset,
 
 // === Utilitní funkce ===========================================
 
-
 // prochazeni symtable pro kazdy scope
-bool search_scopes(symstack *stack, char *identifier, symbol_data **found){
-    
+bool search_scopes(symstack *stack, char *identifier, symbol_data **found)
+{
+
     stack_node *current_symtable = stack->top;
-    while(current_symtable != NULL){
-        if(search_symbol(current_symtable->symtable, identifier, found)){
+    while (current_symtable != NULL)
+    {
+        if (search_symbol(current_symtable->symtable, identifier, found))
+        {
             return true;
         }
         current_symtable = current_symtable->next;
@@ -102,20 +104,23 @@ bool search_scopes(symstack *stack, char *identifier, symbol_data **found){
 }
 
 // ziskani datoveho typu literalu
-symbol_data_type get_type(AstNode *node){
-    if(!node) return Undefined;
+symbol_data_type get_type(AstNode *node)
+{
+    if (!node)
+        return Undefined;
 
-    switch(node->type){
-        case AST_EXPR_LITERAL:
-            return ((AstNodeLiteral *)node)->data_type;
-        case AST_EXPR_VARIABLE:
-            return ((AstNodeVariable *)node)->data_type;
-        case AST_EXPR_BINARY:
-            return ((AstNodeBinaryExpr *)node)->data_type;
-        case AST_FUNC_CALL:
-            return ((AstNodeFuncCall *)node)->data_type;
-        default:
-            return Undefined;
+    switch (node->type)
+    {
+    case AST_EXPR_LITERAL:
+        return ((AstNodeLiteral *)node)->data_type;
+    case AST_EXPR_VARIABLE:
+        return ((AstNodeVariable *)node)->data_type;
+    case AST_EXPR_BINARY:
+        return ((AstNodeBinaryExpr *)node)->data_type;
+    case AST_FUNC_CALL:
+        return ((AstNodeFuncCall *)node)->data_type;
+    default:
+        return Undefined;
     }
 }
 
@@ -251,13 +256,15 @@ static bool parse_prolog(void)
 {
     skip_eol_star();
 
-    if (ifj_cur.type != KEYWORD_import){
+    if (ifj_cur.type != KEYWORD_import)
+    {
         fprintf(stderr, "missing prolog 'import'");
         ifjexit(ERR_SYN);
     }
     next();
 
-    if (ifj_cur.type != STRING || !ifj_cur.lexeme || strcmp(ifj_cur.lexeme, "ifj25") != 0){
+    if (ifj_cur.type != STRING || !ifj_cur.lexeme || strcmp(ifj_cur.lexeme, "ifj25") != 0)
+    {
         fprintf(stderr, "expected string literal \"ifj25\" after import");
         ifjexit(ERR_SYN);
     }
@@ -361,10 +368,16 @@ static AstNode *parse_funcdef(void)
         AstNodeList *params = create_list();
         int arity = 0;
 
+        // ⬇️ povol '\n' hned za '('
+        skip_eol_star();
+
         if (ifj_cur.type != R_ROUND)
         {
             do
             {
+                // povol '\n' mezi parametry / za čárkou
+                skip_eol_star();
+
                 if (ifj_cur.type != IDENTIFIER_LOCAL)
                 {
                     free_ast_node((AstNode *)params);
@@ -372,10 +385,16 @@ static AstNode *parse_funcdef(void)
                     fprintf(stderr, "expected parameter name");
                     ifjexit(ERR_SYN);
                 }
+
                 add_to_list(params, create_variable(ifj_cur));
                 ifj_cur.lexeme = NULL;
                 arity++;
+
                 next();
+
+                // případný newline před čárkou nebo ')'
+                skip_eol_star();
+
             } while (accept(COMMA));
 
             expect(R_ROUND, ")");
@@ -384,7 +403,6 @@ static AstNode *parse_funcdef(void)
         {
             next(); // sežer ')'
         }
-
 
         AstNodeBlock *body = parse_block();
         if (!body)
@@ -869,10 +887,11 @@ static AstNodeList *parse_call_args_terms(void)
 
 // semanticka analyza
 
+static void semantic_firstpass(AstNode *node, symstack *stack)
+{
 
-static void semantic_firstpass(AstNode *node, symstack *stack){
-
-    if(node->type != AST_PROGRAM) return;
+    if (node->type != AST_PROGRAM)
+        return;
 
     AstNodeProgram *program = (AstNodeProgram *)node;
     AstNodeList *funcs = program->functions;
@@ -881,549 +900,642 @@ static void semantic_firstpass(AstNode *node, symstack *stack){
     char identif_buffer[256];
     symbol_data func_data;
 
-    for(int i = 0; i < funcs->count; i++){
+    for (int i = 0; i < funcs->count; i++)
+    {
         AstNodeFuncDef *func = (AstNodeFuncDef *)funcs->items[i];
 
         char *func_name = func->func_id.lexeme;
         int arity = func->params->count;
 
         int temp = 0;
-        switch(func->kind){
-            case FUNC_IS_FUNC:
-                temp = snprintf(identif_buffer, 256, "%s@%d", func_name, arity);
-                break;
-            case FUNC_IS_GETTER:
-                temp = snprintf(identif_buffer, 256, "%s@GET", func_name);
-                break;
-            case FUNC_IS_SETTER:
-                temp = snprintf(identif_buffer, 256, "%s@SET", func_name);
-                break;
-            default:
-                fprintf(stderr, "Unknown function kind\n");
-                ifjexit(ERR_INTERNAL);
+        switch (func->kind)
+        {
+        case FUNC_IS_FUNC:
+            temp = snprintf(identif_buffer, 256, "%s@%d", func_name, arity);
+            break;
+        case FUNC_IS_GETTER:
+            temp = snprintf(identif_buffer, 256, "%s@GET", func_name);
+            break;
+        case FUNC_IS_SETTER:
+            temp = snprintf(identif_buffer, 256, "%s@SET", func_name);
+            break;
+        default:
+            fprintf(stderr, "Unknown function kind\n");
+            ifjexit(ERR_INTERNAL);
         }
-        if(temp < 0 || temp >= 256){
+        if (temp < 0 || temp >= 256)
+        {
             fprintf(stderr, "Line %d, %s function identifier too long for parsing\n", func->base.line_number, func_name);
             ifjexit(ERR_SEM_OTHER);
         }
-        
+
         symbol_data *found;
-        if(search_symbol(*global_table, identif_buffer, &found)){
-            //semanticka chyba redefinice funkce
+        if (search_symbol(*global_table, identif_buffer, &found))
+        {
+            // semanticka chyba redefinice funkce
             fprintf(stderr, "Line: %d, redefinition of function %s\n", func->base.line_number, func_name);
             ifjexit(ERR_SEM_REDEFINED);
         }
 
         func_data.identifier = identif_buffer;
         func_data.id_type = FUNC_ID;
-        func_data.data_type = Undefined; //return type
+        func_data.data_type = Undefined; // return type
         func_data.arity = arity;
         func_data.offset = 0;
 
         insert_symbol(global_table, &func_data);
     }
-}   
+}
 
+static void semantic_recurs(AstNode *node, symstack *stack, int *current_offset, symbol_data *current_func_data)
+{
+    if (!node)
+        return;
 
-static void semantic_recurs(AstNode *node, symstack *stack, int *current_offset, symbol_data *current_func_data){
-    if(!node) return;
+    switch (node->type)
+    {
+    case AST_PROGRAM:
+    {
+        AstNodeProgram *program = (AstNodeProgram *)node;
+        for (int i = 0; i < program->functions->count; i++)
+        {
+            semantic_recurs(program->functions->items[i], stack, NULL, NULL);
+        }
+        break;
+    }
+    case AST_FUNC_DEF:
+    {
+        AstNodeFuncDef *func = (AstNodeFuncDef *)node;
 
-    switch(node->type){
-        case AST_PROGRAM:{
-            AstNodeProgram *program = (AstNodeProgram *)node;
-            for(int i = 0; i < program->functions->count; i++){
-                semantic_recurs(program->functions->items[i], stack, NULL, NULL);
-            }
+        int func_offset = 0;
+        char func_key[256];
+        int arity = func->params->count;
+        switch (func->kind)
+        {
+        case FUNC_IS_FUNC:
+            snprintf(func_key, 256, "%s@%d", func->func_id.lexeme, arity);
             break;
-        }
-        case AST_FUNC_DEF:{
-            AstNodeFuncDef *func = (AstNodeFuncDef *)node;
-
-            int func_offset = 0;
-            char func_key[256];
-            int arity = func->params->count;
-            switch(func->kind){
-                case FUNC_IS_FUNC:   snprintf(func_key, 256, "%s@%d", func->func_id.lexeme, arity); break;
-                case FUNC_IS_GETTER: snprintf(func_key, 256, "%s@GET", func->func_id.lexeme); break;
-                case FUNC_IS_SETTER: snprintf(func_key, 256, "%s@SET", func->func_id.lexeme); break;
-            }//todo: potenc velikost check
-            symbol_data *func_data;
-            if(!search_scopes(stack, func_key, &func_data)){
-                fprintf(stderr, "Function %s not found in secondpass\n", func_key);
-                ifjexit(ERR_INTERNAL);
-            }
-            func_data->data_type = Null;
-            stack_push(stack, func->func_id.lexeme); // func scope
-            tree_node **param_table = stack_top(stack);
-
-            for(int i=0; i<func->params->count; i++){
-                AstNodeVariable *param = (AstNodeVariable *)func->params->items[i];
-                char *param_name = param->token.lexeme;
-
-                symbol_data *found;
-                if(search_symbol(*param_table, param_name, &found)){
-                    fprintf(stderr, "Line: %d, duplicate parameter %s in function definition\n", param->base.line_number, param_name);
-                    ifjexit(ERR_SEM_REDEFINED);
-                }
-
-                func_offset -= 8; //byte pro pram
-
-                symbol_data param_data;
-                param_data.identifier = param_name;
-                param_data.id_type = VARIABLE_ID;
-                param_data.data_type = Undefined;
-                param_data.offset = func_offset;
-                param_data.arity = 0; // neni fce
-
-                insert_symbol(param_table, &param_data);
-
-                // AST anotace
-                param->stack_offset = param_data.offset;
-                param->data_type = param_data.data_type;
-            }
-            semantic_recurs((AstNode*)func->body, stack, &func_offset, func_data);
-            stack_pop(stack);
+        case FUNC_IS_GETTER:
+            snprintf(func_key, 256, "%s@GET", func->func_id.lexeme);
             break;
+        case FUNC_IS_SETTER:
+            snprintf(func_key, 256, "%s@SET", func->func_id.lexeme);
+            break;
+        } // todo: potenc velikost check
+        symbol_data *func_data;
+        if (!search_scopes(stack, func_key, &func_data))
+        {
+            fprintf(stderr, "Function %s not found in secondpass\n", func_key);
+            ifjexit(ERR_INTERNAL);
         }
-        case AST_STMT_BLOCK:{
-           AstNodeBlock *block = (AstNodeBlock *)node;
-           
-           // nemelo by nastat, block ma automaticky offset
-           if(current_offset == NULL){
-                fprintf(stderr, "Block in global scope\n");
-                ifjexit(ERR_INTERNAL);
-           }
+        func_data->data_type = Null;
+        stack_push(stack, func->func_id.lexeme); // func scope
+        tree_node **param_table = stack_top(stack);
 
-           stack_push(stack, "block");
-           for(int i=0; i<block->statements->count; i++){
-                semantic_recurs(block->statements->items[i], stack, current_offset, current_func_data);
-           }
-           stack_pop(stack);
-           break;
-        }
-        case AST_STMT_VAR_DECL:{
-            AstNodeVarDecl *decl = (AstNodeVarDecl *)node;
-            char *var_name = decl->var_id.lexeme;
+        for (int i = 0; i < func->params->count; i++)
+        {
+            AstNodeVariable *param = (AstNodeVariable *)func->params->items[i];
+            char *param_name = param->token.lexeme;
 
-            tree_node **current_table = stack_top(stack);
             symbol_data *found;
-            if(search_symbol(*current_table, var_name, &found)){
-                fprintf(stderr, "Line> %d, redefinition of variable %s\n", decl->base.line_number, var_name);
+            if (search_symbol(*param_table, param_name, &found))
+            {
+                fprintf(stderr, "Line: %d, duplicate parameter %s in function definition\n", param->base.line_number, param_name);
                 ifjexit(ERR_SEM_REDEFINED);
             }
 
-            if(current_offset == NULL){
-                fprintf(stderr, "VAR declaretion found in global scope\n");
-                ifjexit(ERR_INTERNAL);
-            }
+            func_offset -= 8; // byte pro pram
 
-            *current_offset -= 8;
+            symbol_data param_data;
+            param_data.identifier = param_name;
+            param_data.id_type = VARIABLE_ID;
+            param_data.data_type = Undefined;
+            param_data.offset = func_offset;
+            param_data.arity = 0; // neni fce
 
-            symbol_data var_data;
-            var_data.identifier = var_name;
-            var_data.id_type = VARIABLE_ID;
-            var_data.data_type = Null;
-            var_data.offset = *current_offset;
-            var_data.arity = 0;
+            insert_symbol(param_table, &param_data);
 
-            insert_symbol(current_table, &var_data);
-            decl->stack_offset = var_data.offset;
-            decl->data_type = var_data.data_type;
+            // AST anotace
+            param->stack_offset = param_data.offset;
+            param->data_type = param_data.data_type;
+        }
+        semantic_recurs((AstNode *)func->body, stack, &func_offset, func_data);
+        stack_pop(stack);
+        break;
+    }
+    case AST_STMT_BLOCK:
+    {
+        AstNodeBlock *block = (AstNodeBlock *)node;
 
+        // nemelo by nastat, block ma automaticky offset
+        if (current_offset == NULL)
+        {
+            fprintf(stderr, "Block in global scope\n");
+            ifjexit(ERR_INTERNAL);
+        }
+
+        stack_push(stack, "block");
+        for (int i = 0; i < block->statements->count; i++)
+        {
+            semantic_recurs(block->statements->items[i], stack, current_offset, current_func_data);
+        }
+        stack_pop(stack);
+        break;
+    }
+    case AST_STMT_VAR_DECL:
+    {
+        AstNodeVarDecl *decl = (AstNodeVarDecl *)node;
+        char *var_name = decl->var_id.lexeme;
+
+        tree_node **current_table = stack_top(stack);
+        symbol_data *found;
+        if (search_symbol(*current_table, var_name, &found))
+        {
+            fprintf(stderr, "Line> %d, redefinition of variable %s\n", decl->base.line_number, var_name);
+            ifjexit(ERR_SEM_REDEFINED);
+        }
+
+        if (current_offset == NULL)
+        {
+            fprintf(stderr, "VAR declaretion found in global scope\n");
+            ifjexit(ERR_INTERNAL);
+        }
+
+        *current_offset -= 8;
+
+        symbol_data var_data;
+        var_data.identifier = var_name;
+        var_data.id_type = VARIABLE_ID;
+        var_data.data_type = Null;
+        var_data.offset = *current_offset;
+        var_data.arity = 0;
+
+        insert_symbol(current_table, &var_data);
+        decl->stack_offset = var_data.offset;
+        decl->data_type = var_data.data_type;
+
+        break;
+    }
+    case AST_EXPR_VARIABLE:
+    {
+        AstNodeVariable *var = (AstNodeVariable *)node;
+        char *var_name = var->token.lexeme;
+
+        if (var->token.type == IDENTIFIER_GLOBAL)
+        {
+            var->stack_offset = -1; // global
+            var->data_type = Undefined;
             break;
         }
-        case AST_EXPR_VARIABLE:{
-            AstNodeVariable *var = (AstNodeVariable *)node;
-            char *var_name = var->token.lexeme;
 
-            if(var->token.type == IDENTIFIER_GLOBAL){
-                var->stack_offset = -1; // global
-                var->data_type = Undefined;
-                break;
-            }
+        symbol_data *found;
+        if (search_scopes(stack, var_name, &found))
+        {
 
-            symbol_data *found;
-            if(search_scopes(stack, var_name, &found)){
-                
-                var->stack_offset = found->offset;
-                var->data_type = found->data_type;        
-            }
-            else{
-                char getter_key[256];
-                int temp = snprintf(getter_key, 256, "%s@GET", var_name);
-                if(temp < 0 || temp >= 256){
-                    fprintf(stderr, "Identifier too long for parsing\n");
-                    ifjexit(ERR_SEM_OTHER);
-                }
-                if(search_scopes(stack, getter_key, &found)){
-                    if(found->id_type != FUNC_ID){
-                        fprintf(stderr, "%s not FUNC_ID and cant be getter\n", getter_key);
-                        ifjexit(ERR_INTERNAL);    
-                    }
-                    var->stack_offset = 0;
-                    var->data_type = found->data_type;
-                }
-                else{
-                    fprintf(stderr, "Line: %d, undefined var %s\n", var->base.line_number, var_name);
-                    ifjexit(ERR_SEM_UNDEFINED);
-                }
-            }
-            break;
+            var->stack_offset = found->offset;
+            var->data_type = found->data_type;
         }
-        case AST_STMT_ASSIGN:{
-            AstNodeAssignStmt *assign = (AstNodeAssignStmt *)node;
-            
-            semantic_recurs(assign->rvalue, stack, current_offset, current_func_data);//zavolat s pravym potomkem
-            symbol_data_type right_type = Undefined;
-            switch(assign->rvalue->type){
-                case AST_EXPR_LITERAL:
-                    right_type = ((AstNodeLiteral*)assign->rvalue)->data_type;
-                    break;
-                case AST_EXPR_VARIABLE:
-                    right_type = ((AstNodeVariable*)assign->rvalue)->data_type;
-                    break;
-                case AST_EXPR_BINARY:
-                    right_type = ((AstNodeBinaryExpr*)assign->rvalue)->data_type;
-                    break;
-                case AST_FUNC_CALL:
-                    right_type = ((AstNodeFuncCall*)assign->rvalue)->data_type;
-                    break;
-                default: 
-                    fprintf(stderr, "Internal Error: Invalid rvalue in assignment\n");
+        else
+        {
+            char getter_key[256];
+            int temp = snprintf(getter_key, 256, "%s@GET", var_name);
+            if (temp < 0 || temp >= 256)
+            {
+                fprintf(stderr, "Identifier too long for parsing\n");
+                ifjexit(ERR_SEM_OTHER);
+            }
+            if (search_scopes(stack, getter_key, &found))
+            {
+                if (found->id_type != FUNC_ID)
+                {
+                    fprintf(stderr, "%s not FUNC_ID and cant be getter\n", getter_key);
                     ifjexit(ERR_INTERNAL);
+                }
+                var->stack_offset = 0;
+                var->data_type = found->data_type;
             }
-            
-            // analyza leveho potomka
-            AstNodeVariable *left = assign->lvalue;
-            char *left_name = left->token.lexeme;
-            symbol_data *found;
+            else
+            {
+                fprintf(stderr, "Line: %d, undefined var %s\n", var->base.line_number, var_name);
+                ifjexit(ERR_SEM_UNDEFINED);
+            }
+        }
+        break;
+    }
+    case AST_STMT_ASSIGN:
+    {
+        AstNodeAssignStmt *assign = (AstNodeAssignStmt *)node;
 
-            if(left->token.type == IDENTIFIER_GLOBAL){
-                left->stack_offset = -1;
-                left->data_type = right_type;
-                break;
-            }
+        semantic_recurs(assign->rvalue, stack, current_offset, current_func_data); // zavolat s pravym potomkem
+        symbol_data_type right_type = Undefined;
+        switch (assign->rvalue->type)
+        {
+        case AST_EXPR_LITERAL:
+            right_type = ((AstNodeLiteral *)assign->rvalue)->data_type;
+            break;
+        case AST_EXPR_VARIABLE:
+            right_type = ((AstNodeVariable *)assign->rvalue)->data_type;
+            break;
+        case AST_EXPR_BINARY:
+            right_type = ((AstNodeBinaryExpr *)assign->rvalue)->data_type;
+            break;
+        case AST_FUNC_CALL:
+            right_type = ((AstNodeFuncCall *)assign->rvalue)->data_type;
+            break;
+        default:
+            fprintf(stderr, "Internal Error: Invalid rvalue in assignment\n");
+            ifjexit(ERR_INTERNAL);
+        }
 
-            if(search_scopes(stack, left_name, &found)){
-                if(found->id_type != VARIABLE_ID){
-                    fprintf(stderr, "%s can't be non var\n", left_name);
-                    ifjexit(ERR_SEM_OTHER);
-                }
+        // analyza leveho potomka
+        AstNodeVariable *left = assign->lvalue;
+        char *left_name = left->token.lexeme;
+        symbol_data *found;
 
-                left->stack_offset = found->offset;
-                left->data_type = right_type;
-                found->data_type = right_type;
-            }
-            // setter
-            else{
-                char setter_key[256];
-                int temp = snprintf(setter_key, 256, "%s@SET", left_name);
-                if(temp < 0 || temp >= 256){
-                    fprintf(stderr, "Identifier too long for parsing\n");
-                    ifjexit(ERR_SEM_OTHER);
-                }
-                if(search_scopes(stack, setter_key, &found)){
-                    if(found->id_type != FUNC_ID){
-                        fprintf(stderr, "%s not FUNC_ID and cant be setter\n", setter_key);
-                        ifjexit(ERR_INTERNAL);    
-                    }
-                    left->stack_offset = 0;
-                    left->data_type = Undefined; // pro setter je to jedno
-                }
-                else{
-                    fprintf(stderr, "Line %d, Cannot assign to undefined var or setter %s\n", left->base.line_number, left_name);
-                    ifjexit(ERR_SEM_UNDEFINED);
-                }
-            }
+        if (left->token.type == IDENTIFIER_GLOBAL)
+        {
+            left->stack_offset = -1;
+            left->data_type = right_type;
             break;
         }
-        case AST_STMT_IF:{
-            AstNodeIfStmt *if_stmt = (AstNodeIfStmt *)node;
-            semantic_recurs(if_stmt->condition, stack, current_offset, current_func_data);
-            semantic_recurs((AstNode*)if_stmt->then_block, stack, current_offset, current_func_data);
-            semantic_recurs((AstNode*)if_stmt->else_block, stack, current_offset, current_func_data);
-            break;
-        }
-        case AST_STMT_WHILE:{
-            AstNodeWhileStmt *while_stmt = (AstNodeWhileStmt *)node;
-            semantic_recurs(while_stmt->condition, stack, current_offset, current_func_data);
-            semantic_recurs((AstNode*)while_stmt->body_block, stack, current_offset, current_func_data);
-            break;
-        }
-        case AST_STMT_RETURN:{
-            AstNodeReturnStmt *ret = (AstNodeReturnStmt *)node;
-            symbol_data_type return_type = Null;
-            if(current_func_data == NULL){
-                fprintf(stderr, "Line %d: 'return' statement found outside of a function.\n", ret->base.line_number);
-                ifjexit(ERR_SYN); // syntakticka chyba, takze nemela by nastat
-            }
-            if(ret->expr){
-                semantic_recurs(ret->expr, stack, current_offset, current_func_data);
-                return_type = (get_type(ret->expr));
-            }
-            if(current_func_data->data_type == Null){
-                current_func_data->data_type = return_type;
-            }
-            else if(current_func_data->data_type != return_type && return_type != Undefined &&
-                    current_func_data->data_type != Undefined){
-                current_func_data->data_type = Undefined; // vraci odlisny typ, tak se nastavi na undefined a pri behu se na to podiva
-            }
-            
-            break;
-        }
-        case AST_EXPR_BINARY:{
-            AstNodeBinaryExpr *binary_expr = (AstNodeBinaryExpr *)node;
-            semantic_recurs(binary_expr->left, stack, current_offset, current_func_data);
-            semantic_recurs(binary_expr->right, stack, current_offset, current_func_data);
-            
-            symbol_data_type left_type = get_type(binary_expr->left);
-            symbol_data_type right_type = get_type(binary_expr->right);
-            
-            // musi se urcit za behu
-            if(left_type == Undefined || right_type == Undefined){
-                binary_expr->data_type = Undefined;
-                break;
+
+        if (search_scopes(stack, left_name, &found))
+        {
+            if (found->id_type != VARIABLE_ID)
+            {
+                fprintf(stderr, "%s can't be non var\n", left_name);
+                ifjexit(ERR_SEM_OTHER);
             }
 
-            if(binary_expr->op != EQUAL && binary_expr->op != NOT_EQUAL){
-                if(left_type == Null || right_type == Null){
-                    fprintf(stderr, "Line %d: Type Error: Cannot use 'null' in this operation.\n", binary_expr->base.line_number);
+            left->stack_offset = found->offset;
+            left->data_type = right_type;
+            found->data_type = right_type;
+        }
+        // setter
+        else
+        {
+            char setter_key[256];
+            int temp = snprintf(setter_key, 256, "%s@SET", left_name);
+            if (temp < 0 || temp >= 256)
+            {
+                fprintf(stderr, "Identifier too long for parsing\n");
+                ifjexit(ERR_SEM_OTHER);
+            }
+            if (search_scopes(stack, setter_key, &found))
+            {
+                if (found->id_type != FUNC_ID)
+                {
+                    fprintf(stderr, "%s not FUNC_ID and cant be setter\n", setter_key);
+                    ifjexit(ERR_INTERNAL);
+                }
+                left->stack_offset = 0;
+                left->data_type = Undefined; // pro setter je to jedno
+            }
+            else
+            {
+                fprintf(stderr, "Line %d, Cannot assign to undefined var or setter %s\n", left->base.line_number, left_name);
+                ifjexit(ERR_SEM_UNDEFINED);
+            }
+        }
+        break;
+    }
+    case AST_STMT_IF:
+    {
+        AstNodeIfStmt *if_stmt = (AstNodeIfStmt *)node;
+        semantic_recurs(if_stmt->condition, stack, current_offset, current_func_data);
+        semantic_recurs((AstNode *)if_stmt->then_block, stack, current_offset, current_func_data);
+        semantic_recurs((AstNode *)if_stmt->else_block, stack, current_offset, current_func_data);
+        break;
+    }
+    case AST_STMT_WHILE:
+    {
+        AstNodeWhileStmt *while_stmt = (AstNodeWhileStmt *)node;
+        semantic_recurs(while_stmt->condition, stack, current_offset, current_func_data);
+        semantic_recurs((AstNode *)while_stmt->body_block, stack, current_offset, current_func_data);
+        break;
+    }
+    case AST_STMT_RETURN:
+    {
+        AstNodeReturnStmt *ret = (AstNodeReturnStmt *)node;
+        symbol_data_type return_type = Null;
+        if (current_func_data == NULL)
+        {
+            fprintf(stderr, "Line %d: 'return' statement found outside of a function.\n", ret->base.line_number);
+            ifjexit(ERR_SYN); // syntakticka chyba, takze nemela by nastat
+        }
+        if (ret->expr)
+        {
+            semantic_recurs(ret->expr, stack, current_offset, current_func_data);
+            return_type = (get_type(ret->expr));
+        }
+        if (current_func_data->data_type == Null)
+        {
+            current_func_data->data_type = return_type;
+        }
+        else if (current_func_data->data_type != return_type && return_type != Undefined &&
+                 current_func_data->data_type != Undefined)
+        {
+            current_func_data->data_type = Undefined; // vraci odlisny typ, tak se nastavi na undefined a pri behu se na to podiva
+        }
+
+        break;
+    }
+    case AST_EXPR_BINARY:
+    {
+        AstNodeBinaryExpr *binary_expr = (AstNodeBinaryExpr *)node;
+        semantic_recurs(binary_expr->left, stack, current_offset, current_func_data);
+        semantic_recurs(binary_expr->right, stack, current_offset, current_func_data);
+
+        symbol_data_type left_type = get_type(binary_expr->left);
+        symbol_data_type right_type = get_type(binary_expr->right);
+
+        // musi se urcit za behu
+        if (left_type == Undefined || right_type == Undefined)
+        {
+            binary_expr->data_type = Undefined;
+            break;
+        }
+
+        if (binary_expr->op != EQUAL && binary_expr->op != NOT_EQUAL)
+        {
+            if (left_type == Null || right_type == Null)
+            {
+                fprintf(stderr, "Line %d: Type Error: Cannot use 'null' in this operation.\n", binary_expr->base.line_number);
+                ifjexit(ERR_SEM_INCOMP);
+            }
+        }
+        switch (binary_expr->op)
+        {
+        case PLUS:
+            if (left_type == Num && right_type == Num)
+            {
+                binary_expr->data_type = Num;
+            }
+            else if (left_type == String && right_type == String)
+            {
+                binary_expr->data_type = String;
+            }
+            else
+            {
+                fprintf(stderr, "Line %d, Operands for addition must be both Num or both String\n", binary_expr->base.line_number);
+                ifjexit(ERR_SEM_INCOMP);
+            }
+            break;
+        case MINUS:
+        case DIVIDE:
+            if (left_type == Num && right_type == Num)
+            {
+                binary_expr->data_type = Num;
+            }
+            else
+            {
+                fprintf(stderr, "Line %d, Operands for subtraction or division must be both Num\n", binary_expr->base.line_number);
+                ifjexit(ERR_SEM_INCOMP);
+            }
+            break;
+        case TIMES:
+            if (left_type == Num && right_type == Num)
+            {
+                binary_expr->data_type = Num;
+            }
+            else if (left_type == String && right_type == Num)
+            {
+                if (binary_expr->right->type == AST_EXPR_LITERAL &&
+                    ((AstNodeLiteral *)binary_expr->right)->token.type != INT)
+                {
+                    fprintf(stderr, "Line %d, Operands for string iteration must be an Integer, not Float\n", binary_expr->base.line_number);
                     ifjexit(ERR_SEM_INCOMP);
                 }
+                binary_expr->data_type = String;
             }
-            switch(binary_expr->op){
-                case PLUS:
-                    if(left_type == Num && right_type == Num){
-                        binary_expr->data_type = Num;
-                    }
-                    else if(left_type == String && right_type == String){
-                        binary_expr->data_type = String;
-                    }
-                    else{
-                        fprintf(stderr, "Line %d, Operands for addition must be both Num or both String\n", binary_expr->base.line_number);
-                        ifjexit(ERR_SEM_INCOMP);
-                    }
-                    break;
-                case MINUS:
-                case DIVIDE:
-                    if(left_type == Num && right_type == Num){
-                        binary_expr->data_type = Num;
-                    }
-                    else{
-                        fprintf(stderr, "Line %d, Operands for subtraction or division must be both Num\n", binary_expr->base.line_number);
-                        ifjexit(ERR_SEM_INCOMP);
-                    }
-                    break;
-                case TIMES:
-                    if(left_type == Num && right_type == Num){
-                        binary_expr->data_type = Num;
-                    }
-                    else if(left_type == String && right_type == Num){
-                        if (binary_expr->right->type == AST_EXPR_LITERAL &&
-                            ((AstNodeLiteral*)binary_expr->right)->token.type != INT)
-                        {
-                            fprintf(stderr, "Line %d, Operands for string iteration must be an Integer, not Float\n", binary_expr->base.line_number);
-                            ifjexit(ERR_SEM_INCOMP);
-                        }
-                        binary_expr->data_type = String;
-                    }
-                    else{
-                        fprintf(stderr, "Line %d, Operands for multipication must be both Num or String * Num\n", binary_expr->base.line_number);
-                        ifjexit(ERR_SEM_INCOMP);
-                    }
-                    break;
-                case LESSER:
-                case GREATER:
-                case LESSER_EQUAL:
-                case GREATER_EQUAL:
-                    if(left_type == Num && right_type == Num){
-                        binary_expr->data_type = Num;
-                    }
-                    else{
-                       fprintf(stderr, "Line %d: Operands for comparison need to be both Num\n", binary_expr->base.line_number); 
-                        ifjexit(ERR_SEM_INCOMP);
-                    }
-                    break;
-                case EQUAL:
-                case NOT_EQUAL:
-                    binary_expr->data_type = Num;
-                    break;
-                case KEYWORD_is:
-                    binary_expr->data_type = Num;
-                    break;
-                default://asi nenastane
-                    binary_expr->data_type = Undefined;
-                    break;
-            }
-
-            break;
-        }
-        case AST_FUNC_CALL:{
-            AstNodeFuncCall *func = (AstNodeFuncCall *)node;
-
-            for(int i=0; i<func->args->count; i++){
-                semantic_recurs(func->args->items[i], stack, current_offset, current_func_data);
-            }
-            
-            int arity = func->args->count;
-            char *func_name = func->func_id.lexeme;
-            symbol_data *found;
-
-            // uzivatelska nebo vestavena
-            switch(func->func_id.type){
-                case IDENTIFIER_GLOBAL:
-                case IDENTIFIER_LOCAL:{
-                    char key[256];
-                    int temp = snprintf(key, 256, "%s@%d", func_name, arity);
-                    if(temp < 0 || temp >= 256){
-                        fprintf(stderr, "%s identifier too long to parse\n", func_name);
-                        ifjexit(ERR_SEM_OTHER);
-                    }
-                    if(!search_scopes(stack, key, &found)){
-                        fprintf(stderr, "Line %d, %s func call with wrong arity\n", func->base.line_number, func_name);
-                        ifjexit(ERR_SEM_PARAM); // todo: tady je spatnej kod, ma to byt 3 a 5 az potom co zjistim jestli calluju
-                                                // se spatnou aritou, ale jdu spat
-                    }
-                    func->data_type = found->data_type;
-                    break;
-                }
-                case IFJ_READ_NUM:
-                    if(arity != 0) ifjexit(ERR_SEM_PARAM);
-                    func->data_type = Num; // Null
-                    break;
-                case IFJ_READ_STR:
-                    if(arity != 0) ifjexit(ERR_SEM_PARAM);
-                    func->data_type = String; // Null
-                    break;
-                case IFJ_WRITE:
-                    if(arity != 1) ifjexit(ERR_SEM_PARAM);
-                    func->data_type = Null;
-                    break;
-                case IFJ_FLOOR:
-                    if(arity != 1) ifjexit(ERR_SEM_PARAM);
-                    if (get_type(func->args->items[0]) != Num && get_type(func->args->items[0]) != Undefined) {
-                        fprintf(stderr, "Line %d: Type Error: Ifj.floor expects parameter 'term' to be a Num.\n", func->base.line_number);
-                        ifjexit(ERR_SEM_PARAM);
-                    }
-                    func->data_type = Num;
-                    break;
-                case IFJ_STR:
-                    if(arity != 1) ifjexit(ERR_SEM_PARAM);
-                    func->data_type = String;
-                    break;
-                case IFJ_LENGTH:
-                    if(arity != 1) ifjexit(ERR_SEM_PARAM);
-                    if (get_type(func->args->items[0]) != String && 
-                        get_type(func->args->items[0]) != Undefined) {
-                        fprintf(stderr, "Line %d: Type Error: Ifj.length expects parameter 's' to be a String.\n", func->base.line_number);
-                        ifjexit(ERR_SEM_PARAM);
-                    }
-                    func->data_type = Num;
-                    break;
-                case IFJ_CHR:
-                    if(arity != 1) ifjexit(ERR_SEM_PARAM);
-                    if (get_type(func->args->items[0]) != Num && get_type(func->args->items[0]) != Undefined) {
-                        fprintf(stderr, "Line %d: Type Error: Ifj.chr param 'i' must be Num.\n", func->base.line_number);
-                        ifjexit(ERR_SEM_PARAM);
-                    }
-                    if (get_type(func->args->items[0]) == Num &&
-                        func->args->items[0]->type == AST_EXPR_LITERAL &&
-                        ((AstNodeLiteral*)func->args->items[0])->token.type == FLOAT)
-                    {
-                        fprintf(stderr, "Line %d: Type Error: Parameter 'i' for Ifj.chr must be an Integer, not Float.\n", func->base.line_number);
-                        ifjexit(ERR_SEM_INCOMP);
-                    }
-                    func->data_type = String;
-                    break;
-                case IFJ_STRCMP:
-                    if(arity != 2) ifjexit(ERR_SEM_PARAM);
-                    if (get_type(func->args->items[0]) != String && get_type(func->args->items[0]) != Undefined) {
-                        fprintf(stderr, "Line %d: Type Error: Ifj.strcmp param 's1' must be String.\n", func->base.line_number);
-                        ifjexit(ERR_SEM_PARAM);
-                    }
-                    if (get_type(func->args->items[1]) != String && get_type(func->args->items[1]) != Undefined) {
-                        fprintf(stderr, "Line %d: Type Error: Ifj.strcmp param 's2' must be String.\n", func->base.line_number);
-                        ifjexit(ERR_SEM_PARAM);
-                    }
-                    func->data_type = Num;
-                    break;
-                case IFJ_ORD:
-                    if(arity != 2) ifjexit(ERR_SEM_PARAM);
-                    if (get_type(func->args->items[0]) != String && get_type(func->args->items[0]) != Undefined) {
-                        fprintf(stderr, "Line %d: Type Error: Ifj.ord param 's' must be String.\n", func->base.line_number);
-                        ifjexit(ERR_SEM_PARAM);
-                    }
-                    if (get_type(func->args->items[1]) != Num && get_type(func->args->items[1]) != Undefined) {
-                        fprintf(stderr, "Line %d: Type Error: Ifj.ord param 'i' must be Num.\n", func->base.line_number);
-                        ifjexit(ERR_SEM_PARAM);
-                    }
-                    if (get_type(func->args->items[1]) == Num &&
-                        func->args->items[1]->type == AST_EXPR_LITERAL &&
-                        ((AstNodeLiteral*)func->args->items[1])->token.type != INT)
-                    {
-                        fprintf(stderr, "Line %d, Parameter 'i' for Ifj.ord must be an Integer.\n", func->base.line_number);
-                        ifjexit(ERR_SEM_INCOMP);
-                    }
-                    func->data_type = Num;
-                    break;
-                case IFJ_SUBSTRING:
-                    if(arity != 3) ifjexit(ERR_SEM_PARAM);
-                    if (get_type(func->args->items[0]) != String && get_type(func->args->items[0]) != Undefined) {
-                        fprintf(stderr, "Line %d: Type Error: Ifj.substring param 's' must be String.\n", func->base.line_number);
-                        ifjexit(ERR_SEM_PARAM);
-                    }
-                    if (get_type(func->args->items[1]) != Num && get_type(func->args->items[1]) != Undefined) {
-                        fprintf(stderr, "Line %d: Type Error: Ifj.substring param 'i' must be Num.\n", func->base.line_number);
-                        ifjexit(ERR_SEM_PARAM);
-                    }
-                    if (get_type(func->args->items[2]) != Num && get_type(func->args->items[2]) != Undefined) {
-                        fprintf(stderr, "Line %d: Type Error: Ifj.substring param 'j' must be Num.\n", func->base.line_number);
-                        ifjexit(ERR_SEM_PARAM);
-                    }
-                    if (get_type(func->args->items[1]) == Num &&
-                        func->args->items[1]->type == AST_EXPR_LITERAL &&
-                        ((AstNodeLiteral*)func->args->items[1])->token.type == FLOAT)
-                    {
-                        fprintf(stderr, "Line %d: Type Error: Parameter 'i' for Ifj.substring must be an Integer, not Float.\n", func->base.line_number);
-                        ifjexit(ERR_SEM_INCOMP);
-                    }
-                    if (get_type(func->args->items[2]) == Num &&
-                        func->args->items[2]->type == AST_EXPR_LITERAL &&
-                        ((AstNodeLiteral*)func->args->items[2])->token.type == FLOAT)
-                    {
-                        fprintf(stderr, "Line %d: Type Error: Parameter 'j' for Ifj.substring must be an Integer, not Float.\n", func->base.line_number);
-                        ifjexit(ERR_SEM_INCOMP);
-                    }
-                    func->data_type = String; // muze Null
-                    break;
-                default:
-                    fprintf(stderr, "Invalid token sem parsing in AST_FUNC_CALL\n");
-                    ifjexit(ERR_INTERNAL);
+            else
+            {
+                fprintf(stderr, "Line %d, Operands for multipication must be both Num or String * Num\n", binary_expr->base.line_number);
+                ifjexit(ERR_SEM_INCOMP);
             }
             break;
-        }
-        case AST_EXPR_LITERAL:{
-            AstNodeLiteral *literal = (AstNodeLiteral *)node;
-
-            switch(literal->token.type){
-                case INT:
-                case FLOAT:
-                    literal->data_type = Num;
-                    break;
-                case STRING:
-                    literal->data_type = String;
-                    break;
-                case KEYWORD_null:
-                    literal->data_type = Null;
-                    break;
-                default:
-                    literal->data_type = Undefined;
-                    break;
+        case LESSER:
+        case GREATER:
+        case LESSER_EQUAL:
+        case GREATER_EQUAL:
+            if (left_type == Num && right_type == Num)
+            {
+                binary_expr->data_type = Num;
+            }
+            else
+            {
+                fprintf(stderr, "Line %d: Operands for comparison need to be both Num\n", binary_expr->base.line_number);
+                ifjexit(ERR_SEM_INCOMP);
             }
             break;
+        case EQUAL:
+        case NOT_EQUAL:
+            binary_expr->data_type = Num;
+            break;
+        case KEYWORD_is:
+            binary_expr->data_type = Num;
+            break;
+        default: // asi nenastane
+            binary_expr->data_type = Undefined;
+            break;
         }
+
+        break;
+    }
+    case AST_FUNC_CALL:
+    {
+        AstNodeFuncCall *func = (AstNodeFuncCall *)node;
+
+        for (int i = 0; i < func->args->count; i++)
+        {
+            semantic_recurs(func->args->items[i], stack, current_offset, current_func_data);
+        }
+
+        int arity = func->args->count;
+        char *func_name = func->func_id.lexeme;
+        symbol_data *found;
+
+        // uzivatelska nebo vestavena
+        switch (func->func_id.type)
+        {
+        case IDENTIFIER_GLOBAL:
+        case IDENTIFIER_LOCAL:
+        {
+            char key[256];
+            int temp = snprintf(key, 256, "%s@%d", func_name, arity);
+            if (temp < 0 || temp >= 256)
+            {
+                fprintf(stderr, "%s identifier too long to parse\n", func_name);
+                ifjexit(ERR_SEM_OTHER);
+            }
+            if (!search_scopes(stack, key, &found))
+            {
+                fprintf(stderr, "Line %d, %s func call with wrong arity\n", func->base.line_number, func_name);
+                ifjexit(ERR_SEM_PARAM); // todo: tady je spatnej kod, ma to byt 3 a 5 az potom co zjistim jestli calluju
+                                        // se spatnou aritou, ale jdu spat
+            }
+            func->data_type = found->data_type;
+            break;
+        }
+        case IFJ_READ_NUM:
+            if (arity != 0)
+                ifjexit(ERR_SEM_PARAM);
+            func->data_type = Num; // Null
+            break;
+        case IFJ_READ_STR:
+            if (arity != 0)
+                ifjexit(ERR_SEM_PARAM);
+            func->data_type = String; // Null
+            break;
+        case IFJ_WRITE:
+            if (arity != 1)
+                ifjexit(ERR_SEM_PARAM);
+            func->data_type = Null;
+            break;
+        case IFJ_FLOOR:
+            if (arity != 1)
+                ifjexit(ERR_SEM_PARAM);
+            if (get_type(func->args->items[0]) != Num && get_type(func->args->items[0]) != Undefined)
+            {
+                fprintf(stderr, "Line %d: Type Error: Ifj.floor expects parameter 'term' to be a Num.\n", func->base.line_number);
+                ifjexit(ERR_SEM_PARAM);
+            }
+            func->data_type = Num;
+            break;
+        case IFJ_STR:
+            if (arity != 1)
+                ifjexit(ERR_SEM_PARAM);
+            func->data_type = String;
+            break;
+        case IFJ_LENGTH:
+            if (arity != 1)
+                ifjexit(ERR_SEM_PARAM);
+            if (get_type(func->args->items[0]) != String &&
+                get_type(func->args->items[0]) != Undefined)
+            {
+                fprintf(stderr, "Line %d: Type Error: Ifj.length expects parameter 's' to be a String.\n", func->base.line_number);
+                ifjexit(ERR_SEM_PARAM);
+            }
+            func->data_type = Num;
+            break;
+        case IFJ_CHR:
+            if (arity != 1)
+                ifjexit(ERR_SEM_PARAM);
+            if (get_type(func->args->items[0]) != Num && get_type(func->args->items[0]) != Undefined)
+            {
+                fprintf(stderr, "Line %d: Type Error: Ifj.chr param 'i' must be Num.\n", func->base.line_number);
+                ifjexit(ERR_SEM_PARAM);
+            }
+            if (get_type(func->args->items[0]) == Num &&
+                func->args->items[0]->type == AST_EXPR_LITERAL &&
+                ((AstNodeLiteral *)func->args->items[0])->token.type == FLOAT)
+            {
+                fprintf(stderr, "Line %d: Type Error: Parameter 'i' for Ifj.chr must be an Integer, not Float.\n", func->base.line_number);
+                ifjexit(ERR_SEM_INCOMP);
+            }
+            func->data_type = String;
+            break;
+        case IFJ_STRCMP:
+            if (arity != 2)
+                ifjexit(ERR_SEM_PARAM);
+            if (get_type(func->args->items[0]) != String && get_type(func->args->items[0]) != Undefined)
+            {
+                fprintf(stderr, "Line %d: Type Error: Ifj.strcmp param 's1' must be String.\n", func->base.line_number);
+                ifjexit(ERR_SEM_PARAM);
+            }
+            if (get_type(func->args->items[1]) != String && get_type(func->args->items[1]) != Undefined)
+            {
+                fprintf(stderr, "Line %d: Type Error: Ifj.strcmp param 's2' must be String.\n", func->base.line_number);
+                ifjexit(ERR_SEM_PARAM);
+            }
+            func->data_type = Num;
+            break;
+        case IFJ_ORD:
+            if (arity != 2)
+                ifjexit(ERR_SEM_PARAM);
+            if (get_type(func->args->items[0]) != String && get_type(func->args->items[0]) != Undefined)
+            {
+                fprintf(stderr, "Line %d: Type Error: Ifj.ord param 's' must be String.\n", func->base.line_number);
+                ifjexit(ERR_SEM_PARAM);
+            }
+            if (get_type(func->args->items[1]) != Num && get_type(func->args->items[1]) != Undefined)
+            {
+                fprintf(stderr, "Line %d: Type Error: Ifj.ord param 'i' must be Num.\n", func->base.line_number);
+                ifjexit(ERR_SEM_PARAM);
+            }
+            if (get_type(func->args->items[1]) == Num &&
+                func->args->items[1]->type == AST_EXPR_LITERAL &&
+                ((AstNodeLiteral *)func->args->items[1])->token.type != INT)
+            {
+                fprintf(stderr, "Line %d, Parameter 'i' for Ifj.ord must be an Integer.\n", func->base.line_number);
+                ifjexit(ERR_SEM_INCOMP);
+            }
+            func->data_type = Num;
+            break;
+        case IFJ_SUBSTRING:
+            if (arity != 3)
+                ifjexit(ERR_SEM_PARAM);
+            if (get_type(func->args->items[0]) != String && get_type(func->args->items[0]) != Undefined)
+            {
+                fprintf(stderr, "Line %d: Type Error: Ifj.substring param 's' must be String.\n", func->base.line_number);
+                ifjexit(ERR_SEM_PARAM);
+            }
+            if (get_type(func->args->items[1]) != Num && get_type(func->args->items[1]) != Undefined)
+            {
+                fprintf(stderr, "Line %d: Type Error: Ifj.substring param 'i' must be Num.\n", func->base.line_number);
+                ifjexit(ERR_SEM_PARAM);
+            }
+            if (get_type(func->args->items[2]) != Num && get_type(func->args->items[2]) != Undefined)
+            {
+                fprintf(stderr, "Line %d: Type Error: Ifj.substring param 'j' must be Num.\n", func->base.line_number);
+                ifjexit(ERR_SEM_PARAM);
+            }
+            if (get_type(func->args->items[1]) == Num &&
+                func->args->items[1]->type == AST_EXPR_LITERAL &&
+                ((AstNodeLiteral *)func->args->items[1])->token.type == FLOAT)
+            {
+                fprintf(stderr, "Line %d: Type Error: Parameter 'i' for Ifj.substring must be an Integer, not Float.\n", func->base.line_number);
+                ifjexit(ERR_SEM_INCOMP);
+            }
+            if (get_type(func->args->items[2]) == Num &&
+                func->args->items[2]->type == AST_EXPR_LITERAL &&
+                ((AstNodeLiteral *)func->args->items[2])->token.type == FLOAT)
+            {
+                fprintf(stderr, "Line %d: Type Error: Parameter 'j' for Ifj.substring must be an Integer, not Float.\n", func->base.line_number);
+                ifjexit(ERR_SEM_INCOMP);
+            }
+            func->data_type = String; // muze Null
+            break;
         default:
-            fprintf(stderr, "Unhandled ast node in semantic analysis\n");
-            ifjexit(ERR_INTERNAL);//jestli nastane toto tak je to moje chyba oops 
+            fprintf(stderr, "Invalid token sem parsing in AST_FUNC_CALL\n");
+            ifjexit(ERR_INTERNAL);
+        }
+        break;
+    }
+    case AST_EXPR_LITERAL:
+    {
+        AstNodeLiteral *literal = (AstNodeLiteral *)node;
+
+        switch (literal->token.type)
+        {
+        case INT:
+        case FLOAT:
+            literal->data_type = Num;
+            break;
+        case STRING:
+            literal->data_type = String;
+            break;
+        case KEYWORD_null:
+            literal->data_type = Null;
+            break;
+        default:
+            literal->data_type = Undefined;
+            break;
+        }
+        break;
+    }
+    default:
+        fprintf(stderr, "Unhandled ast node in semantic analysis\n");
+        ifjexit(ERR_INTERNAL); // jestli nastane toto tak je to moje chyba oops
     }
 }
