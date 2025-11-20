@@ -803,7 +803,7 @@ Token createToken(TokenType type, LexemeBuffer *lexeme)
     /*if (token.type == STRING && token.value.string_val) {
         free(token.value.string_val);
     }*/
-    printf("%s - %s\n", convert(token.type), token.lexeme ? token.lexeme : "NULL");
+    //printf("%s - %s\n", convert(token.type), token.lexeme ? token.lexeme : "NULL");
 
     if (type == EOL)
     {
