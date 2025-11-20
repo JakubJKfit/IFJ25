@@ -144,7 +144,7 @@ State builtInFunctions(LexemeBuffer *lexeme)
     return Start;
 }
 
-State keywords(LexemeBuffer *lexeme)
+void keywords(LexemeBuffer *lexeme)
 {
     if (strcmp(lexeme->buffer, "class") == 0)
     {
@@ -204,9 +204,8 @@ State keywords(LexemeBuffer *lexeme)
     }
     else
     {
-        return Letter;
+        createToken(IDENTIFIER_LOCAL, lexeme);
     }
-    return Start;
 }
 
 char escapeChar()
@@ -237,7 +236,7 @@ char escapeChar()
         return (char)strtol(hex, NULL, 16);
     }
     default:
-        return c;
+        return -1;
     }
 }
 
@@ -258,6 +257,7 @@ static void compress_newlines(void)
 
 State transition(State state, int key, LexemeBuffer *lexeme)
 {
+    static bool float_detected = false;
     static int quote_count = 0;
     switch (state)
     {
@@ -325,11 +325,30 @@ State transition(State state, int key, LexemeBuffer *lexeme)
             else if (isdigit(key))
             {
                 appendChar(lexeme, key);
+                if (key == '0')
+                {
+                    return Zero;
+                }
                 return Number;
             }
             ungetc(key, stdin);
             return Error;
         }
+    case Zero:
+        if (key == 'x')
+        {
+            appendChar(lexeme, key);
+            return Hex;
+        }
+        else if (isdigit(key))
+        {
+            fprintf(stderr, "Neplatný číselný literál na řádku %d\n", g_line);
+            createToken(ERROR, lexeme);
+            ifjexit(ERR_LEX);
+        }
+        createToken(INT, lexeme);
+        ungetc(key, stdin);
+        return Start;
 
     case Number:
         appendChar(lexeme, key);
@@ -345,10 +364,6 @@ State transition(State state, int key, LexemeBuffer *lexeme)
         {
             return Exponent;
         }
-        else if (strcmp(lexeme->buffer, "0x") == 0)
-        {
-            return Hex;
-        }
         removeLast(lexeme);
         createToken(INT, lexeme);
         ungetc(key, stdin);
@@ -357,15 +372,24 @@ State transition(State state, int key, LexemeBuffer *lexeme)
         appendChar(lexeme, key);
         if (isdigit(key))
         {
+            float_detected = true;
             return Float;
         }
-        else if (key == 'e' || key == 'E')
+        else if ((key == 'e' || key == 'E') && float_detected)
         {
+            float_detected = false;
             return Exponent;
+        }else if (!float_detected)
+        {
+            fprintf(stderr, "Neplatný desetinný literál na řádku %d\n", g_line);
+            createToken(ERROR, lexeme);
+            ifjexit(ERR_LEX);
+            
         }
         removeLast(lexeme);
         createToken(FLOAT, lexeme);
         ungetc(key, stdin);
+        float_detected = false;
         return Start;
     case Exponent:
         appendChar(lexeme, key);
@@ -400,16 +424,20 @@ State transition(State state, int key, LexemeBuffer *lexeme)
         ungetc(key, stdin);
         return Start;
     case Hex:
-        appendChar(lexeme, key);
-        if (isdigit(key) || (key >= 'a' && key <= 'f') || (key >= 'A' && key <= 'F'))
+        if (isxdigit(key))
         {
+            appendChar(lexeme, key);
             return Hex;
         }
-        removeLast(lexeme);
+        if (lexeme->length <= 2 || isalpha(key))
+        {
+            fprintf(stderr, "Neplatný hexadecimální literál na řádku %d\n", g_line);
+            createToken(ERROR, lexeme);
+            ifjexit(ERR_LEX);
+        }
         createToken(INT, lexeme);
         ungetc(key, stdin);
         return Start;
-
     case Not:
         if (key == '=')
         {
@@ -423,15 +451,15 @@ State transition(State state, int key, LexemeBuffer *lexeme)
         if (isalnum(key) || key == '_')
         {
             appendChar(lexeme, key);
-            return keywords(lexeme);
+            return Letter;
         }
         else if (strcmp(lexeme->buffer, "Ifj") == 0)
         {
             ungetc(key, stdin);
             return BuiltIn;
         }
-        createToken(IDENTIFIER_LOCAL, lexeme);
-        ungetc(key, stdin);
+        keywords(lexeme);
+        ungetc(key, stdin); 
         return Start;
     case Id_global0:
         if (key == '_')
@@ -494,9 +522,21 @@ State transition(State state, int key, LexemeBuffer *lexeme)
             appendChar(lexeme, (char)escaped);
             return String_single;
         }
+        if (key == '\n' || key == EOF)
+        {
+            createToken(ERROR, lexeme);
+            fprintf(stderr, "Neukončený string na řádku %d\n", g_line);
+            ifjexit(ERR_LEX);
+        }
         appendChar(lexeme, key);
         return String_single;
     case String_multi:
+        if (key == EOF)
+        {
+            createToken(ERROR, lexeme);
+            fprintf(stderr, "Neukončený víceřádkový string na řádku %d\n", g_line);
+            ifjexit(ERR_LEX);
+        }
         if (key == '"')
         {
             quote_count++;
@@ -589,6 +629,12 @@ State transition(State state, int key, LexemeBuffer *lexeme)
         return Comment_single;
 
     case Comment_multi:
+        if (key == EOF)
+        {
+            createToken(ERROR, lexeme);
+            fprintf(stderr, "Neukončený víceřádkový komentář na řádku %d\n", g_line);
+            ifjexit(ERR_LEX);
+        }
         if (key == '*')
         {
             return Comment_multi_end; // možný konec "*/"
@@ -605,6 +651,12 @@ State transition(State state, int key, LexemeBuffer *lexeme)
         return Comment_multi;
 
     case Comment_multi_slash:
+        if (key == EOF)
+        {
+            createToken(ERROR, lexeme);
+            fprintf(stderr, "Neukončený víceřádkový komentář na řádku %d\n", g_line);
+            ifjexit(ERR_LEX);
+        }
         if (key == '*')
         {
             // detekováno "/*" uvnitř komentáře vnoření + 1
@@ -615,10 +667,15 @@ State transition(State state, int key, LexemeBuffer *lexeme)
         {
             g_line++;
         }
+
         // nebylo to "/*", pořád jsme uvnitř
         return Comment_multi;
 
     case Comment_multi_end:
+        if (key == EOF) {
+            fprintf(stderr, "Neukončený víceřádkový komentář (EOF) na řádku %d\n", g_line);
+            ifjexit(ERR_LEX);
+        }
         if (key == '/')
         {
             // detekováno "*/"
@@ -628,6 +685,9 @@ State transition(State state, int key, LexemeBuffer *lexeme)
                 return Start; // vycházíme z komentáře
             }
             return Comment_multi; // pořád jsme ve vnořeném komentáři
+        }
+        if (key == '*') {
+            return Comment_multi_end;   // NE VRÁTIT SE
         }
         if (key == '\n')
         {
@@ -686,7 +746,7 @@ Token ifj_get_token(void)
         if (ch == EOF)
         {
             // propusť T_EOF přes FSM a vytvoř token EOF
-            transition(g_state, T_EOF, g_lb);
+            transition(g_state, ch, g_lb);
             createToken(T_EOF, g_lb);
             break;
         }
@@ -738,12 +798,12 @@ Token createToken(TokenType type, LexemeBuffer *lexeme)
     /*if (token.lexeme) {
         printf("%s - %s\n", convert(token.type), token.lexeme);
         free(token.lexeme);
-    }
+    }*/
 
-    if (token.type == STRING && token.value.string_val) {
+    /*if (token.type == STRING && token.value.string_val) {
         free(token.value.string_val);
     }*/
-    // printf("%s - %s\n", convert(token.type), token.lexeme ? token.lexeme : "NULL");
+    printf("%s - %s\n", convert(token.type), token.lexeme ? token.lexeme : "NULL");
 
     if (type == EOL)
     {

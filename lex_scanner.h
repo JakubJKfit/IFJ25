@@ -5,6 +5,7 @@ typedef enum State
 {
     Start,
     Letter,
+    Zero,
     Number,
     Hex,
     Exponent,
