@@ -43,6 +43,23 @@ static void print_string_literal_escaped(const char *str) {
     }
 }
 
+void gen_nil_check() {
+    int label_id = if_label_counter++;
+    printf("POPS GF@_check_op_2\n"); 
+    printf("POPS GF@_check_op_1\n"); 
+    printf("TYPE GF@_check_type GF@_check_op_1\n");
+    printf("JUMPIFEQ $nil_err_%d GF@_check_type string@nil\n", label_id);
+    printf("TYPE GF@_check_type GF@_check_op_2\n");
+    printf("JUMPIFEQ $nil_err_%d GF@_check_type string@nil\n", label_id);
+    printf("PUSHS GF@_check_op_1\n");
+    printf("PUSHS GF@_check_op_2\n");
+    printf("JUMP $nil_ok_%d\n", label_id);
+    printf("LABEL $nil_err_%d\n", label_id);
+    printf("EXIT int@26\n");
+    printf("LABEL $nil_ok_%d\n", label_id);
+}
+
+
 
 /**
  * @brief Rekurzivně projde strom a vypíše typ každého uzlu.
@@ -249,6 +266,7 @@ static void traverse_and_print_ast(AstNode *node) {
             switch (expr->op) {
         
                 case PLUS:
+                    gen_nil_check();
                     
                     if (expr->data_type == String) {
                         printf("POPS GF@_concat_help_2\n");
@@ -261,45 +279,72 @@ static void traverse_and_print_ast(AstNode *node) {
                     break;
                     
                 case MINUS:
+                gen_nil_check();
                     printf("SUBS\n");
                     break;
                     
-                case TIMES:{
-                    
-                    if (expr->data_type == String) {
-                        int current_loop_id = if_label_counter;
-                        if_label_counter++;
-                        
-                        printf("POPS GF@_mul_n\n");
-                        printf("POPS GF@_mul_s\n"); 
-                        printf("MOVE GF@_mul_acc string@\n");
-                        
-                        printf("LABEL $mul_loop_start_%d\n", current_loop_id);
-                    
-                        printf("PUSHS GF@_mul_n\n");
-                        printf("PUSHS float@0x0p+0\n");
-                        printf("GTS\n"); 
-                        printf("POPS GF@_mul_pod\n");
-                        printf("JUMPIFNEQ $mul_loop_end_%d GF@_mul_pod bool@true\n", current_loop_id);
+                case TIMES: {
 
-                       
-                        printf("CONCAT GF@_mul_acc GF@_mul_acc GF@_mul_s\n");
-                        
-                        printf("SUB GF@_mul_n GF@_mul_n float@0x1p+0\n");
-                        
-                        printf("JUMP $mul_loop_start_%d\n", current_loop_id);
-                        
-                        
-                        printf("LABEL $mul_loop_end_%d\n", current_loop_id);
-                        printf("PUSHS GF@_mul_acc\n");
-                    } else {
-                        printf("MULS\n");
-                    }
+                    int uid = if_label_counter++; 
+
+
+                    printf("POPS GF@_mul_r\n"); 
+                    printf("POPS GF@_mul_l\n"); 
+
+                    printf("TYPE GF@_mul_type_l GF@_mul_l\n");
+                    printf("TYPE GF@_mul_type_r GF@_mul_r\n");
+
+                    printf("JUMPIFEQ $mul_str_%d GF@_mul_type_l string@string\n", uid);
+
+                    printf("JUMPIFEQ $mul_l_float_%d GF@_mul_type_l string@float\n", uid);
+                    printf("JUMP $mul_err_%d\n", uid); 
+
+                    printf("LABEL $mul_l_float_%d\n", uid);
+
+                    printf("JUMPIFEQ $mul_r_float_%d GF@_mul_type_r string@float\n", uid);
+                    printf("JUMP $mul_err_%d\n", uid);
+
+                    printf("LABEL $mul_r_float_%d\n", uid);
+
+                    printf("PUSHS GF@_mul_l\n");
+                    printf("PUSHS GF@_mul_r\n");
+                    printf("MULS\n");
+                    printf("JUMP $mul_end_%d\n", uid);
+
+                    printf("LABEL $mul_str_%d\n", uid);
+      
+                    printf("JUMPIFNEQ $mul_err_%d GF@_mul_type_r string@float\n", uid);
+
+                    printf("ISINT GF@_mul_check_int GF@_mul_r\n");
+                    printf("JUMPIFNEQ $mul_err_%d GF@_mul_check_int bool@true\n", uid);
+
+                    
+                    printf("LABEL $mul_str_int_ok_%d\n", uid);
+
+                    printf("MOVE GF@_mul_acc string@\n");
+
+                    printf("LABEL $mul_loop_%d\n", uid);
+                    printf("PUSHS GF@_mul_r\n");
+                    printf("PUSHS float@0x0p+0\n");
+                    printf("GTS\n");
+                    printf("PUSHS bool@true\n");
+                    printf("JUMPIFNEQS $mul_loop_end_%d\n", uid); 
+                    printf("CONCAT GF@_mul_acc GF@_mul_acc GF@_mul_l\n");
+                    printf("SUB GF@_mul_r GF@_mul_r float@0x1p+0\n");
+                    printf("JUMP $mul_loop_%d\n", uid);
+
+                    printf("LABEL $mul_loop_end_%d\n", uid);
+                    printf("PUSHS GF@_mul_acc\n");
+                    printf("JUMP $mul_end_%d\n", uid);
+                    printf("LABEL $mul_err_%d\n", uid);
+                    printf("EXIT int@26\n");
+
+                    printf("LABEL $mul_end_%d\n", uid);
                     break;
                 }
                     
                 case DIVIDE:
-                    
+                    gen_nil_check();
                     printf("POPS GF@_div_r\n");
                     printf("POPS GF@_div_l\n");
 
@@ -941,6 +986,8 @@ void help_func() {
 
 
 
+
+
 /**
  * @brief Hlavní funkce pro generování kódu.
  * Nyní jen spustí rekurzivní tisk.
@@ -957,6 +1004,7 @@ void generate_code(AstNode *root) {
     printf("\n");
     for(int i = 0; i < counter; i++){
         printf("DEFVAR GF@%s\n", global_vars[i]);
+        printf("MOVE GF@%s nil@nil\n", global_vars[i]);
     }
     printf("DEFVAR GF@_div_l\n");
     printf("DEFVAR GF@_div_r\n");
@@ -979,6 +1027,15 @@ void generate_code(AstNode *root) {
     printf("DEFVAR GF@_eq_help_4\n");
     printf("DEFVAR GF@_concat_help_1\n");
     printf("DEFVAR GF@_concat_help_2\n");
+    printf("DEFVAR GF@_check_op_1\n");
+    printf("DEFVAR GF@_check_op_2\n");
+    printf("DEFVAR GF@_check_type\n");
+    printf("DEFVAR GF@_check_res\n");
+    printf("DEFVAR GF@_mul_l\n");
+    printf("DEFVAR GF@_mul_r\n");
+    printf("DEFVAR GF@_mul_type_l\n");
+    printf("DEFVAR GF@_mul_type_r\n");
+    printf("DEFVAR GF@_mul_check_int\n");
 
     
     
