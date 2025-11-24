@@ -339,6 +339,9 @@ State transition(State state, int key, LexemeBuffer *lexeme)
         {
             appendChar(lexeme, key);
             return Hex;
+        }else if (key == '.')
+        {
+            return Float;
         }
         else if (isdigit(key))
         {

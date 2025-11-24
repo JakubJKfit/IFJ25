@@ -251,7 +251,10 @@ static void traverse_and_print_ast(AstNode *node) {
                 case PLUS:
                     
                     if (expr->data_type == String) {
-                        printf("CONCATS\n");
+                        printf("POPS GF@_concat_help_2\n");
+                        printf("POPS GF@_concat_help_1\n");
+                        printf("CONCAT GF@_concat_help_1 GF@_concat_help_1 GF@_concat_help_2\n");
+                        printf("PUSHS GF@_concat_help_1\n");
                     } else { 
                         printf("ADDS\n");
                     }
@@ -974,6 +977,8 @@ void generate_code(AstNode *root) {
     printf("DEFVAR GF@_eq_help_2\n");
     printf("DEFVAR GF@_eq_help_3\n");
     printf("DEFVAR GF@_eq_help_4\n");
+    printf("DEFVAR GF@_concat_help_1\n");
+    printf("DEFVAR GF@_concat_help_2\n");
 
     
     
@@ -983,7 +988,6 @@ void generate_code(AstNode *root) {
     
     
     traverse_and_print_ast(root);
-    printf("\n");
-    printf("CLEARS\n");
+    
     
 }

@@ -63,3 +63,13 @@ test.txt
 examples/ok-builtins-and-spaces.wren
 
 is_it_ok.sh
+exampleCodesIFJ25/
+
+run_all_tests.sh
+.gitignore
+run_lex_tests.sh
+run_cc_tests.sh
+run_sem_tests.sh
+run_stx_tests.sh
+vysledek.txt
+tools/output.ifjcode25
