@@ -508,39 +508,40 @@ static AstNode *parse_stmt_list(AstNodeBlock *block)
 {
     while (1)
     {
-        // prázdné řádky na začátku / mezi příkazy nevadí
+        // prázdné řádky před příkazy nevadí
         skip_eol_star();
 
-        // konec bloku
-        if (ifj_cur.type == R_CURLY)
+        // konec bloku / souboru
+        if (ifj_cur.type == R_CURLY || ifj_cur.type == T_EOF)
             return (AstNode *)block;
 
-        // EOF uvnitř bloku je chyba – chybí '}'
-        if (ifj_cur.type == T_EOF)
-        {
-            fprintf(stderr, "l%d: unexpected end-of-file inside block\n", ifj_get_line());
-            ifjexit(ERR_SYN);
-        }
+        // zapamatuj si, na kterém řádku příkaz začíná
+        int stmt_line = ifj_get_line();
 
+        // načti jeden příkaz
         AstNode *stmt = parse_stmt();
         if (!stmt)
             return NULL;
 
         add_stmt_to_block(block, stmt);
 
-        // po příkazu MUSÍ být aspoň jeden EOL
-        if (ifj_cur.type != EOL)
+        // hned po příkazu může přijít ukončení bloku nebo EOF – to je v pořádku,
+        // příkaz může být těsně před '}'
+        if (ifj_cur.type == R_CURLY || ifj_cur.type == T_EOF)
+            return (AstNode *)block;
+
+        // jsme pořád na stejném řádku jako začátek příkazu -> chybí <EOL>
+        if (ifj_get_line() == stmt_line)
         {
-            fprintf(stderr, "l%d: expected end-of-line after statement, got %s",
+            fprintf(stderr,
+                    "l%d: expected end-of-line after statement, got %s",
                     ifj_get_line(), convert(ifj_cur.type));
             ifjexit(ERR_SYN);
         }
 
-        // sežer jeden nebo více EOLů
-        do
-        {
-            next();
-        } while (ifj_cur.type == EOL);
+        // jinak už jsme na pozdějším řádku => nějaké zalomení řádku proběhlo,
+        // jen případně sežereme EOL tokeny, pokud je lexer vytváří
+        skip_eol_star();
     }
 }
 
@@ -1305,18 +1306,21 @@ static void semantic_recurs(AstNode *node, symstack *stack, int *current_offset,
         symbol_data_type left_type = get_type(binary_expr->left);
         symbol_data_type right_type = get_type(binary_expr->right);
 
-        // musi se urcit za behu
+        // musí se určit za běhu
         if (left_type == Undefined || right_type == Undefined)
         {
             binary_expr->data_type = Undefined;
             break;
         }
 
+        // null je zakázaný ve všech operacích kromě == a !=
         if (binary_expr->op != EQUAL && binary_expr->op != NOT_EQUAL)
         {
             if (left_type == Null || right_type == Null)
             {
-                fprintf(stderr, "Line %d: Type Error: Cannot use 'null' in this operation.\n", binary_expr->base.line_number);
+                fprintf(stderr,
+                        "Line %d: Type Error: Cannot use 'null' in this operation.\n",
+                        binary_expr->base.line_number);
                 ifjexit(ERR_SEM_INCOMP);
             }
         }
