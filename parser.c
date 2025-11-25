@@ -165,6 +165,7 @@ static bool consume_eol(enum EOL_POLICY p)
     {
         fprintf(stderr, "l%d: expected end-of-line, got %s",
                 ifj_get_line(), convert(ifj_cur.type));
+        ifjexit(ERR_SYN);
     }
     do
     {
@@ -231,6 +232,16 @@ AstNode *ifj_parse_program(void)
     {
         stack_dispose(&global_symstack);
         return NULL;
+    }
+
+    consume_eol(EOL_ZERO_OR_MORE); // povolíme prázdné řádky na konci souboru
+    if (ifj_cur.type != T_EOF)
+    {
+        free_ast_node(program_node);
+        stack_dispose(&global_symstack);
+        fprintf(stderr, "l%d: unexpected token after end of Program class: %s",
+                ifj_get_line(), convert(ifj_cur.type));
+        ifjexit(ERR_SYN);
     }
 
     semantic_firstpass(program_node, &global_symstack);
@@ -497,10 +508,19 @@ static AstNode *parse_stmt_list(AstNodeBlock *block)
 {
     while (1)
     {
+        // prázdné řádky na začátku / mezi příkazy nevadí
         skip_eol_star();
 
-        if (ifj_cur.type == R_CURLY || ifj_cur.type == T_EOF)
+        // konec bloku
+        if (ifj_cur.type == R_CURLY)
             return (AstNode *)block;
+
+        // EOF uvnitř bloku je chyba – chybí '}'
+        if (ifj_cur.type == T_EOF)
+        {
+            fprintf(stderr, "l%d: unexpected end-of-file inside block\n", ifj_get_line());
+            ifjexit(ERR_SYN);
+        }
 
         AstNode *stmt = parse_stmt();
         if (!stmt)
@@ -508,7 +528,19 @@ static AstNode *parse_stmt_list(AstNodeBlock *block)
 
         add_stmt_to_block(block, stmt);
 
-        skip_eol_star();
+        // po příkazu MUSÍ být aspoň jeden EOL
+        if (ifj_cur.type != EOL)
+        {
+            fprintf(stderr, "l%d: expected end-of-line after statement, got %s",
+                    ifj_get_line(), convert(ifj_cur.type));
+            ifjexit(ERR_SYN);
+        }
+
+        // sežer jeden nebo více EOLů
+        do
+        {
+            next();
+        } while (ifj_cur.type == EOL);
     }
 }
 
@@ -941,9 +973,11 @@ static void semantic_firstpass(AstNode *node, symstack *stack)
             fprintf(stderr, "Line: %d, redefinition of function %s\n", func->base.line_number, func_name);
             ifjexit(ERR_SEM_REDEFINED);
         }
-        if(func->kind == FUNC_IS_FUNC){// pro check deklarace funkce
+        if (func->kind == FUNC_IS_FUNC)
+        { // pro check deklarace funkce
             symbol_data *found_decl;
-            if(!search_symbol(*global_table, func_key, &found_decl)){
+            if (!search_symbol(*global_table, func_key, &found_decl))
+            {
                 symbol_data data;
                 data.identifier = func_key;
                 data.id_type = FUNC_ID;
@@ -954,7 +988,6 @@ static void semantic_firstpass(AstNode *node, symstack *stack)
                 insert_symbol(global_table, &data);
             }
         }
-
 
         func_data.identifier = identif_buffer;
         func_data.id_type = FUNC_ID;
@@ -1039,7 +1072,8 @@ static void semantic_recurs(AstNode *node, symstack *stack, int *current_offset,
             param->data_type = param_data.data_type;
         }
         AstNodeBlock *body = func->body;
-        for(int i = 0; i < body->statements->count; i++){
+        for (int i = 0; i < body->statements->count; i++)
+        {
             semantic_recurs(body->statements->items[i], stack, &func_offset, func_data);
         }
         stack_pop(stack);
@@ -1270,7 +1304,7 @@ static void semantic_recurs(AstNode *node, symstack *stack, int *current_offset,
 
         symbol_data_type left_type = get_type(binary_expr->left);
         symbol_data_type right_type = get_type(binary_expr->right);
-        
+
         // musi se urcit za behu
         if (left_type == Undefined || right_type == Undefined)
         {
@@ -1300,7 +1334,7 @@ static void semantic_recurs(AstNode *node, symstack *stack, int *current_offset,
             else
             {
                 fprintf(stderr, "Line %d, Operands for addition must be both Num or both String\n", binary_expr->base.line_number);
-                ifjexit(ERR_SEM_INCOMP);   
+                ifjexit(ERR_SEM_INCOMP);
             }
             break;
         case MINUS:
@@ -1310,7 +1344,7 @@ static void semantic_recurs(AstNode *node, symstack *stack, int *current_offset,
                 binary_expr->data_type = Num;
             }
             else
-            {    
+            {
                 fprintf(stderr, "Line %d, Operands for subtraction or division must be both Num\n", binary_expr->base.line_number);
                 ifjexit(ERR_SEM_INCOMP);
             }
@@ -1386,18 +1420,21 @@ static void semantic_recurs(AstNode *node, symstack *stack, int *current_offset,
             char arity_key[256];
             int temp = snprintf(func_key, 256, "%s@F", func_name);
             int temp2 = snprintf(arity_key, 256, "%s@%d", func_name, arity);
-            if(temp < 0 || temp2 < 0 || temp >= 256 || temp2 >= 256){
+            if (temp < 0 || temp2 < 0 || temp >= 256 || temp2 >= 256)
+            {
                 fprintf(stderr, "%s identifier too long\n", func_name);
                 ifjexit(ERR_SEM_OTHER);
             }
             // hledani deklarace
             symbol_data *found_decl;
-            if(!search_scopes(stack, func_key, &found_decl)){
+            if (!search_scopes(stack, func_key, &found_decl))
+            {
                 fprintf(stderr, "Line %d: undefined function %s\n", func->base.line_number, func_name);
                 ifjexit(ERR_SEM_UNDEFINED);
             }
             // arita
-            if(!search_scopes(stack, arity_key, &found)){
+            if (!search_scopes(stack, arity_key, &found))
+            {
                 fprintf(stderr, "Line %d: %s function call with wrong arity\n", func->base.line_number, func_name);
                 ifjexit(ERR_SEM_PARAM);
             }
