@@ -899,6 +899,7 @@ static void semantic_firstpass(AstNode *node, symstack *stack)
 
     char identif_buffer[256];
     symbol_data func_data;
+    char func_key[256];
 
     for (int i = 0; i < funcs->count; i++)
     {
@@ -911,6 +912,10 @@ static void semantic_firstpass(AstNode *node, symstack *stack)
         switch (func->kind)
         {
         case FUNC_IS_FUNC:
+            // funkce pod timto jmenem je deklarovana
+            snprintf(func_key, 256, "%s@F", func_name);
+
+            // ulozeni jmena + arita
             temp = snprintf(identif_buffer, 256, "%s@%d", func_name, arity);
             break;
         case FUNC_IS_GETTER:
@@ -936,6 +941,20 @@ static void semantic_firstpass(AstNode *node, symstack *stack)
             fprintf(stderr, "Line: %d, redefinition of function %s\n", func->base.line_number, func_name);
             ifjexit(ERR_SEM_REDEFINED);
         }
+        if(func->kind == FUNC_IS_FUNC){// pro check deklarace funkce
+            symbol_data *found_decl;
+            if(!search_symbol(*global_table, func_key, &found_decl)){
+                symbol_data data;
+                data.identifier = func_key;
+                data.id_type = FUNC_ID;
+                data.data_type = Undefined;
+                data.arity = -1;
+                data.offset = 0;
+
+                insert_symbol(global_table, &data);
+            }
+        }
+
 
         func_data.identifier = identif_buffer;
         func_data.id_type = FUNC_ID;
@@ -1248,7 +1267,7 @@ static void semantic_recurs(AstNode *node, symstack *stack, int *current_offset,
 
         symbol_data_type left_type = get_type(binary_expr->left);
         symbol_data_type right_type = get_type(binary_expr->right);
-
+        
         // musi se urcit za behu
         if (left_type == Undefined || right_type == Undefined)
         {
@@ -1278,7 +1297,7 @@ static void semantic_recurs(AstNode *node, symstack *stack, int *current_offset,
             else
             {
                 fprintf(stderr, "Line %d, Operands for addition must be both Num or both String\n", binary_expr->base.line_number);
-                ifjexit(ERR_SEM_INCOMP);
+                ifjexit(ERR_SEM_INCOMP);   
             }
             break;
         case MINUS:
@@ -1288,7 +1307,7 @@ static void semantic_recurs(AstNode *node, symstack *stack, int *current_offset,
                 binary_expr->data_type = Num;
             }
             else
-            {
+            {    
                 fprintf(stderr, "Line %d, Operands for subtraction or division must be both Num\n", binary_expr->base.line_number);
                 ifjexit(ERR_SEM_INCOMP);
             }
@@ -1300,8 +1319,7 @@ static void semantic_recurs(AstNode *node, symstack *stack, int *current_offset,
             }
             else if (left_type == String && right_type == Num)
             {
-                if (binary_expr->right->type == AST_EXPR_LITERAL &&
-                    ((AstNodeLiteral *)binary_expr->right)->token.type != INT)
+                if (binary_expr->right->type == AST_EXPR_LITERAL && ((AstNodeLiteral *)binary_expr->right)->token.type != INT)
                 {
                     fprintf(stderr, "Line %d, Operands for string iteration must be an Integer, not Float\n", binary_expr->base.line_number);
                     ifjexit(ERR_SEM_INCOMP);
@@ -1361,18 +1379,24 @@ static void semantic_recurs(AstNode *node, symstack *stack, int *current_offset,
         case IDENTIFIER_GLOBAL:
         case IDENTIFIER_LOCAL:
         {
-            char key[256];
-            int temp = snprintf(key, 256, "%s@%d", func_name, arity);
-            if (temp < 0 || temp >= 256)
-            {
-                fprintf(stderr, "%s identifier too long to parse\n", func_name);
+            char func_key[256];
+            char arity_key[256];
+            int temp = snprintf(func_key, 256, "%s@F", func_name);
+            int temp2 = snprintf(arity_key, 256, "%s@%d", func_name, arity);
+            if(temp < 0 || temp2 < 0 || temp >= 256 || temp2 >= 256){
+                fprintf(stderr, "%s identifier too long\n", func_name);
                 ifjexit(ERR_SEM_OTHER);
             }
-            if (!search_scopes(stack, key, &found))
-            {
-                fprintf(stderr, "Line %d, %s func call with wrong arity\n", func->base.line_number, func_name);
-                ifjexit(ERR_SEM_PARAM); // todo: tady je spatnej kod, ma to byt 3 a 5 az potom co zjistim jestli calluju
-                                        // se spatnou aritou, ale jdu spat
+            // hledani deklarace
+            symbol_data *found_decl;
+            if(!search_scopes(stack, func_key, &found_decl)){
+                fprintf(stderr, "Line %d: undefined function %s\n", func->base.line_number, func_name);
+                ifjexit(ERR_SEM_UNDEFINED);
+            }
+            // arita
+            if(!search_scopes(stack, arity_key, &found)){
+                fprintf(stderr, "Line %d: %s function call with wrong arity\n", func->base.line_number, func_name);
+                ifjexit(ERR_SEM_PARAM);
             }
             func->data_type = found->data_type;
             break;
