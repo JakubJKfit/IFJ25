@@ -1038,7 +1038,10 @@ static void semantic_recurs(AstNode *node, symstack *stack, int *current_offset,
             param->stack_offset = param_data.offset;
             param->data_type = param_data.data_type;
         }
-        semantic_recurs((AstNode *)func->body, stack, &func_offset, func_data);
+        AstNodeBlock *body = func->body;
+        for(int i = 0; i < body->statements->count; i++){
+            semantic_recurs(body->statements->items[i], stack, &func_offset, func_data);
+        }
         stack_pop(stack);
         break;
     }
