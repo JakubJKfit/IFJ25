@@ -343,12 +343,6 @@ State transition(State state, int key, LexemeBuffer *lexeme)
         {
             return Float;
         }
-        else if (isdigit(key))
-        {
-            fprintf(stderr, "Neplatný číselný literál na řádku %d\n", g_line);
-            createToken(ERROR, lexeme);
-            ifjexit(ERR_LEX);
-        }
         createToken(INT, lexeme);
         ungetc(key, stdin);
         return Start;
