@@ -22,9 +22,12 @@ typedef enum State
     Comment_single,
     Comment_multi,
     Comment_multi_end,
+    Comment_multi_end_check,
     Comment_multi_slash,
     String_single,
     String_detect,
+    String_q_check1,
+    String_q_check2,
     String_multi,
     Id_global0,
     Id_global,
@@ -54,7 +57,6 @@ typedef enum TokenType
     INT,
     FLOAT,
     STRING,
-    PROLOG,
     TIMES,
     DIVIDE,
     PLUS,
@@ -80,7 +82,6 @@ typedef enum TokenType
     IFJ_STRCMP,
     IFJ_ORD,
     IFJ_CHR,
-    ERROR,
     COMMA,
     EOL,
     T_EOF
@@ -150,8 +151,6 @@ static inline const char* convert(TokenType type)
         return "FLOAT";
     case STRING:
         return "STRING";
-    case PROLOG:
-        return "PROLOG";
     case TIMES:
         return "TIMES";
     case DIVIDE:
@@ -202,8 +201,6 @@ static inline const char* convert(TokenType type)
         return "IFJ_ORD";
     case IFJ_CHR:
         return "IFJ_CHR";
-    case ERROR:
-        return "ERROR";
     case COMMA:
         return "COMMA";
     case EOL:
