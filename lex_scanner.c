@@ -26,16 +26,23 @@ typedef struct
     size_t capacity;
 } LexemeBuffer;
 
-// Globální stav pro token na vyžádání (parser volá ifj_get_token)
+/// Buffer pro znaky aktuálního lexému
 static LexemeBuffer *g_lb = NULL;
+
+/// Aktuální stav konečného automatu lexikálního analyzátoru
 static State g_state = Start;
 
-// Poslední vytvořený token (createToken ho sem uloží)
+/// Příznak, že byl vytvořen nový token
 static int g_has_token = 0;
+
+/// Poslední vytvořený token vracený funkcí ifj_get_token()
 static Token g_last_token;
 
-static int g_line = 1;     // začátek na prvním řádku
-static int g_ml_depth = 0; // hloubka vnořených komentářů
+/// Aktuální číslo řádku ve vstupním souboru (začíná na 1)
+static int g_line = 1;
+
+/// Hloubka vnořených vícerádkových komentářů
+static int g_ml_depth = 0;
 
 Token createToken(TokenType type, LexemeBuffer *lexeme);
 
@@ -798,6 +805,9 @@ State transition(State state, int key, LexemeBuffer *lexeme)
     return Error;
 }
 
+/**
+ * @brief Vrátí další token z lexikálního analyzátoru
+ */
 Token ifj_get_token(void)
 {
     if (!g_lb)
@@ -822,6 +832,9 @@ Token ifj_get_token(void)
     return g_last_token;
 }
 
+/**
+ * @brief Vrátí číslo aktuálního řádku
+ */
 int ifj_get_line(void)
 {
     return g_line;

@@ -120,10 +120,20 @@ typedef struct Token
     } value;
 } Token;
 
-// Scanner API pro parser:
+/**
+ * @brief Vrátí další token ze vstupu.
+ *
+ * Čte znaky ze standardního vstupu a vrací postupně jednotlivé tokeny.
+ * Po dosažení konce vstupu vrací token typu T_EOF.
+ */
 Token ifj_get_token(void);
 
-// Aktuální číslo řádku (1-based)
+
+/**
+ * @brief Vrátí aktuální číslo řádku.
+ *
+ * Řádek se zvyšuje při čtení znaků konce řádku v lexikálním analyzátoru.
+ */
 int ifj_get_line(void);
 
 
