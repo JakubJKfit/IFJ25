@@ -1,3 +1,13 @@
+/**
+ * @file lex_scanner.c
+ * @author Petr Molík xmolikp00
+ * @brief Lexikální analýza
+ * 
+ * Soubor načte znak ze standartního vstupu, pomocí konečného automatu se přesouvá do stavů a zpracovává načtené znaky.
+ * Jakmile se dostane do koncového stavu, vytvoří se token a analýza pokračuje dalším znakem ze startovního stavu.
+ * 
+ * 
+ */
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>
@@ -5,6 +15,10 @@
 #include <stdlib.h>
 #include "lex_scanner.h"
 #include "err.h"
+
+/**
+* @brief Struktura pro paměť lexému
+*/
 typedef struct
 {
     char *buffer;
@@ -25,6 +39,9 @@ static int g_ml_depth = 0; // hloubka vnořených komentářů
 
 Token createToken(TokenType type, LexemeBuffer *lexeme);
 
+/**
+* @brief Přidělení paměti pro lexém
+*/
 LexemeBuffer *initBuffer(size_t initial_size)
 {
     LexemeBuffer *lb = malloc(sizeof(LexemeBuffer));
@@ -45,12 +62,18 @@ LexemeBuffer *initBuffer(size_t initial_size)
     return lb;
 }
 
+/**
+* @brief Uvolnění paměti lexému
+*/
 void freeBuffer(LexemeBuffer *lb)
 {
     free(lb->buffer);
     free(lb);
 }
 
+/**
+* @brief Vymazání obsahu uloženého lexému
+*/
 void resetBuffer(LexemeBuffer *lb)
 {
     lb->length = 0;
@@ -58,6 +81,9 @@ void resetBuffer(LexemeBuffer *lb)
         lb->buffer[0] = '\0';
 }
 
+/**
+* @brief Přidání znaku do lexému
+*/
 void appendChar(LexemeBuffer *lb, char c)
 {
     if (lb->length + 1 >= lb->capacity)
@@ -74,6 +100,9 @@ void appendChar(LexemeBuffer *lb, char c)
     lb->buffer[lb->length] = '\0';
 }
 
+/**
+* @brief Odebrání posledního znaku z lexému
+*/
 void removeLast(LexemeBuffer *lb)
 {
     if (lb->length > 0)
@@ -82,6 +111,9 @@ void removeLast(LexemeBuffer *lb)
     }
 }
 
+/**
+* @brief Pomocná funkce pro kopírování řetězce a přiřazení paměti
+*/
 char *copyString(const char *str)
 {
     char *copy = malloc(strlen(str) + 1);
@@ -95,6 +127,17 @@ char *copyString(const char *str)
     return copy;
 }
 
+/**
+ * @brief Vytvoření tokenu vestavěné funkce
+ * 
+ * Funkce podle načteného řetězce vytvoří token pro danou vestavěnou funkci.
+ * Pokud se token vytvořil vrací zpátky Start, jinak Error.
+ * 
+ * @see createToken()
+ * 
+ * @param lexeme Načtený řetězec
+ * @return State 
+ */
 State builtInFunctions(LexemeBuffer *lexeme)
 {
     if (strcmp(lexeme->buffer, "read_str") == 0)
@@ -144,6 +187,14 @@ State builtInFunctions(LexemeBuffer *lexeme)
     return Start;
 }
 
+/**
+ * @brief Vyhodnocení klíčového slova
+ * 
+ * Funkce zkontroluje, jestli není načtený retězec klíčové slovo.
+ * Pokud je, vytvoří pro něj token, jinak se vytvoří token identifikátoru.
+ * 
+ * @param lexeme Načtený řetězec
+ */
 void keywords(LexemeBuffer *lexeme)
 {
     if (strcmp(lexeme->buffer, "class") == 0)
@@ -208,6 +259,13 @@ void keywords(LexemeBuffer *lexeme)
     }
 }
 
+/**
+ * @brief Přetypování escape sekvence
+ * 
+ * Pokud se jedná o escape sekvenci, vrácí funkce znak odpovídající dané sekvenci.
+ * 
+ * @return char ,nebo -1 při chybě/neplatné sekvenci
+ */
 char escapeChar()
 {
     int c = getchar();
@@ -255,6 +313,17 @@ static void compress_newlines(void)
     g_line += extra;
 }
 
+/**
+ * @brief Vytvoření tokenu vestavěné funkce
+ * 
+ * Jedná se o konečný automat. Podle vstupního stavu se funkce rozhodne do jakého stavu vstoupí.
+ * Tam se na základě načteného stavu vytvoří token (jedná se o koncový stav), nebo vrací následující stav.
+ * 
+ * @param state Aktuální stav
+ * @param key Načtený znak
+ * @param lexeme Paměť pro uložení řetězce tokenu
+ * @return State 
+ */
 State transition(State state, int key, LexemeBuffer *lexeme)
 {
     static bool float_detected = false;
@@ -334,6 +403,8 @@ State transition(State state, int key, LexemeBuffer *lexeme)
             ungetc(key, stdin);
             return Error;
         }
+    
+    // Číslo
     case Zero:
         if (key == 'x')
         {
@@ -346,7 +417,6 @@ State transition(State state, int key, LexemeBuffer *lexeme)
         createToken(INT, lexeme);
         ungetc(key, stdin);
         return Start;
-
     case Number:
         appendChar(lexeme, key);
         if (isdigit(key))
@@ -376,7 +446,7 @@ State transition(State state, int key, LexemeBuffer *lexeme)
         {
             float_detected = false;
             return Exponent;
-        }else if (!float_detected)
+        }else if (!float_detected)  // Pokud se za desetinnou tečkou nenachází žádné číslo
         {
             fprintf(stderr, "Neplatný desetinný literál na řádku %d\n", g_line);
             ifjexit(ERR_LEX);
@@ -387,6 +457,8 @@ State transition(State state, int key, LexemeBuffer *lexeme)
         ungetc(key, stdin);
         float_detected = false;
         return Start;
+    
+    // Exponent
     case Exponent:
         appendChar(lexeme, key);
         if (isdigit(key))
@@ -418,13 +490,14 @@ State transition(State state, int key, LexemeBuffer *lexeme)
         createToken(FLOAT, lexeme);
         ungetc(key, stdin);
         return Start;
+
     case Hex:
         if (isxdigit(key))
         {
             appendChar(lexeme, key);
             return Hex;
         }
-        if (lexeme->length <= 2) //(lexeme->length <= 2 || isalpha(key))
+        if (lexeme->length <= 2)    // Pokud je jen "0x"
         {
             fprintf(stderr, "Neplatný hexadecimální literál na řádku %d\n", g_line);
             ifjexit(ERR_LEX);
@@ -432,6 +505,7 @@ State transition(State state, int key, LexemeBuffer *lexeme)
         createToken(INT, lexeme);
         ungetc(key, stdin);
         return Start;
+
     case Not:
         if (key == '=')
         {
@@ -447,7 +521,7 @@ State transition(State state, int key, LexemeBuffer *lexeme)
             appendChar(lexeme, key);
             return Letter;
         }
-        else if (strcmp(lexeme->buffer, "Ifj") == 0)
+        else if (strcmp(lexeme->buffer, "Ifj") == 0)    // Víme že se jedná o začátek vestavěné funkce
         {
             ungetc(key, stdin);
             return BuiltIn;
@@ -455,6 +529,8 @@ State transition(State state, int key, LexemeBuffer *lexeme)
         keywords(lexeme);
         ungetc(key, stdin); 
         return Start;
+
+    // Globální identifikátor
     case Id_global0:
         if (key == '_')
         {
@@ -473,6 +549,7 @@ State transition(State state, int key, LexemeBuffer *lexeme)
         ungetc(key, stdin);
         return Start;
 
+    // Stringy/řetězce
     case String_detect:
         if (key == '"')
         {
@@ -481,19 +558,19 @@ State transition(State state, int key, LexemeBuffer *lexeme)
         }
         else
         {
-            if (quote_count == 2)
+            if (quote_count == 2)   // Jedná se o prázdný řetězec
             {
                 quote_count = 0;
                 createToken(STRING, lexeme);
                 ungetc(key, stdin);
                 return Start;
             }
-            resetBuffer(lexeme);
+            resetBuffer(lexeme);    // Odstraní uvozovku z lexému
             ungetc(key, stdin);
             quote_count = 0;
             return String_single;
         }
-    case String_q_check1:
+    case String_q_check1:   // Kontrola zda se jedná o víceřádkový řetezec
         ungetc(key, stdin);
         if (quote_count == 3)
             {
@@ -501,7 +578,7 @@ State transition(State state, int key, LexemeBuffer *lexeme)
                 return String_multi;
             }
         return String_detect;
-    case String_single:
+    case String_single: // Jednořádkový
         if (key == '"')
         {
             createToken(STRING, lexeme);
@@ -525,7 +602,7 @@ State transition(State state, int key, LexemeBuffer *lexeme)
         }
         appendChar(lexeme, key);
         return String_single;
-    case String_multi:
+    case String_multi:  // Víceřádkový
         if (key == EOF)
         {
             fprintf(stderr, "Neukončený víceřádkový string na řádku %d\n", g_line);
@@ -539,7 +616,7 @@ State transition(State state, int key, LexemeBuffer *lexeme)
         quote_count = 0;
         appendChar(lexeme, key);
         return String_multi;
-    case String_q_check2:
+    case String_q_check2:   // Kontrola zda uvozovky ukončují víceřádkový řetězec
         ungetc(key,stdin);
         if (quote_count == 3)
             {
@@ -553,7 +630,7 @@ State transition(State state, int key, LexemeBuffer *lexeme)
     case BuiltIn:
         if (key == ' ' || key == '\t' || key == '\r' || key == '\v' || key == '\f')
         {
-            // běžné whitespacy ignorujeme, čekáme na '.' (povolí "Ifj . write")
+            // Běžné whitespacy ignorujeme, čekáme na '.' (povolí "Ifj . write")
             return BuiltIn;
         }
         else if (key == '.')
@@ -561,11 +638,10 @@ State transition(State state, int key, LexemeBuffer *lexeme)
             resetBuffer(lexeme);
             return BuiltIn_dot;
         }
-        // jakýkoli jiný znak ukončí Ifj jako klíčové slovo a znak vrátíme
+        // Jakýkoli jiný znak ukončí Ifj jako klíčové slovo a znak vrátíme
         createToken(KEYWORD_Ifj, lexeme);
         ungetc(key, stdin);
         return Start;
-
     case BuiltIn_dot:
         if (isspace(key))
         {
@@ -588,12 +664,10 @@ State transition(State state, int key, LexemeBuffer *lexeme)
             appendChar(lexeme, key);
             return BuiltIn_fun;
         }
-        // konec vestavěné funkce, emituj IFJ_* token
-        {
-            State st = builtInFunctions(lexeme);
-            ungetc(key, stdin);
-            return st;
-        }
+        // Konec vestavěné funkce, emituj IFJ_* token
+        State st = builtInFunctions(lexeme);
+        ungetc(key, stdin);
+        return st;
 
     case Divide:
         if (key == '/')
@@ -602,23 +676,23 @@ State transition(State state, int key, LexemeBuffer *lexeme)
         }
         else if (key == '*')
         {
-            g_ml_depth = 1; // začátek ve hloubce 1
+            g_ml_depth = 1; // Začátek ve hloubce 1
             return Comment_multi;
         }
         createToken(DIVIDE, lexeme);
         ungetc(key, stdin);
         return Start;
 
-    case Comment_single:
+    // Komentáře
+    case Comment_single: // Jednořádkový
         if (key == '\n')
         {
-            // konec řádkového komentáře, uzavři příkaz EOL
+            // Konec řádkového komentáře, uzavři příkaz EOL
             createToken(EOL, lexeme);
             return Start;
         }
         return Comment_single;
-
-    case Comment_multi:
+    case Comment_multi: // Víceřádkový
         if (key == EOF)
         {
             fprintf(stderr, "Neukončený víceřádkový komentář na řádku %d\n", g_line);
@@ -626,19 +700,18 @@ State transition(State state, int key, LexemeBuffer *lexeme)
         }
         if (key == '*')
         {
-            return Comment_multi_end; // možný konec "*/"
+            return Comment_multi_end; // Možný konec "*/"
         }
         if (key == '/')
         {
-            return Comment_multi_slash; // možný nový začátek "/*"
+            return Comment_multi_slash; // Možný nový začátek "/*"
         }
         if (key == '\n')
         {
-            // drž číslování řádků i uvnitř komentářů
+            // Drž číslování řádků i uvnitř komentářů
             g_line++;
         }
         return Comment_multi;
-
     case Comment_multi_slash:
         if (key == EOF)
         {
@@ -647,7 +720,7 @@ State transition(State state, int key, LexemeBuffer *lexeme)
         }
         if (key == '*')
         {
-            // detekováno "/*" uvnitř komentáře vnoření + 1
+            // Detekováno "/*" uvnitř komentáře vnoření + 1
             g_ml_depth++;
             return Comment_multi;
         }
@@ -655,10 +728,8 @@ State transition(State state, int key, LexemeBuffer *lexeme)
         {
             g_line++;
         }
-
-        // nebylo to "/*", pořád jsme uvnitř
+        // Nebylo to "/*", pořád jsme uvnitř
         return Comment_multi;
-
     case Comment_multi_end:
         if (key == EOF) {
             fprintf(stderr, "Neukončený víceřádkový komentář (EOF) na řádku %d\n", g_line);
@@ -666,7 +737,7 @@ State transition(State state, int key, LexemeBuffer *lexeme)
         }
         if (key == '/')
         {
-            // detekováno "*/"
+            // Detekováno "*/"
             g_ml_depth--;
             return Comment_multi_end_check;
         }
@@ -677,14 +748,15 @@ State transition(State state, int key, LexemeBuffer *lexeme)
         {
             g_line++;
         }
-        // nebylo to "*/", zpět do těla komentáře
+        // Nebylo to "*/", zpět do těla komentáře
         return Comment_multi;
     case Comment_multi_end_check:
         if (g_ml_depth <= 0)
             {
-                return Start; // vycházíme z komentáře
+                return Start; // Vycházíme z komentáře
             }
-        return Comment_multi; // pořád jsme ve vnořeném komentáři
+        return Comment_multi; // Pořád jsme ve vnořeném komentáři
+    
     case Lesser:
         if (key == '=')
         {
@@ -694,6 +766,7 @@ State transition(State state, int key, LexemeBuffer *lexeme)
         createToken(LESSER, lexeme);
         ungetc(key, stdin);
         return Start;
+
     case Greater:
         if (key == '=')
         {
@@ -703,6 +776,7 @@ State transition(State state, int key, LexemeBuffer *lexeme)
         createToken(GREATER, lexeme);
         ungetc(key, stdin);
         return Start;
+
     case Assign:
         if (key == '=')
         {
@@ -712,6 +786,7 @@ State transition(State state, int key, LexemeBuffer *lexeme)
         createToken(ASSIGN, lexeme);
         ungetc(key, stdin);
         return Start;
+
     case Error:
         fprintf(stderr, "Lexikální chyba na řádku %d\n", g_line);
         ifjexit(ERR_LEX);
@@ -734,7 +809,7 @@ Token ifj_get_token(void)
         int ch = getchar();
         if (ch == EOF)
         {
-            // propusť T_EOF přes FSM a vytvoř token EOF
+            // Propusť T_EOF přes FSM a vytvoř token EOF
             transition(g_state, ch, g_lb);
             createToken(T_EOF, g_lb);
             break;
@@ -752,6 +827,16 @@ int ifj_get_line(void)
     return g_line;
 }
 
+/**
+ * @brief Vytvoření tokenu
+ * 
+ * Vytvoří token s daným typem a načteným řetězcem(lexem).
+ * Některým tokenům se přiřadí i číselná hodnota nebo řetězec, který předsatvují.
+ * 
+ * @param type Typ tokenu
+ * @param lexeme Načtený řetězec tokenu
+ * @return Token 
+ */
 Token createToken(TokenType type, LexemeBuffer *lexeme)
 {
     Token token;
@@ -779,17 +864,6 @@ Token createToken(TokenType type, LexemeBuffer *lexeme)
         token.lexeme = NULL;
         break;
     }
-
-    // Vypisovani tokenu na debuging
-    /*if (token.lexeme) {
-        printf("%s - %s\n", convert(token.type), token.lexeme);
-        free(token.lexeme);
-    }*/
-
-    /*if (token.type == STRING && token.value.string_val) {
-        free(token.value.string_val);
-    }*/
-    //printf("%s - %s\n", convert(token.type), token.lexeme ? token.lexeme : "NULL");
 
     if (type == EOL)
     {

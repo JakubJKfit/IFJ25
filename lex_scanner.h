@@ -1,6 +1,17 @@
+/**
+ * @file lex_scanner.h
+ * @author Petr Molík xmolikp00
+ * @brief Lexikální analýza
+ * 
+ */
+
 #ifndef LEX_SCANNER_H
 #define LEX_SCANNER_H
 
+/**
+ * @brief Stavy konečného automatu
+ * 
+ */
 typedef enum State
 {
     Start,
@@ -35,6 +46,10 @@ typedef enum State
     Error
 } State;
 
+/**
+ * @brief Všechny typy tokenů
+ * 
+ */
 typedef enum TokenType
 {
     KEYWORD_class,
@@ -87,6 +102,12 @@ typedef enum TokenType
     T_EOF
 } TokenType;
 
+/**
+ * @brief Struktura tokenu s načteným řčetězcem a jeho hodnotou
+ * 
+ * Uvolnění paměti má na starosti parser.
+ * 
+ */
 typedef struct Token
 {
     TokenType type;
@@ -106,7 +127,13 @@ Token ifj_get_token(void);
 int ifj_get_line(void);
 
 
-// Pomocna funkce pro vypis tokenu
+/**
+ * @brief pomocná funkce pro vypsání tokenů
+ * 
+ * 
+ * @param type Typ tokenu
+ * @return char* 
+ */
 static inline const char* convert(TokenType type)
 {
     switch (type)
