@@ -9,7 +9,15 @@
 #include <string.h>
 #include <assert.h>
 
-// --- Helper pro alokaci ---
+/**
+ * @brief Alokuje a inicializuje AST uzel daného typu.
+ *
+ * Při chybě alokace ukončí program s návratovým kódem 99.
+ *
+ * @param type Typ uzlu.
+ * @param size Velikost alokované struktury v bajtech.
+ * @return Ukazatel na nově alokovaný uzel.
+ */
 static AstNode *ast_node_alloc(AstNodeType type, size_t size)
 {
     AstNode *node = calloc(1, size);
@@ -23,7 +31,11 @@ static AstNode *ast_node_alloc(AstNodeType type, size_t size)
     return node;
 }
 
-// --- Seznamy ---
+/**
+ * @brief Vytvoří prázdný seznam AST uzlů.
+ *
+ * Seznam má počáteční kapacitu 8 položek a podle potřeby se dynamicky zvětšuje.
+ */
 AstNodeList *create_list(void)
 {
     AstNodeList *list = (AstNodeList *)ast_node_alloc(AST_NODE_LIST, sizeof(AstNodeList));
@@ -38,6 +50,14 @@ AstNodeList *create_list(void)
     return list;
 }
 
+/**
+ * @brief Přidá položku na konec seznamu AST uzlů.
+ *
+ * Pokud je kapacita naplněna, seznam se zvětší pomocí realloc().
+ *
+ * @param list Seznam, do kterého se přidává.
+ * @param item Přidávaný uzel AST.
+ */
 void add_to_list(AstNodeList *list, AstNode *item)
 {
     if (list->count >= list->capacity)
@@ -53,25 +73,46 @@ void add_to_list(AstNodeList *list, AstNode *item)
     list->items[list->count++] = item;
 }
 
-// --- Výrazy ---
+// Výrazy
+
+/**
+ * @brief Vytvoří AST uzel pro literál (číslo, řetězec, null).
+ *
+ * @param token Token reprezentující literál.
+ * @return Ukazatel na nově vytvořený uzel.
+ */
 AstNode *create_literal(Token token)
 {
     AstNodeLiteral *node = (AstNodeLiteral *)ast_node_alloc(AST_EXPR_LITERAL, sizeof(AstNodeLiteral));
-    node->token = token; // Kopíruje strukturu, vč. lexeme (pokud byl alokován)
+    node->token = token;
     node->data_type = Undefined;
     return (AstNode *)node;
 }
 
+/**
+ * @brief Vytvoří AST uzel pro proměnnou.
+ *
+ * @param token Token s identifikátorem proměnné.
+ * @return Ukazatel na nově vytvořený uzel.
+ */
 AstNode *create_variable(Token token)
 {
     AstNodeVariable *node = (AstNodeVariable *)ast_node_alloc(AST_EXPR_VARIABLE, sizeof(AstNodeVariable));
-    node->token = token; // Kopíruje strukturu
-
+    node->token = token;
     node->stack_offset = 0;
     node->data_type = Undefined;
     return (AstNode *)node;
 }
 
+/**
+ * @brief Vytvoří AST uzel pro binární výraz.
+ *
+ * @param op    Typ operátoru (PLUS, MINUS, atd.).
+ * @param left  Levý operand.
+ * @param right Pravý operand.
+ * @param line  Číslo řádku, na kterém se výraz nachází.
+ * @return Ukazatel na nově vytvořený uzel.
+ */
 AstNode *create_binary_expr(TokenType op, AstNode *left, AstNode *right, int line)
 {
     AstNodeBinaryExpr *node = (AstNodeBinaryExpr *)ast_node_alloc(AST_EXPR_BINARY, sizeof(AstNodeBinaryExpr));
@@ -83,6 +124,13 @@ AstNode *create_binary_expr(TokenType op, AstNode *left, AstNode *right, int lin
     return (AstNode *)node;
 }
 
+/**
+ * @brief Vytvoří AST uzel pro volání funkce.
+ *
+ * @param func_id Token s identifikátorem funkce (nebo vestavěné IFJ funkce).
+ * @param args    Seznam argumentů volání.
+ * @return Ukazatel na nově vytvořený uzel.
+ */
 AstNode *create_func_call(Token func_id, AstNodeList *args)
 {
     AstNodeFuncCall *node = (AstNodeFuncCall *)ast_node_alloc(AST_FUNC_CALL, sizeof(AstNodeFuncCall));
@@ -92,7 +140,14 @@ AstNode *create_func_call(Token func_id, AstNodeList *args)
     return (AstNode *)node;
 }
 
-// --- Příkazy ---
+// Příkazy
+
+/**
+ * @brief Vytvoří AST uzel pro blok příkazů.
+ *
+ * @param line Číslo řádku, na kterém blok začíná.
+ * @return Ukazatel na nově vytvořený blok.
+ */
 AstNodeBlock *create_block(int line)
 {
     AstNodeBlock *node = (AstNodeBlock *)ast_node_alloc(AST_STMT_BLOCK, sizeof(AstNodeBlock));
@@ -101,6 +156,12 @@ AstNodeBlock *create_block(int line)
     return node;
 }
 
+/**
+ * @brief Přidá příkaz do bloku.
+ *
+ * @param block Blok, do kterého se příkaz přidává.
+ * @param stmt  Přidávaný příkaz (AST uzel).
+ */
 void add_stmt_to_block(AstNodeBlock *block, AstNode *stmt)
 {
     if (stmt)
@@ -109,6 +170,15 @@ void add_stmt_to_block(AstNodeBlock *block, AstNode *stmt)
     }
 }
 
+/**
+ * @brief Vytvoří AST uzel pro příkaz if.
+ *
+ * @param cond    Podmínka.
+ * @param then_b  Větev then.
+ * @param else_b  Větev else (může být NULL).
+ * @param line    Číslo řádku, na kterém příkaz začíná.
+ * @return Ukazatel na nově vytvořený uzel.
+ */
 AstNode *create_if_stmt(AstNode *cond, AstNodeBlock *then_b, AstNodeBlock *else_b, int line)
 {
     AstNodeIfStmt *node = (AstNodeIfStmt *)ast_node_alloc(AST_STMT_IF, sizeof(AstNodeIfStmt));
@@ -119,6 +189,14 @@ AstNode *create_if_stmt(AstNode *cond, AstNodeBlock *then_b, AstNodeBlock *else_
     return (AstNode *)node;
 }
 
+/**
+ * @brief Vytvoří AST uzel pro příkaz while.
+ *
+ * @param cond Podmínka cyklu.
+ * @param body Tělo cyklu.
+ * @param line Číslo řádku, na kterém příkaz začíná.
+ * @return Ukazatel na nově vytvořený uzel.
+ */
 AstNode *create_while_stmt(AstNode *cond, AstNodeBlock *body, int line)
 {
     AstNodeWhileStmt *node = (AstNodeWhileStmt *)ast_node_alloc(AST_STMT_WHILE, sizeof(AstNodeWhileStmt));
@@ -128,24 +206,44 @@ AstNode *create_while_stmt(AstNode *cond, AstNodeBlock *body, int line)
     return (AstNode *)node;
 }
 
+/**
+ * @brief Vytvoří AST uzel pro příkaz return.
+ *
+ * @param expr Vrácený výraz (může být NULL).
+ * @param line Číslo řádku, na kterém příkaz začíná.
+ * @return Ukazatel na nově vytvořený uzel.
+ */
 AstNode *create_return_stmt(AstNode *expr, int line)
 {
     AstNodeReturnStmt *node = (AstNodeReturnStmt *)ast_node_alloc(AST_STMT_RETURN, sizeof(AstNodeReturnStmt));
     node->base.line_number = line;
-    node->expr = expr; // Může být NULL
+    node->expr = expr;
     return (AstNode *)node;
 }
 
+/**
+ * @brief Vytvoří AST uzel pro deklaraci proměnné.
+ *
+ * @param var_id Token s identifikátorem proměnné.
+ * @return Ukazatel na nově vytvořený uzel.
+ */
 AstNode *create_vardecl(Token var_id)
 {
     AstNodeVarDecl *node = (AstNodeVarDecl *)ast_node_alloc(AST_STMT_VAR_DECL, sizeof(AstNodeVarDecl));
     node->var_id = var_id;
-
     node->stack_offset = 0;
     node->data_type = Undefined;
     return (AstNode *)node;
 }
 
+/**
+ * @brief Vytvoří AST uzel pro přiřazení.
+ *
+ * @param lvalue Levá strana (proměnná).
+ * @param rvalue Pravá strana (výraz).
+ * @param line   Číslo řádku, na kterém příkaz začíná.
+ * @return Ukazatel na nově vytvořený uzel.
+ */
 AstNode *create_assign_stmt(AstNodeVariable *lvalue, AstNode *rvalue, int line)
 {
     AstNodeAssignStmt *node = (AstNodeAssignStmt *)ast_node_alloc(AST_STMT_ASSIGN, sizeof(AstNodeAssignStmt));
@@ -155,7 +253,17 @@ AstNode *create_assign_stmt(AstNodeVariable *lvalue, AstNode *rvalue, int line)
     return (AstNode *)node;
 }
 
-// --- Top Level ---
+// Top Level
+
+/**
+ * @brief Vytvoří AST uzel pro definici funkce.
+ *
+ * @param func_id Identifikátor funkce.
+ * @param params  Seznam parametrů.
+ * @param body    Tělo funkce.
+ * @param kind    Druh funkce (běžná, getter, setter).
+ * @return Ukazatel na nově vytvořený uzel.
+ */
 AstNodeFuncDef *create_func_def(Token func_id, AstNodeList *params, AstNodeBlock *body, AstFuncKind kind)
 {
     AstNodeFuncDef *node = (AstNodeFuncDef *)ast_node_alloc(AST_FUNC_DEF, sizeof(AstNodeFuncDef));
@@ -166,6 +274,13 @@ AstNodeFuncDef *create_func_def(Token func_id, AstNodeList *params, AstNodeBlock
     return node;
 }
 
+/**
+ * @brief Vytvoří kořenový uzel programu.
+ *
+ * Kořen obsahuje seznam definic funkcí.
+ *
+ * @return Ukazatel na nově vytvořený uzel programu.
+ */
 AstNodeProgram *create_program(void)
 {
     AstNodeProgram *node = (AstNodeProgram *)ast_node_alloc(AST_PROGRAM, sizeof(AstNodeProgram));
@@ -173,6 +288,12 @@ AstNodeProgram *create_program(void)
     return node;
 }
 
+/**
+ * @brief Přidá definici funkce do kořenového uzlu programu.
+ *
+ * @param prog Kořenový uzel programu.
+ * @param func Definice funkce, která se má přidat.
+ */
 void add_func_to_program(AstNodeProgram *prog, AstNodeFuncDef *func)
 {
     if (prog && func)
@@ -181,7 +302,11 @@ void add_func_to_program(AstNodeProgram *prog, AstNodeFuncDef *func)
     }
 }
 
-// Funkce pro uvolnění lexému
+/**
+ * @brief Uvolní dynamicky alokované části tokenu (lexeme, string_val).
+ *
+ * @param t Ukazatel na token, jehož interní data se mají uvolnit.
+ */
 void free_token_lexeme(Token *t)
 {
     if (t->lexeme)
@@ -196,12 +321,13 @@ void free_token_lexeme(Token *t)
     }
 }
 
-// --- Uvolnění paměti (rekurzivní) ---
-
 /**
- * @brief Uvolní POUZE OBSAH seznamu (položky a pole),
- * NE uvolnění samotné struktury seznamu (ta je uvolněna v free_ast_node),
- * aby se zabránilo double free chybám.
+ * @brief Uvolní položky seznamu a jeho dynamické pole.
+ *
+ * Samotná struktura AstNodeList je uvolněna ve free_ast_node(), aby se
+ * zabránilo dvojímu uvolnění.
+ *
+ * @param list Seznam, jehož obsah se má uvolnit.
  */
 static void free_list_contents(AstNodeList *list)
 {
@@ -212,9 +338,16 @@ static void free_list_contents(AstNodeList *list)
         free_ast_node(list->items[i]);
     }
     free(list->items);
-    // free(list); <-- TENTO ŘÁDEK JE ZÁMĚRNĚ SMAZÁN, ABY SE ZABRÁNILO DOUBLE FREE
 }
 
+/**
+ * @brief Rekurzivně uvolní uzel AST a všechny jeho potomky.
+ *
+ * Funkce korektně uvolní i vnořené struktury (bloky, seznamy, výrazy,
+ * definice funkcí atd.) a všechny dynamicky alokované lexémy.
+ *
+ * @param node Kořen uvolňovaného podstromu (může být NULL).
+ */
 void free_ast_node(AstNode *node)
 {
     if (!node)
@@ -276,6 +409,6 @@ void free_ast_node(AstNode *node)
         free_list_contents((AstNodeList *)node);
         break;
     }
-    // Nakonec uvolníme samotný uzel (včetně struktur jako AstNodeList)
+
     free(node);
 }

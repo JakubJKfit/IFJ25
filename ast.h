@@ -1,6 +1,6 @@
 /**
  * @file    ast.h
- * @brief   Definice struktur pro Abstraktní Syntaktický Strom (AST) jazyka IFJ25
+ * @brief   Definice struktur pro abstraktní syntaktický strom (AST) jazyka IFJ25
  */
 
 #ifndef AST_H
@@ -10,53 +10,62 @@
 #include "symtable.h"
 #include <stdlib.h>
 
-// --- Typy uzlů ---
+/**
+ * @brief Typ uzlu v abstraktním syntaktickém stromu.
+ */
 typedef enum
 {
-    AST_PROGRAM,       // Kořen stromu, obsahuje seznam funkcí
-    AST_FUNC_DEF,      // Definice funkce (static name(params) block)
-    AST_FUNC_CALL,     // Volání funkce (name(args))
-    AST_STMT_BLOCK,    // Blok kódu { ... }
-    AST_STMT_VAR_DECL, // var id
-    AST_STMT_ASSIGN,   // id = expr
-    AST_STMT_IF,       // if (cond) then else
-    AST_STMT_WHILE,    // while (cond) block
-    AST_STMT_RETURN,   // return expr
-    AST_EXPR_BINARY,   // expr OP expr
-    AST_EXPR_LITERAL,  // 123, "abc", null
-    AST_EXPR_VARIABLE, // id
-    AST_NODE_LIST,     // Obecný seznam (pro argumenty, parametry, příkazy)
+    AST_PROGRAM,       ///< Kořen stromu, obsahuje seznam funkcí
+    AST_FUNC_DEF,      ///< Definice funkce (static name(params) block)
+    AST_FUNC_CALL,     ///< Volání funkce (name(args))
+    AST_STMT_BLOCK,    ///< Blok kódu { ... }
+    AST_STMT_VAR_DECL, ///< var id
+    AST_STMT_ASSIGN,   ///< id = expr
+    AST_STMT_IF,       ///< if (cond) then else
+    AST_STMT_WHILE,    ///< while (cond) block
+    AST_STMT_RETURN,   ///< return expr
+    AST_EXPR_BINARY,   ///< expr OP expr
+    AST_EXPR_LITERAL,  ///< 123, "abc", null
+    AST_EXPR_VARIABLE, ///< id
+    AST_NODE_LIST,     ///< Obecný seznam (pro argumenty, parametry, příkazy)
 } AstNodeType;
 
-// typ funkce
-typedef enum{
+/**
+ * @brief Druh funkce (běžná funkce, getter, setter).
+ */
+typedef enum
+{
     FUNC_IS_FUNC,
     FUNC_IS_GETTER,
     FUNC_IS_SETTER
 } AstFuncKind;
 
-// --- Základní struktura ---
+/**
+ * @brief Základní struktura každého uzlu AST.
+ */
 typedef struct AstNode
 {
-    AstNodeType type;
-    int line_number;
+    AstNodeType type; ///< Typ uzlu.
+    int line_number;  ///< Číslo řádku ve zdrojovém souboru.
 } AstNode;
 
-// --- Helper pro seznamy ---
+/**
+ * @brief Obecný seznam AST uzlů.
+ */
 typedef struct
 {
     AstNode base;
-    struct AstNode **items; // Dynamické pole ukazatelů
-    int count;
-    int capacity;
+    struct AstNode **items; ///< Dynamické pole ukazatelů na uzly.
+    int count;              ///< Aktuální počet položek.
+    int capacity;           ///< Celková kapacita pole.
 } AstNodeList;
 
-// --- Uzly výrazů (Expressions) ---
+// Uzly výrazů (Expressions)
 
 typedef struct
 {
     AstNode base;
-    Token token; // Uložíme si celý token s hodnotou (INT, FLOAT, STRING, null)
+    Token token;                // Uložíme si celý token s hodnotou (INT, FLOAT, STRING, null)
     symbol_data_type data_type; // pro semantiku
 } AstNodeLiteral;
 
@@ -86,7 +95,7 @@ typedef struct
     symbol_data_type data_type;
 } AstNodeFuncCall;
 
-// --- Uzly příkazů (Statements) ---
+// Uzly příkazů (Statements) 
 
 typedef struct
 {
@@ -131,7 +140,7 @@ typedef struct
     struct AstNode *expr; // Výraz, který se vrací (může být NULL)
 } AstNodeReturnStmt;
 
-// --- Uzly nejvyšší úrovně ---
+// Uzly nejvyšší úrovně 
 
 typedef struct
 {
@@ -148,31 +157,96 @@ typedef struct
     AstNodeList *functions; // Seznam AstNodeFuncDef
 } AstNodeProgram;
 
-// --- Prototypy konstruktorů (z ast.c) ---
+// Prototypy konstruktorů (z ast.c)
 
+/**
+ * @brief Vytvoří AST uzel pro literál.
+ */
 AstNode *create_literal(Token token);
+
+/**
+ * @brief Vytvoří AST uzel pro proměnnou.
+ */
 AstNode *create_variable(Token token);
+
+/**
+ * @brief Vytvoří AST uzel pro binární výraz.
+ */
 AstNode *create_binary_expr(TokenType op, AstNode *left, AstNode *right, int line);
+
+/**
+ * @brief Vytvoří AST uzel pro volání funkce.
+ */
 AstNode *create_func_call(Token func_id, AstNodeList *args);
 
+/**
+ * @brief Vytvoří AST uzel pro příkaz if.
+ */
 AstNode *create_if_stmt(AstNode *cond, AstNodeBlock *then_b, AstNodeBlock *else_b, int line);
+
+/**
+ * @brief Vytvoří AST uzel pro příkaz while.
+ */
 AstNode *create_while_stmt(AstNode *cond, AstNodeBlock *body, int line);
+
+/**
+ * @brief Vytvoří AST uzel pro příkaz return.
+ */
 AstNode *create_return_stmt(AstNode *expr, int line);
+
+/**
+ * @brief Vytvoří AST uzel pro deklaraci proměnné.
+ */
 AstNode *create_vardecl(Token var_id);
+
+/**
+ * @brief Vytvoří AST uzel pro přiřazení.
+ */
 AstNode *create_assign_stmt(AstNodeVariable *lvalue, AstNode *rvalue, int line);
 
+/**
+ * @brief Vytvoří prázdný seznam AST uzlů.
+ */
 AstNodeList *create_list(void);
+
+/**
+ * @brief Přidá položku na konec seznamu AST uzlů.
+ */
 void add_to_list(AstNodeList *list, AstNode *item);
 
+/**
+ * @brief Vytvoří AST uzel pro blok příkazů.
+ */
 AstNodeBlock *create_block(int line);
+
+/**
+ * @brief Přidá příkaz do bloku.
+ */
 void add_stmt_to_block(AstNodeBlock *block, AstNode *stmt);
 
+/**
+ * @brief Vytvoří AST uzel pro definici funkce.
+ */
 AstNodeFuncDef *create_func_def(Token func_id, AstNodeList *params, AstNodeBlock *body, AstFuncKind kind);
+
+/**
+ * @brief Vytvoří kořenový uzel programu.
+ */
 AstNodeProgram *create_program(void);
+
+/**
+ * @brief Přidá definici funkce do kořenového uzlu programu.
+ */
 void add_func_to_program(AstNodeProgram *prog, AstNodeFuncDef *func);
 
-// Uvolnění paměti
+/**
+ * @brief Rekurzivně uvolní uzel AST a všechny jeho potomky.
+ */
 void free_ast_node(AstNode *node);
+
+/**
+ * @brief Uvolní dynamicky alokované části tokenu (lexeme, string_val).
+ */
 void free_token_lexeme(Token *t);
 
 #endif // AST_H
