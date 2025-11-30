@@ -1,3 +1,9 @@
+/**
+ * @file err.h
+ * @author Jakub Jan Kupčík xkupcij00
+ * @brief Hlavičkový soubor deklarující všechny návratové hodnoty
+ */
+
 #ifndef ERR_H
 #define ERR_H
 

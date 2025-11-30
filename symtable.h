@@ -1,15 +1,24 @@
+/**
+ * @file symtable.h
+ * @author Jakub Jan Kupčík xkupcij00
+ * @brief Hlavičkový soubor pro tabulku symbolů
+ */
 #ifndef SYMTABLE_H
 #define SYMTABLE_H
 
 #include <stdbool.h>
 
-
+/**
+ * @brief Uložení symbolu jako identifikátor funkce nebo proměnné
+ */
 typedef enum{
     VARIABLE_ID,
-    FUNC_ID,
-    CLASS_ID
+    FUNC_ID
 }symbol_id_type;
 
+/**
+ * @brief Datový typ uloženého symbolu, návratové pro funkce
+ */
 typedef enum{
     Undefined,
     Null,
@@ -17,18 +26,21 @@ typedef enum{
     Num
 }symbol_data_type;
 
-
-//TODO: doplnit vsechna potrebna data k ulozeni
+/**
+ * @brief Data uloženého symbolu
+ */
 typedef struct{
     symbol_id_type id_type;
     symbol_data_type data_type;
     char *identifier;
     int arity;
-    int offset; // pro lokalni promenne
+    int offset; // Uroven vnorenosti
 } symbol_data;
 
 
-// uzel stromu
+/**
+ * @brief Uzel stromu
+ */
 typedef struct tree_node{
     symbol_data data;
     struct tree_node *left;

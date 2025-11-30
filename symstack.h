@@ -1,16 +1,26 @@
-
+/**
+ * @file symstack.h
+ * @author Jakub Jan Kupčík xkupcij00
+ * @brief Hlavičkový soubor pro zásobník tabulek
+ */
 
 #ifndef SYMSTACK_H
 #define SYMSTACK_H
 
 #include "symtable.h"
 
+/**
+ * @brief uzel v zásobníku
+ */
 typedef struct stack_node{
-    tree_node *symtable;
-    char *identifier;
-    struct stack_node *next;
+    tree_node *symtable; // tabulka uzlu
+    char *identifier; // identifikátor, pod kterým je uložená
+    struct stack_node *next; // ukazatel na další uzel
 }stack_node;
 
+/**
+ * @brief zásobník, ukazatel na vrchol zásobníku
+ */
 typedef struct{
     stack_node *top;
 }symstack;

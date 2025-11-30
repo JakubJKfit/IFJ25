@@ -33,6 +33,10 @@
 
 // Stav parseru
 static Token ifj_cur;
+
+/**
+ * @brief globální tabulka symbolů
+ */
 symstack global_symstack;
 
 // Lexer API
@@ -85,25 +89,35 @@ static void semantic_recurs(AstNode *node, symstack *stack, int *current_offset,
 
 // === Utilitní funkce ===========================================
 
-// prochazeni symtable pro kazdy scope
+/**
+ * @brief Hledání symbolu ve všech uložených tabulkách symbolů v zásobníku
+ * @param stack ukazatel na zásobník
+ * @param identifier identifikátor symbolu
+ * @param found ukazatel na adresu dat nalezeného symbolu
+ * @return bool true, pokud byl symbol nalezen
+ */
 bool search_scopes(symstack *stack, char *identifier, symbol_data **found)
 {
 
-    stack_node *current_symtable = stack->top;
+    stack_node *current_symtable = stack->top; // aktuální tabulka (vnořenost) -- vrchol zásobníku
     while (current_symtable != NULL)
     {
         if (search_symbol(current_symtable->symtable, identifier, found))
         {
-            return true;
+            return true; // nalezeni symbolu
         }
-        current_symtable = current_symtable->next;
+        current_symtable = current_symtable->next; // dalsi zaznam v zasobniku
     }
 
     *found = NULL;
     return false;
 }
 
-// ziskani datoveho typu literalu
+/**
+ * @brief Získání datového typu výrazu
+ * @param node ukazatel na AST uzel
+ * @return symbol_data_type datový typ
+ */
 symbol_data_type get_type(AstNode *node)
 {
     if (!node)
@@ -244,16 +258,18 @@ AstNode *ifj_parse_program(void)
         ifjexit(ERR_SYN);
     }
 
+    // prvni pruchod semantiky
     semantic_firstpass(program_node, &global_symstack);
 
-    symbol_data *main_func;
-    if (!search_symbol(*stack_top(&global_symstack), "main@0", &main_func))
+    symbol_data *main_func; // ukazatel na main funkci
+    if (!search_symbol(*stack_top(&global_symstack), "main@0", &main_func)) // kod musi obsahovat funkci main
     {
         free_ast_node(program_node);
         stack_dispose(&global_symstack);
         fprintf(stderr, "No main function with 0 params found\n");
         exit(ERR_SEM_UNDEFINED);
     }
+    // semanticka analyza pomoci rekurzivni funkce
     semantic_recurs(program_node, &global_symstack, 0, NULL);
 
     stack_dispose(&global_symstack);
@@ -920,6 +936,13 @@ static AstNodeList *parse_call_args_terms(void)
 
 // semanticka analyza
 
+/**
+ * @brief První průstup zdrojovým kódem pomocí AST stromu
+ *        sesbíraní deklarací funkcí
+ * @param node ukazatel na uzel AST
+ * @param stack ukazatel na zásobník
+ * @returns void 
+ */
 static void semantic_firstpass(AstNode *node, symstack *stack)
 {
 
@@ -927,19 +950,20 @@ static void semantic_firstpass(AstNode *node, symstack *stack)
         return;
 
     AstNodeProgram *program = (AstNodeProgram *)node;
-    AstNodeList *funcs = program->functions;
-    tree_node **global_table = stack_top(stack);
+    AstNodeList *funcs = program->functions; // seznam vsech funkci
+    tree_node **global_table = stack_top(stack); // globalni tabulka symbolu
 
-    char identif_buffer[256];
-    symbol_data func_data;
-    char func_key[256];
+    char identif_buffer[256]; // buffer pro ulozeni identifikatoru s aritou
+    symbol_data func_data; // data funkce
+    char func_key[256]; // buffer pro ulozeni identifikatoru bez arity
 
+    // prochazeni funkci
     for (int i = 0; i < funcs->count; i++)
     {
         AstNodeFuncDef *func = (AstNodeFuncDef *)funcs->items[i];
 
-        char *func_name = func->func_id.lexeme;
-        int arity = func->params->count;
+        char *func_name = func->func_id.lexeme; // jmeno funkce
+        int arity = func->params->count; // arita funkce
 
         int temp = 0;
         switch (func->kind)
@@ -967,6 +991,7 @@ static void semantic_firstpass(AstNode *node, symstack *stack)
             ifjexit(ERR_SEM_OTHER);
         }
 
+        // kontrola redefince funkce
         symbol_data *found;
         if (search_symbol(*global_table, identif_buffer, &found))
         {
@@ -974,10 +999,11 @@ static void semantic_firstpass(AstNode *node, symstack *stack)
             fprintf(stderr, "Line: %d, redefinition of function %s\n", func->base.line_number, func_name);
             ifjexit(ERR_SEM_REDEFINED);
         }
+        // ulozeni funkce bez arity
         if (func->kind == FUNC_IS_FUNC)
-        { // pro check deklarace funkce
+        {
             symbol_data *found_decl;
-            if (!search_symbol(*global_table, func_key, &found_decl))
+            if (!search_symbol(*global_table, func_key, &found_decl)) // @F se nemusi ukladat vicerokrat
             {
                 symbol_data data;
                 data.identifier = func_key;
@@ -990,6 +1016,7 @@ static void semantic_firstpass(AstNode *node, symstack *stack)
             }
         }
 
+        // ulozeni jmena funkce s aritou
         func_data.identifier = identif_buffer;
         func_data.id_type = FUNC_ID;
         func_data.data_type = Undefined; // return type
@@ -1000,17 +1027,28 @@ static void semantic_firstpass(AstNode *node, symstack *stack)
     }
 }
 
+
+/**
+ * @brief Sémantická analýza implementována pomocí rekurzivní funkce
+ * @param node ukazatel na uzel AST
+ * @param stack ukazatel na zásobník
+ * @param current_offset ukazatel na posun proměnných pro codegen
+ * @param current_func_data ukazatel na data aktualni funkce
+ * @returns void
+ */
 static void semantic_recurs(AstNode *node, symstack *stack, int *current_offset, symbol_data *current_func_data)
 {
+    // konec analyzy
     if (!node)
         return;
 
+    // switch podle typu AST uzlu
     switch (node->type)
     {
     case AST_PROGRAM:
     {
         AstNodeProgram *program = (AstNodeProgram *)node;
-        for (int i = 0; i < program->functions->count; i++)
+        for (int i = 0; i < program->functions->count; i++)// prochazeni definic funkci
         {
             semantic_recurs(program->functions->items[i], stack, NULL, NULL);
         }
@@ -1020,13 +1058,13 @@ static void semantic_recurs(AstNode *node, symstack *stack, int *current_offset,
     {
         AstNodeFuncDef *func = (AstNodeFuncDef *)node;
 
-        int func_offset = 0;
-        char func_key[256];
-        int arity = func->params->count;
+        int func_offset = 0; // posun promennych
+        char func_key[256]; // buffer pro identifikator funkce
+        int arity = func->params->count; // arita funkce
         switch (func->kind)
         {
         case FUNC_IS_FUNC:
-            snprintf(func_key, 256, "%s@%d", func->func_id.lexeme, arity);
+            snprintf(func_key, 256, "%s@%d", func->func_id.lexeme, arity); // ziskani identifikator@arita
             break;
         case FUNC_IS_GETTER:
             snprintf(func_key, 256, "%s@GET", func->func_id.lexeme);
@@ -1034,22 +1072,28 @@ static void semantic_recurs(AstNode *node, symstack *stack, int *current_offset,
         case FUNC_IS_SETTER:
             snprintf(func_key, 256, "%s@SET", func->func_id.lexeme);
             break;
-        } // todo: potenc velikost check
-        symbol_data *func_data;
+        }
+
+        symbol_data *func_data; // data funkce
+        
+        // spravne se funkce v firstpass ulozila
         if (!search_scopes(stack, func_key, &func_data))
         {
             fprintf(stderr, "Function %s not found in secondpass\n", func_key);
             ifjexit(ERR_INTERNAL);
         }
-        func_data->data_type = Null;
+        
+        func_data->data_type = Null; // navratova hodnota zatim null
         stack_push(stack, func->func_id.lexeme); // func scope
         tree_node **param_table = stack_top(stack);
 
+        // kontrola parametru
         for (int i = 0; i < func->params->count; i++)
         {
             AstNodeVariable *param = (AstNodeVariable *)func->params->items[i];
             char *param_name = param->token.lexeme;
 
+            // duplikatni parametry v definici fce
             symbol_data *found;
             if (search_symbol(*param_table, param_name, &found))
             {
@@ -1057,8 +1101,9 @@ static void semantic_recurs(AstNode *node, symstack *stack, int *current_offset,
                 ifjexit(ERR_SEM_REDEFINED);
             }
 
-            func_offset -= 8; // byte pro pram
+            func_offset -= 8; // byte pro param
 
+            // data parametru
             symbol_data param_data;
             param_data.identifier = param_name;
             param_data.id_type = VARIABLE_ID;
@@ -1072,6 +1117,7 @@ static void semantic_recurs(AstNode *node, symstack *stack, int *current_offset,
             param->stack_offset = param_data.offset;
             param->data_type = param_data.data_type;
         }
+        // telo funkce
         AstNodeBlock *body = func->body;
         for (int i = 0; i < body->statements->count; i++)
         {
@@ -1091,7 +1137,7 @@ static void semantic_recurs(AstNode *node, symstack *stack, int *current_offset,
             ifjexit(ERR_INTERNAL);
         }
 
-        stack_push(stack, "block");
+        stack_push(stack, "block"); // vnoreni do bloku
         for (int i = 0; i < block->statements->count; i++)
         {
             semantic_recurs(block->statements->items[i], stack, current_offset, current_func_data);
@@ -1104,8 +1150,10 @@ static void semantic_recurs(AstNode *node, symstack *stack, int *current_offset,
         AstNodeVarDecl *decl = (AstNodeVarDecl *)node;
         char *var_name = decl->var_id.lexeme;
 
-        tree_node **current_table = stack_top(stack);
+        tree_node **current_table = stack_top(stack); // aktualni vnorenost
         symbol_data *found;
+        
+        // redefinice promenne
         if (search_symbol(*current_table, var_name, &found))
         {
             fprintf(stderr, "Line> %d, redefinition of variable %s\n", decl->base.line_number, var_name);
@@ -1118,8 +1166,9 @@ static void semantic_recurs(AstNode *node, symstack *stack, int *current_offset,
             ifjexit(ERR_INTERNAL);
         }
 
-        *current_offset -= 8;
+        *current_offset -= 8; // offset pro codegen
 
+        // ulozeni promenne
         symbol_data var_data;
         var_data.identifier = var_name;
         var_data.id_type = VARIABLE_ID;
@@ -1128,6 +1177,8 @@ static void semantic_recurs(AstNode *node, symstack *stack, int *current_offset,
         var_data.arity = 0;
 
         insert_symbol(current_table, &var_data);
+        
+        // anotace AST
         decl->stack_offset = var_data.offset;
         decl->data_type = var_data.data_type;
 
@@ -1138,13 +1189,15 @@ static void semantic_recurs(AstNode *node, symstack *stack, int *current_offset,
         AstNodeVariable *var = (AstNodeVariable *)node;
         char *var_name = var->token.lexeme;
 
+        // globalni promenna
         if (var->token.type == IDENTIFIER_GLOBAL)
         {
-            var->stack_offset = -1; // global
+            var->stack_offset = -1; // specialni offset pro global
             var->data_type = Undefined;
             break;
         }
 
+        // promenna
         symbol_data *found;
         if (search_scopes(stack, var_name, &found))
         {
@@ -1152,7 +1205,7 @@ static void semantic_recurs(AstNode *node, symstack *stack, int *current_offset,
             var->stack_offset = found->offset;
             var->data_type = found->data_type;
         }
-        else
+        else // getter
         {
             char getter_key[256];
             int temp = snprintf(getter_key, 256, "%s@GET", var_name);
@@ -1171,7 +1224,7 @@ static void semantic_recurs(AstNode *node, symstack *stack, int *current_offset,
                 var->stack_offset = 0;
                 var->data_type = found->data_type;
             }
-            else
+            else // nedefinovana promenna/getter
             {
                 fprintf(stderr, "Line: %d, undefined var %s\n", var->base.line_number, var_name);
                 ifjexit(ERR_SEM_UNDEFINED);
@@ -1179,13 +1232,13 @@ static void semantic_recurs(AstNode *node, symstack *stack, int *current_offset,
         }
         break;
     }
-    case AST_STMT_ASSIGN:
+    case AST_STMT_ASSIGN: // lvalue = rvalue
     {
         AstNodeAssignStmt *assign = (AstNodeAssignStmt *)node;
 
         semantic_recurs(assign->rvalue, stack, current_offset, current_func_data); // zavolat s pravym potomkem
-        symbol_data_type right_type = Undefined;
-        switch (assign->rvalue->type)
+        symbol_data_type right_type = Undefined; 
+        switch (assign->rvalue->type) // leva hodnota nabyje datovy typ prave hodnoty
         {
         case AST_EXPR_LITERAL:
             right_type = ((AstNodeLiteral *)assign->rvalue)->data_type;
@@ -1209,6 +1262,7 @@ static void semantic_recurs(AstNode *node, symstack *stack, int *current_offset,
         char *left_name = left->token.lexeme;
         symbol_data *found;
 
+        // globalni
         if (left->token.type == IDENTIFIER_GLOBAL)
         {
             left->stack_offset = -1;
@@ -1216,6 +1270,7 @@ static void semantic_recurs(AstNode *node, symstack *stack, int *current_offset,
             break;
         }
 
+        // promenna
         if (search_scopes(stack, left_name, &found))
         {
             if (found->id_type != VARIABLE_ID)
@@ -1271,7 +1326,7 @@ static void semantic_recurs(AstNode *node, symstack *stack, int *current_offset,
         semantic_recurs((AstNode *)while_stmt->body_block, stack, current_offset, current_func_data);
         break;
     }
-    case AST_STMT_RETURN:
+    case AST_STMT_RETURN: // ziskani navratoveho typu fce
     {
         AstNodeReturnStmt *ret = (AstNodeReturnStmt *)node;
         symbol_data_type return_type = Null;
@@ -1283,9 +1338,9 @@ static void semantic_recurs(AstNode *node, symstack *stack, int *current_offset,
         if (ret->expr)
         {
             semantic_recurs(ret->expr, stack, current_offset, current_func_data);
-            return_type = (get_type(ret->expr));
+            return_type = (get_type(ret->expr)); // navratovy typ je vysledek vyrazu
         }
-        if (current_func_data->data_type == Null)
+        if (current_func_data->data_type == Null) // void funkce
         {
             current_func_data->data_type = return_type;
         }
