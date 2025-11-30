@@ -31,11 +31,11 @@
     } while (0)
 #endif
 
-// Stav parseru
+/// Aktuální token načtený z lexikálního analyzátoru
 static Token ifj_cur;
 
 /**
- * @brief globální tabulka symbolů
+ * @brief Zásobník tabulek symbolů používaný při sémantické analýze
  */
 symstack global_symstack;
 
@@ -87,19 +87,23 @@ static int lbp_of(TokenType t);
 static void semantic_firstpass(AstNode *node, symstack *stack);
 static void semantic_recurs(AstNode *node, symstack *stack, int *current_offset, symbol_data *current_func_data);
 
-// === Utilitní funkce ===========================================
+// Utilitz funkce
 
 /**
- * @brief Hledání symbolu ve všech uložených tabulkách symbolů v zásobníku
- * @param stack ukazatel na zásobník
- * @param identifier identifikátor symbolu
- * @param found ukazatel na adresu dat nalezeného symbolu
- * @return bool true, pokud byl symbol nalezen
+ * @brief Vyhledá symbol ve všech tabulkách symbolů na zásobníku.
+ *
+ * Prohledává tabulky od vrcholu zásobníku (nejvnitřnější scope) směrem ven.
+ *
+ * @param stack      Zásobník tabulek symbolů.
+ * @param identifier Hledaný identifikátor.
+ * @param found      Výstupní ukazatel na nalezený záznam (pokud je nalezen).
+ *
+ * @return true, pokud byl symbol nalezen, jinak false.
  */
 bool search_scopes(symstack *stack, char *identifier, symbol_data **found)
 {
 
-    stack_node *current_symtable = stack->top; // aktuální tabulka (vnořenost) -- vrchol zásobníku
+    stack_node *current_symtable = stack->top; // aktuální tabulka (vnořenost), vrchol zásobníku
     while (current_symtable != NULL)
     {
         if (search_symbol(current_symtable->symtable, identifier, found))
@@ -114,9 +118,10 @@ bool search_scopes(symstack *stack, char *identifier, symbol_data **found)
 }
 
 /**
- * @brief Získání datového typu výrazu
- * @param node ukazatel na AST uzel
- * @return symbol_data_type datový typ
+ * @brief Vrátí datový typ výrazu podle anotací v AST.
+ *
+ * @param node Uzel AST představující výraz.
+ * @return Datový typ výrazu, nebo Undefined, pokud není možné typ určit.
  */
 symbol_data_type get_type(AstNode *node)
 {
@@ -225,8 +230,16 @@ static bool accept(TokenType t)
     return false;
 }
 
-// === Vstupní bod parseru =======================================
-
+/**
+ * @brief Vstupní bod parseru
+ *
+ * Načte celý vstup pomocí lexikálního analyzátoru, provede syntaktickou
+ * analýzu, vytvoří AST a nad ním dvouprůchodovou sémantickou analýzu.
+ * Při chybě volá ifjexit() s odpovídajícím kódem chyby.
+ *
+ * @return Ukazatel na kořenový uzel AST (AST_PROGRAM). V případě chyby funkce
+ *         nevrací a ukončí běh programu.
+ */
 AstNode *ifj_parse_program(void)
 {
     next();
@@ -261,7 +274,7 @@ AstNode *ifj_parse_program(void)
     // prvni pruchod semantiky
     semantic_firstpass(program_node, &global_symstack);
 
-    symbol_data *main_func; // ukazatel na main funkci
+    symbol_data *main_func;                                                 // ukazatel na main funkci
     if (!search_symbol(*stack_top(&global_symstack), "main@0", &main_func)) // kod musi obsahovat funkci main
     {
         free_ast_node(program_node);
@@ -269,7 +282,8 @@ AstNode *ifj_parse_program(void)
         fprintf(stderr, "No main function with 0 params found\n");
         exit(ERR_SEM_UNDEFINED);
     }
-    // semanticka analyza pomoci rekurzivni funkce
+
+    // druhý průchod – rekurzivní sémantická analýza
     semantic_recurs(program_node, &global_symstack, 0, NULL);
 
     stack_dispose(&global_symstack);
@@ -277,7 +291,7 @@ AstNode *ifj_parse_program(void)
     return program_node;
 }
 
-// === Prolog =====================================================
+// Prolog
 
 static bool parse_prolog(void)
 {
@@ -316,7 +330,7 @@ static bool parse_prolog(void)
     return consume_eol(EOL_ONE_EXACT);
 }
 
-// === Funkce/Program =============================================
+// Funkce/Program
 
 static AstNode *parse_class(void)
 {
@@ -482,12 +496,13 @@ static AstNode *parse_funcdef(void)
         ifjexit(ERR_SYN);
     }
 
-    // pro -Wreturn-type (neproveditelné)
     return NULL;
 }
 
-// === Bloky a příkazy ============================================
-
+// Bloky a příkazy
+/**
+ * @brief Parsuje blok příkazů uzavřený v `{` a `}` a vrací AST bloku.
+ */
 static AstNodeBlock *parse_block(void)
 {
     int line = ifj_get_line();
@@ -520,6 +535,9 @@ static AstNodeBlock *parse_block(void)
     return block;
 }
 
+/**
+ * @brief Parsuje sekvenci příkazů uvnitř bloku, dokud nenarazí na `}` nebo EOF.
+ */
 static AstNode *parse_stmt_list(AstNodeBlock *block)
 {
     while (1)
@@ -561,6 +579,9 @@ static AstNode *parse_stmt_list(AstNodeBlock *block)
     }
 }
 
+/**
+ * @brief Parsuje jeden příkaz (deklarace, přiřazení, if, while, return, blok).
+ */
 static AstNode *parse_stmt(void)
 {
     switch (ifj_cur.type)
@@ -600,7 +621,6 @@ static AstNode *parse_stmt(void)
         ifjexit(ERR_SYN);
     }
 
-    // pro -Wreturn-type (neproveditelné)
     return NULL;
 }
 
@@ -730,7 +750,7 @@ static AstNode *parse_return_stmt(void)
     return create_return_stmt(expr, line);
 }
 
-// === Výrazy =====================================================
+// Výrazy
 
 static int lbp_of(TokenType t)
 {
@@ -757,6 +777,9 @@ static int lbp_of(TokenType t)
     }
 }
 
+/**
+ * @brief Parsuje primární výraz (literál, identifikátor, volání funkce, závorky).
+ */
 static AstNode *parse_primary(void)
 {
     switch (ifj_cur.type)
@@ -841,11 +864,19 @@ static AstNode *parse_primary(void)
     return NULL;
 }
 
+/**
+ * @brief Parsuje výraz s nejnižší prioritou (vstupní bod precedenčního parseru).
+ */
 static AstNode *parse_expr(void)
 {
     return parse_expr_bp(PREC_LOWEST);
 }
 
+/**
+ * @brief Precedenční parser výrazů (binding power).
+ *
+ * @param minbp Minimální priorita operátoru, který se ještě bere v úvahu.
+ */
 static AstNode *parse_expr_bp(IfjPrec minbp)
 {
     int line = ifj_get_line();
@@ -896,8 +927,10 @@ static AstNode *parse_expr_bp(IfjPrec minbp)
     return left;
 }
 
-// === Volání a argumenty =========================================
-
+// Volání a argumenty
+/**
+ * @brief Parsuje seznam argumentů funkce v závorkách `( ... )`.
+ */
 static AstNodeList *parse_call_args_terms(void)
 {
     expect(L_ROUND, "(");
@@ -937,11 +970,14 @@ static AstNodeList *parse_call_args_terms(void)
 // semanticka analyza
 
 /**
- * @brief První průstup zdrojovým kódem pomocí AST stromu
- *        sesbíraní deklarací funkcí
- * @param node ukazatel na uzel AST
- * @param stack ukazatel na zásobník
- * @returns void 
+ * @brief První průchod AST – založení záznamů o funkcích v globální tabulce.
+ *
+ * Projde všechny definice funkcí v kořenovém uzlu programu, zkontroluje
+ * redefinice a vloží záznamy o funkcích (včetně arity) do globální tabulky
+ * symbolů. V případě chyby ukončí běh programu.
+ *
+ * @param node  Kořenový uzel AST (očekává se typ AST_PROGRAM).
+ * @param stack Zásobník tabulek symbolů, v jehož vrcholu je globální tabulka.
  */
 static void semantic_firstpass(AstNode *node, symstack *stack)
 {
@@ -950,29 +986,29 @@ static void semantic_firstpass(AstNode *node, symstack *stack)
         return;
 
     AstNodeProgram *program = (AstNodeProgram *)node;
-    AstNodeList *funcs = program->functions; // seznam vsech funkci
+    AstNodeList *funcs = program->functions;     // seznam vsech funkci
     tree_node **global_table = stack_top(stack); // globalni tabulka symbolu
 
     char identif_buffer[256]; // buffer pro ulozeni identifikatoru s aritou
-    symbol_data func_data; // data funkce
+    symbol_data func_data;
     char func_key[256]; // buffer pro ulozeni identifikatoru bez arity
 
-    // prochazeni funkci
+    // projdi všechny definice funkcí v programu
     for (int i = 0; i < funcs->count; i++)
     {
         AstNodeFuncDef *func = (AstNodeFuncDef *)funcs->items[i];
 
-        char *func_name = func->func_id.lexeme; // jmeno funkce
-        int arity = func->params->count; // arita funkce
+        char *func_name = func->func_id.lexeme;
+        int arity = func->params->count;
 
         int temp = 0;
         switch (func->kind)
         {
         case FUNC_IS_FUNC:
-            // funkce pod timto jmenem je deklarovana
+            // klíč pro deklaraci funkce bez arity (pro kontrolu existence)
             snprintf(func_key, 256, "%s@F", func_name);
 
-            // ulozeni jmena + arita
+            // klíč pro konkrétní definici s aritou
             temp = snprintf(identif_buffer, 256, "%s@%d", func_name, arity);
             break;
         case FUNC_IS_GETTER:
@@ -999,11 +1035,12 @@ static void semantic_firstpass(AstNode *node, symstack *stack)
             fprintf(stderr, "Line: %d, redefinition of function %s\n", func->base.line_number, func_name);
             ifjexit(ERR_SEM_REDEFINED);
         }
-        // ulozeni funkce bez arity
+
+        // u běžné funkce si navíc pamatujeme, že pod daným jménem existuje nějaká definice
         if (func->kind == FUNC_IS_FUNC)
         {
             symbol_data *found_decl;
-            if (!search_symbol(*global_table, func_key, &found_decl)) // @F se nemusi ukladat vicerokrat
+            if (!search_symbol(*global_table, func_key, &found_decl))
             {
                 symbol_data data;
                 data.identifier = func_key;
@@ -1016,10 +1053,10 @@ static void semantic_firstpass(AstNode *node, symstack *stack)
             }
         }
 
-        // ulozeni jmena funkce s aritou
+        // ulož záznam pro konkrétní kombinaci jméno+arita
         func_data.identifier = identif_buffer;
         func_data.id_type = FUNC_ID;
-        func_data.data_type = Undefined; // return type
+        func_data.data_type = Undefined; // návratový typ určí až druhý průchod
         func_data.arity = arity;
         func_data.offset = 0;
 
@@ -1027,14 +1064,20 @@ static void semantic_firstpass(AstNode *node, symstack *stack)
     }
 }
 
-
 /**
- * @brief Sémantická analýza implementována pomocí rekurzivní funkce
- * @param node ukazatel na uzel AST
- * @param stack ukazatel na zásobník
- * @param current_offset ukazatel na posun proměnných pro codegen
- * @param current_func_data ukazatel na data aktualni funkce
- * @returns void
+ * @brief Rekurzivní sémantická analýza AST.
+ *
+ * Prochází strom AST, kontroluje deklarace a použití proměnných a funkcí,
+ * vyhodnocuje typy výrazů a doplňuje informace potřebné pro generování kódu
+ * (offsety, datové typy).
+ *
+ * @param node              Aktuálně zpracovávaný uzel AST.
+ * @param stack             Zásobník tabulek symbolů (scopy).
+ * @param current_offset    Ukazatel na aktuální offset pro lokální proměnné
+ *                          dané funkce/bloku (pro generování kódu). V globálním
+ *                          kontextu je NULL.
+ * @param current_func_data Záznam o právě zpracovávané funkci (pro určení
+ *                          návratového typu), nebo NULL mimo tělo funkce.
  */
 static void semantic_recurs(AstNode *node, symstack *stack, int *current_offset, symbol_data *current_func_data)
 {
@@ -1048,7 +1091,7 @@ static void semantic_recurs(AstNode *node, symstack *stack, int *current_offset,
     case AST_PROGRAM:
     {
         AstNodeProgram *program = (AstNodeProgram *)node;
-        for (int i = 0; i < program->functions->count; i++)// prochazeni definic funkci
+        for (int i = 0; i < program->functions->count; i++) // prochazeni definic funkci
         {
             semantic_recurs(program->functions->items[i], stack, NULL, NULL);
         }
@@ -1058,13 +1101,13 @@ static void semantic_recurs(AstNode *node, symstack *stack, int *current_offset,
     {
         AstNodeFuncDef *func = (AstNodeFuncDef *)node;
 
-        int func_offset = 0; // posun promennych
-        char func_key[256]; // buffer pro identifikator funkce
+        int func_offset = 0;             // posun promennych
+        char func_key[256];              // buffer pro identifikator funkce
         int arity = func->params->count; // arita funkce
         switch (func->kind)
         {
         case FUNC_IS_FUNC:
-            snprintf(func_key, 256, "%s@%d", func->func_id.lexeme, arity); // ziskani identifikator@arita
+            snprintf(func_key, 256, "%s@%d", func->func_id.lexeme, arity);
             break;
         case FUNC_IS_GETTER:
             snprintf(func_key, 256, "%s@GET", func->func_id.lexeme);
@@ -1074,16 +1117,16 @@ static void semantic_recurs(AstNode *node, symstack *stack, int *current_offset,
             break;
         }
 
-        symbol_data *func_data; // data funkce
-        
+        symbol_data *func_data;
+
         // spravne se funkce v firstpass ulozila
         if (!search_scopes(stack, func_key, &func_data))
         {
             fprintf(stderr, "Function %s not found in secondpass\n", func_key);
             ifjexit(ERR_INTERNAL);
         }
-        
-        func_data->data_type = Null; // navratova hodnota zatim null
+
+        func_data->data_type = Null;             // výchozí návratová hodnota
         stack_push(stack, func->func_id.lexeme); // func scope
         tree_node **param_table = stack_top(stack);
 
@@ -1117,7 +1160,7 @@ static void semantic_recurs(AstNode *node, symstack *stack, int *current_offset,
             param->stack_offset = param_data.offset;
             param->data_type = param_data.data_type;
         }
-        // telo funkce
+
         AstNodeBlock *body = func->body;
         for (int i = 0; i < body->statements->count; i++)
         {
@@ -1130,7 +1173,6 @@ static void semantic_recurs(AstNode *node, symstack *stack, int *current_offset,
     {
         AstNodeBlock *block = (AstNodeBlock *)node;
 
-        // nemelo by nastat, block ma automaticky offset
         if (current_offset == NULL)
         {
             fprintf(stderr, "Block in global scope\n");
@@ -1152,7 +1194,7 @@ static void semantic_recurs(AstNode *node, symstack *stack, int *current_offset,
 
         tree_node **current_table = stack_top(stack); // aktualni vnorenost
         symbol_data *found;
-        
+
         // redefinice promenne
         if (search_symbol(*current_table, var_name, &found))
         {
@@ -1177,7 +1219,7 @@ static void semantic_recurs(AstNode *node, symstack *stack, int *current_offset,
         var_data.arity = 0;
 
         insert_symbol(current_table, &var_data);
-        
+
         // anotace AST
         decl->stack_offset = var_data.offset;
         decl->data_type = var_data.data_type;
@@ -1237,7 +1279,7 @@ static void semantic_recurs(AstNode *node, symstack *stack, int *current_offset,
         AstNodeAssignStmt *assign = (AstNodeAssignStmt *)node;
 
         semantic_recurs(assign->rvalue, stack, current_offset, current_func_data); // zavolat s pravym potomkem
-        symbol_data_type right_type = Undefined; 
+        symbol_data_type right_type = Undefined;
         switch (assign->rvalue->type) // leva hodnota nabyje datovy typ prave hodnoty
         {
         case AST_EXPR_LITERAL:
@@ -1262,7 +1304,7 @@ static void semantic_recurs(AstNode *node, symstack *stack, int *current_offset,
         char *left_name = left->token.lexeme;
         symbol_data *found;
 
-        // globalni
+        // globalni promenna
         if (left->token.type == IDENTIFIER_GLOBAL)
         {
             left->stack_offset = -1;
@@ -1270,7 +1312,7 @@ static void semantic_recurs(AstNode *node, symstack *stack, int *current_offset,
             break;
         }
 
-        // promenna
+        // lokalni promenna
         if (search_scopes(stack, left_name, &found))
         {
             if (found->id_type != VARIABLE_ID)
@@ -1283,8 +1325,7 @@ static void semantic_recurs(AstNode *node, symstack *stack, int *current_offset,
             left->data_type = right_type;
             found->data_type = right_type;
         }
-        // setter
-        else
+        else // setter
         {
             char setter_key[256];
             int temp = snprintf(setter_key, 256, "%s@SET", left_name);
@@ -1333,7 +1374,7 @@ static void semantic_recurs(AstNode *node, symstack *stack, int *current_offset,
         if (current_func_data == NULL)
         {
             fprintf(stderr, "Line %d: 'return' statement found outside of a function.\n", ret->base.line_number);
-            ifjexit(ERR_SYN); // syntakticka chyba, takze nemela by nastat
+            ifjexit(ERR_SYN);
         }
         if (ret->expr)
         {

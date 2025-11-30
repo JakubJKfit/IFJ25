@@ -9,10 +9,19 @@
 #include <stdbool.h>
 #include "ast.h" // Přidán include AST
 
-// Entry point nyní vrací kořen AST nebo NULL při chybě
+/**
+ * @brief Vstupní bod parseru pro jazyk IFJ25.
+ *
+ * Načte vstupní program, provede syntaktickou a sémantickou analýzu a
+ * vytvoří strom AST. Při chybě volá ifjexit() a ukončí program.
+ *
+ * @return Ukazatel na kořenový uzel AST (AST_PROGRAM).
+ */
 AstNode *ifj_parse_program(void);
 
-// globální kód chyby
+/**
+ * @brief Globální kód chyby nastavovaný funkcí ifjexit().
+ */
 extern int ifj_error_code;
 
 #endif // IFJ_PARSER_H
