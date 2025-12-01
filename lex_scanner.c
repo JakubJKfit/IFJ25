@@ -1,4 +1,6 @@
 /**
+ * @name IFJ25
+ * 
  * @file lex_scanner.c
  * @author Petr Molík xmolikp00
  * @brief Lexikální analýza
@@ -271,7 +273,7 @@ void keywords(LexemeBuffer *lexeme)
  * 
  * Pokud se jedná o escape sekvenci, vrácí funkce znak odpovídající dané sekvenci.
  * 
- * @return char ,nebo -1 při chybě/neplatné sekvenci
+ * @return char, nebo -1 při chybě/neplatné sekvenci
  */
 char escapeChar()
 {

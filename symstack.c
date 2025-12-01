@@ -1,4 +1,6 @@
 /**
+ * @name IFJ25
+ * 
  * @file symstack.c
  * @author Jakub Jan Kupčík xkupcij00
  * @brief Zásobník tabulek určený k vytvoření nové tabulky symbolů pro vnořené bloky

@@ -1,5 +1,7 @@
 /**
- * @file symtable.h
+ * @name IFJ25
+ * 
+ * @headerfile symtable.h
  * @author Jakub Jan Kupčík xkupcij00
  * @brief Hlavičkový soubor pro tabulku symbolů
  */

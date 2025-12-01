@@ -1,6 +1,9 @@
 /**
- * @file    ast.h
- * @brief   Definice struktur pro abstraktní syntaktický strom (AST) jazyka IFJ25
+ * @name IFJ25
+ * 
+ * @headerfile ast.h
+ * @author xkostej00  
+ * @brief Definice struktur pro abstraktní syntaktický strom (AST) jazyka IFJ25
  */
 
 #ifndef AST_H

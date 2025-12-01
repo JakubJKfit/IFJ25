@@ -1,4 +1,6 @@
 /**
+ * @name IFJ25
+ * 
  * @file err.h
  * @author Jakub Jan Kupčík xkupcij00
  * @brief Hlavičkový soubor deklarující všechny návratové hodnoty

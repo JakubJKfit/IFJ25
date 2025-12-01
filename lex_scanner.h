@@ -1,5 +1,7 @@
 /**
- * @file lex_scanner.h
+ * @name IFJ25
+ * 
+ * @headerfile lex_scanner.h
  * @author Petr Molík xmolikp00
  * @brief Lexikální analýza
  * 

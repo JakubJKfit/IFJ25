@@ -1,5 +1,8 @@
 /**
+ * @name IFJ25
+ * 
  * @file    ast.c
+ * @author  xkostej00
  * @brief   Implementace funkcí pro tvorbu a uvolnění uzlů AST
  */
 

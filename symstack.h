@@ -1,5 +1,7 @@
 /**
- * @file symstack.h
+ * @name IFJ25
+ * 
+ * @headerfile symstack.h
  * @author Jakub Jan Kupčík xkupcij00
  * @brief Hlavičkový soubor pro zásobník tabulek
  */

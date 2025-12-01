@@ -1,4 +1,6 @@
 /**
+ * @name IFJ25
+ * 
  * @file symtable.c
  * @author Jakub Jan Kupčík xkupcij00
  * @brief Tabulka symbolů implementována pomocí výškově vyváženého bin. stromu

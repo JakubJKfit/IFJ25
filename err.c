@@ -1,4 +1,6 @@
 /**
+ * @name IFJ25
+ * 
  * @file err.c
  * @author Jakub Jan Kupčík xkupcij00
  * @brief Soubor obsahující jednotnou fuknci pro správné vypnutí programu se správnou návratovou hodnotou
