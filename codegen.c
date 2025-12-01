@@ -1,3 +1,14 @@
+/**
+ * @name IFJ25
+ * 
+ * @file codegen.c
+ * @author Jáchym Turek xturekj01
+ * @brief generování cílového kódu IFJcode25
+ * 
+ * Soubor obsahuje funkce pro generování kódu z AST. Generovaný kód je vypsán na standardní výstup.
+ * Prochází strom a pro každý uzel generuje odpovídající unstrukce IFJcode25.
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h> 
@@ -8,8 +19,11 @@
 #include "parser.h"
 #include "err.h"  
 
+/// Pole pro uložení globálních proměnných
 char global_vars[128][256];
+/// Počet globálních proměnných
 int counter = 0;
+/// Čítač pro generování unikátních návěstí (if, while...)
 int if_label_counter = 0;
 
 
@@ -17,7 +31,12 @@ static void traverse_and_print_ast(AstNode *node);
 
 
 
-
+/**
+ * @brief Vypíše řetězec ve formátu pro IFJcode25
+ *  Funkce projde vstupní řetězec a znaky, které nejsou tisknutelné nebo mají
+ * IFJcode25 speciální význam (např. mezera, #, \), nahradí escape sekvencí \xyz.
+ * @param str Vstupní řetězec
+ */
 static void print_string_literal_escaped(const char *str) {
     
     printf("string@");
@@ -43,6 +62,10 @@ static void print_string_literal_escaped(const char *str) {
     }
 }
 
+
+/**
+ * @brief Generuje kontrolu na nil hodnoty pro binární operace
+ */
 void gen_nil_check() {
     int label_id = if_label_counter++;
     printf("POPS GF@_check_op_2\n"); 
@@ -62,7 +85,9 @@ void gen_nil_check() {
 
 
 /**
- * @brief Rekurzivně projde strom a vypíše typ každého uzlu.
+ * @brief Rekurzivně projde strom a generuje kód.
+ * Prochází AST a pro každý typ uzlu generuje odpovídající kód IFJcode25.
+ * @param node Aktuální uzel AST
  */
 static void traverse_and_print_ast(AstNode *node) {
 
@@ -593,8 +618,12 @@ static void traverse_and_print_ast(AstNode *node) {
             break;
     }
 }
-
-static void first_travers(AstNode *node, int indent) {
+/**
+ * @brief První průchod AST pro vybrání globálních proměných
+ * Prochází strom a hledá proměnné s offsetem -1.
+ * @param node Aktuální uzel AST
+ */
+static void first_travers(AstNode *node) {
 
     if (!node) {
         return;
@@ -606,14 +635,14 @@ static void first_travers(AstNode *node, int indent) {
     switch (node->type) {
         case AST_PROGRAM: {
             AstNodeProgram *prog = (AstNodeProgram *)node;
-            first_travers((AstNode *)prog->functions, indent + 1);
+            first_travers((AstNode *)prog->functions);
             break;
         }
         case AST_FUNC_DEF: {
             AstNodeFuncDef *func = (AstNodeFuncDef *)node;
             
-            first_travers((AstNode *)func->params, indent + 1);
-            first_travers((AstNode *)func->body, indent + 1);
+            first_travers((AstNode *)func->params);
+            first_travers((AstNode *)func->body);
         
 
             
@@ -621,38 +650,38 @@ static void first_travers(AstNode *node, int indent) {
         }
         case AST_STMT_BLOCK: {
             AstNodeBlock *block = (AstNodeBlock *)node;
-            first_travers((AstNode *)block->statements, indent + 1);
+            first_travers((AstNode *)block->statements);
             break;
         }
         case AST_STMT_ASSIGN: {
             AstNodeAssignStmt *stmt = (AstNodeAssignStmt *)node;
-            first_travers((AstNode *)stmt->lvalue, indent + 1);
-            first_travers(stmt->rvalue, indent + 1);
+            first_travers((AstNode *)stmt->lvalue);
+            first_travers((AstNode *)stmt->rvalue);
             
             break;
         }
         case AST_STMT_IF: {
             AstNodeIfStmt *stmt = (AstNodeIfStmt *)node;
-            first_travers(stmt->condition, indent + 1);
-            first_travers((AstNode *)stmt->then_block, indent + 1);
-            first_travers((AstNode *)stmt->else_block, indent + 1);
+            first_travers(stmt->condition);
+            first_travers((AstNode *)stmt->then_block);
+            first_travers((AstNode *)stmt->else_block);
             break;
         }
         case AST_STMT_WHILE: {
             AstNodeWhileStmt *stmt = (AstNodeWhileStmt *)node;
-            first_travers(stmt->condition, indent + 1);
-            first_travers((AstNode *)stmt->body_block, indent + 1);
+            first_travers(stmt->condition);
+            first_travers((AstNode *)stmt->body_block);
             break;
         }
         case AST_STMT_RETURN: {
             AstNodeReturnStmt *stmt = (AstNodeReturnStmt *)node;
-            first_travers(stmt->expr, indent + 1);
+            first_travers(stmt->expr);
             break;
         }
         case AST_FUNC_CALL: {
             AstNodeFuncCall *call = (AstNodeFuncCall *)node;
 
-            first_travers((AstNode *)call->args, indent + 1);
+            first_travers((AstNode *)call->args);
 
             
 
@@ -665,8 +694,8 @@ static void first_travers(AstNode *node, int indent) {
             AstNodeBinaryExpr *expr = (AstNodeBinaryExpr *)node;
             
             
-            first_travers(expr->left, indent + 1);
-            first_travers(expr->right, indent + 1);
+            first_travers(expr->left);
+            first_travers(expr->right);
             
             break;
             
@@ -677,7 +706,7 @@ static void first_travers(AstNode *node, int indent) {
 
             for (int i = 0; i < list->count; i++) {
 
-                first_travers(list->items[i], indent + 1);
+                first_travers(list->items[i]);
             }
             break;
         }
@@ -726,6 +755,10 @@ static void first_travers(AstNode *node, int indent) {
     }
 }
 
+/**
+ * @brief vypíše kód vestavěných funkcí
+ * 
+ */
 void help_func() {
     printf("LABEL IFJ_WRITE\n");
     printf("PUSHFRAME\n");
@@ -989,8 +1022,12 @@ void help_func() {
 
 
 /**
- * @brief Hlavní funkce pro generování kódu.
- * Nyní jen spustí rekurzivní tisk.
+ * @brief Vstupní funkce pro generování kódu z AST
+ * volání z main.c.
+ * Nejprve spustí první průchod pro sběr globálních proměných, potom se vypíšou globální proměnné, pomocné proměnné a vestavěné funkce.
+ * Nakonec se provede hlavní průchod AST pro generování kódu.
+ * 
+ * @param root Kořen AST
  */
 void generate_code(AstNode *root) {
     if (!root) {
@@ -998,7 +1035,7 @@ void generate_code(AstNode *root) {
         return;
     }
 
-    first_travers(root, 0);
+    first_travers(root);
 
     printf(".IFJcode25\n");
     printf("\n");
