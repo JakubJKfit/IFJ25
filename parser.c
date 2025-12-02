@@ -1173,7 +1173,7 @@ static void semantic_recurs(AstNode *node, symstack *stack, int *current_offset,
         stack_pop(stack);
         break;
     }
-    case AST_STMT_BLOCK:
+    case AST_STMT_BLOCK: 
     {
         AstNodeBlock *block = (AstNodeBlock *)node;
 
@@ -1191,7 +1191,7 @@ static void semantic_recurs(AstNode *node, symstack *stack, int *current_offset,
         stack_pop(stack);
         break;
     }
-    case AST_STMT_VAR_DECL:
+    case AST_STMT_VAR_DECL: // deklarace fce
     {
         AstNodeVarDecl *decl = (AstNodeVarDecl *)node;
         char *var_name = decl->var_id.lexeme;
@@ -1356,7 +1356,7 @@ static void semantic_recurs(AstNode *node, symstack *stack, int *current_offset,
         }
         break;
     }
-    case AST_STMT_IF:
+    case AST_STMT_IF: // if block -> nutnost kontroly if statement a pak bloku
     {
         AstNodeIfStmt *if_stmt = (AstNodeIfStmt *)node;
         semantic_recurs(if_stmt->condition, stack, current_offset, current_func_data);
@@ -1364,7 +1364,7 @@ static void semantic_recurs(AstNode *node, symstack *stack, int *current_offset,
         semantic_recurs((AstNode *)if_stmt->else_block, stack, current_offset, current_func_data);
         break;
     }
-    case AST_STMT_WHILE:
+    case AST_STMT_WHILE: // while block
     {
         AstNodeWhileStmt *while_stmt = (AstNodeWhileStmt *)node;
         semantic_recurs(while_stmt->condition, stack, current_offset, current_func_data);
@@ -1424,6 +1424,7 @@ static void semantic_recurs(AstNode *node, symstack *stack, int *current_offset,
                 ifjexit(ERR_SEM_INCOMP);
             }
         }
+        // kontrola datovych typu operandu
         switch (binary_expr->op)
         {
         case PLUS:
