@@ -1,0 +1,130 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>IFJ25: Dokumentace souboru codegen.h</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">IFJ25
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generováno programem Doxygen 1.9.1 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+var searchBox = new SearchBox("searchBox", "search",false,'Hledat','.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(function() {
+  initMenu('',true,false,'search.php','Hledat');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+</div><!-- top -->
+<div class="header">
+  <div class="headertitle">
+<div class="title">Dokumentace souboru codegen.h</div>  </div>
+</div><!--header-->
+<div class="contents">
+
+<p>generování cílového kódu IFJcode25  
+<a href="#details">...</a></p>
+<div class="textblock"><code>#include &quot;<a class="el" href="ast_8h_source.html">ast.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="parser_8h_source.html">parser.h</a>&quot;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Graf závislostí na vkládaných souborech pro codegen.h:</div>
+<div class="dyncontent">
+<div class="center"><img src="codegen_8h__incl.png" border="0" usemap="#acodegen_8h" alt=""/></div>
+</div>
+</div><div class="textblock"><div class="dynheader">
+Následující graf ukazuje, které soubory přímo nebo nepřímo vkládají tento soubor:</div>
+<div class="dyncontent">
+<div class="center"><img src="codegen_8h__dep__incl.png" border="0" usemap="#acodegen_8hdep" alt=""/></div>
+</div>
+</div>
+<p><a href="codegen_8h_source.html">Zobrazit zdrojový text tohoto souboru.</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Funkce</h2></td></tr>
+<tr><td colspan="2"><div class="groupHeader">IFJ25</div></td></tr>
+<tr class="memitem:a21c0510ab7ceb6ef021080f79c4fdfe0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="codegen_8h.html#a21c0510ab7ceb6ef021080f79c4fdfe0">generate_code</a> (<a class="el" href="structAstNode.html">AstNode</a> *root)</td></tr>
+<tr class="memdesc:a21c0510ab7ceb6ef021080f79c4fdfe0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Vstupní funkce pro generování kódu z AST volání z <a class="el" href="main_8c.html" title="Hlavičkový soubor pro tabulku symbolů">main.c</a>. Nejprve spustí první průchod pro sběr globálních proměných, potom se vypíšou globální proměnné, pomocné proměnné a vestavěné funkce. Nakonec se provede hlavní průchod AST pro generování kódu.  <a href="codegen_8h.html#a21c0510ab7ceb6ef021080f79c4fdfe0">...</a><br /></td></tr>
+<tr class="separator:a21c0510ab7ceb6ef021080f79c4fdfe0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailní popis</h2>
+<div class="textblock"><p>generování cílového kódu IFJcode25 </p>
+<dl class="section author"><dt>Autor</dt><dd>Jáchym Turek xturekj01</dd></dl>
+<p>Hlavičkový soubor pro generátor kódu. </p>
+</div><h2 class="groupheader">Dokumentace funkcí</h2>
+<a id="a21c0510ab7ceb6ef021080f79c4fdfe0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a21c0510ab7ceb6ef021080f79c4fdfe0">&#9670;&nbsp;</a></span>generate_code()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void generate_code </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structAstNode.html">AstNode</a> *&#160;</td>
+          <td class="paramname"><em>root</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Vstupní funkce pro generování kódu z AST volání z <a class="el" href="main_8c.html" title="Hlavičkový soubor pro tabulku symbolů">main.c</a>. Nejprve spustí první průchod pro sběr globálních proměných, potom se vypíšou globální proměnné, pomocné proměnné a vestavěné funkce. Nakonec se provede hlavní průchod AST pro generování kódu. </p>
+<dl class="params"><dt>Parametry</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">root</td><td>Kořen AST </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Generováno programem&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+</small></address>
+</body>
+</html>

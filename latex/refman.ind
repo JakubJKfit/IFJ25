@@ -1,0 +1,302 @@
+\begin{theindex}
+
+  \item {add\_func\_to\_program}
+    \subitem {ast.h}, \hyperpage{19}
+  \item {add\_stmt\_to\_block}
+    \subitem {ast.h}, \hyperpage{20}
+  \item {add\_to\_list}
+    \subitem {ast.h}, \hyperpage{20}
+  \item {ast.c}, \hyperpage{17}
+  \item {ast.h}, \hyperpage{17}
+    \subitem {add\_func\_to\_program}, \hyperpage{19}
+    \subitem {add\_stmt\_to\_block}, \hyperpage{20}
+    \subitem {add\_to\_list}, \hyperpage{20}
+    \subitem {AST\_EXPR\_BINARY}, \hyperpage{19}
+    \subitem {AST\_EXPR\_LITERAL}, \hyperpage{19}
+    \subitem {AST\_EXPR\_VARIABLE}, \hyperpage{19}
+    \subitem {AST\_FUNC\_CALL}, \hyperpage{19}
+    \subitem {AST\_FUNC\_DEF}, \hyperpage{19}
+    \subitem {AST\_NODE\_LIST}, \hyperpage{19}
+    \subitem {AST\_PROGRAM}, \hyperpage{19}
+    \subitem {AST\_STMT\_ASSIGN}, \hyperpage{19}
+    \subitem {AST\_STMT\_BLOCK}, \hyperpage{19}
+    \subitem {AST\_STMT\_IF}, \hyperpage{19}
+    \subitem {AST\_STMT\_RETURN}, \hyperpage{19}
+    \subitem {AST\_STMT\_VAR\_DECL}, \hyperpage{19}
+    \subitem {AST\_STMT\_WHILE}, \hyperpage{19}
+    \subitem {AstNodeType}, \hyperpage{19}
+    \subitem {create\_assign\_stmt}, \hyperpage{20}
+    \subitem {create\_binary\_expr}, \hyperpage{21}
+    \subitem {create\_block}, \hyperpage{21}
+    \subitem {create\_func\_call}, \hyperpage{22}
+    \subitem {create\_func\_def}, \hyperpage{22}
+    \subitem {create\_if\_stmt}, \hyperpage{22}
+    \subitem {create\_list}, \hyperpage{23}
+    \subitem {create\_literal}, \hyperpage{23}
+    \subitem {create\_program}, \hyperpage{24}
+    \subitem {create\_return\_stmt}, \hyperpage{24}
+    \subitem {create\_vardecl}, \hyperpage{24}
+    \subitem {create\_variable}, \hyperpage{25}
+    \subitem {create\_while\_stmt}, \hyperpage{25}
+    \subitem {free\_ast\_node}, \hyperpage{25}
+    \subitem {free\_token\_lexeme}, \hyperpage{26}
+  \item {AST\_EXPR\_BINARY}
+    \subitem {ast.h}, \hyperpage{19}
+  \item {AST\_EXPR\_LITERAL}
+    \subitem {ast.h}, \hyperpage{19}
+  \item {AST\_EXPR\_VARIABLE}
+    \subitem {ast.h}, \hyperpage{19}
+  \item {AST\_FUNC\_CALL}
+    \subitem {ast.h}, \hyperpage{19}
+  \item {AST\_FUNC\_DEF}
+    \subitem {ast.h}, \hyperpage{19}
+  \item {AST\_NODE\_LIST}
+    \subitem {ast.h}, \hyperpage{19}
+  \item {AST\_PROGRAM}
+    \subitem {ast.h}, \hyperpage{19}
+  \item {AST\_STMT\_ASSIGN}
+    \subitem {ast.h}, \hyperpage{19}
+  \item {AST\_STMT\_BLOCK}
+    \subitem {ast.h}, \hyperpage{19}
+  \item {AST\_STMT\_IF}
+    \subitem {ast.h}, \hyperpage{19}
+  \item {AST\_STMT\_RETURN}
+    \subitem {ast.h}, \hyperpage{19}
+  \item {AST\_STMT\_VAR\_DECL}
+    \subitem {ast.h}, \hyperpage{19}
+  \item {AST\_STMT\_WHILE}
+    \subitem {ast.h}, \hyperpage{19}
+  \item {AstNode}, \hyperpage{7}
+  \item {AstNodeAssignStmt}, \hyperpage{7}
+  \item {AstNodeBinaryExpr}, \hyperpage{8}
+  \item {AstNodeBlock}, \hyperpage{8}
+  \item {AstNodeFuncCall}, \hyperpage{8}
+  \item {AstNodeFuncDef}, \hyperpage{9}
+  \item {AstNodeIfStmt}, \hyperpage{9}
+  \item {AstNodeList}, \hyperpage{9}
+  \item {AstNodeLiteral}, \hyperpage{10}
+  \item {AstNodeProgram}, \hyperpage{10}
+  \item {AstNodeReturnStmt}, \hyperpage{10}
+  \item {AstNodeType}
+    \subitem {ast.h}, \hyperpage{19}
+  \item {AstNodeVarDecl}, \hyperpage{11}
+  \item {AstNodeVariable}, \hyperpage{11}
+  \item {AstNodeWhileStmt}, \hyperpage{11}
+
+  \indexspace
+
+  \item {balance\_tree}
+    \subitem {symtable.c}, \hyperpage{46}
+  \item {builtInFunctions}
+    \subitem {lex\_scanner.c}, \hyperpage{31}
+
+  \indexspace
+
+  \item {codegen.c}, \hyperpage{26}
+    \subitem {generate\_code}, \hyperpage{27}
+  \item {codegen.h}, \hyperpage{27}
+    \subitem {generate\_code}, \hyperpage{28}
+  \item {create\_assign\_stmt}
+    \subitem {ast.h}, \hyperpage{20}
+  \item {create\_binary\_expr}
+    \subitem {ast.h}, \hyperpage{21}
+  \item {create\_block}
+    \subitem {ast.h}, \hyperpage{21}
+  \item {create\_func\_call}
+    \subitem {ast.h}, \hyperpage{22}
+  \item {create\_func\_def}
+    \subitem {ast.h}, \hyperpage{22}
+  \item {create\_if\_stmt}
+    \subitem {ast.h}, \hyperpage{22}
+  \item {create\_list}
+    \subitem {ast.h}, \hyperpage{23}
+  \item {create\_literal}
+    \subitem {ast.h}, \hyperpage{23}
+  \item {create\_program}
+    \subitem {ast.h}, \hyperpage{24}
+  \item {create\_return\_stmt}
+    \subitem {ast.h}, \hyperpage{24}
+  \item {create\_vardecl}
+    \subitem {ast.h}, \hyperpage{24}
+  \item {create\_variable}
+    \subitem {ast.h}, \hyperpage{25}
+  \item {create\_while\_stmt}
+    \subitem {ast.h}, \hyperpage{25}
+  \item {createToken}
+    \subitem {lex\_scanner.c}, \hyperpage{32}
+
+  \indexspace
+
+  \item {delete\_symbol}
+    \subitem {symtable.c}, \hyperpage{46}
+    \subitem {symtable.h}, \hyperpage{52}
+
+  \indexspace
+
+  \item {err.c}, \hyperpage{28}
+    \subitem {ifjexit}, \hyperpage{29}
+  \item {err.h}, \hyperpage{29}
+    \subitem {ifjexit}, \hyperpage{30}
+  \item {escapeChar}
+    \subitem {lex\_scanner.c}, \hyperpage{32}
+
+  \indexspace
+
+  \item {free\_ast\_node}
+    \subitem {ast.h}, \hyperpage{25}
+  \item {free\_token\_lexeme}
+    \subitem {ast.h}, \hyperpage{26}
+
+  \indexspace
+
+  \item {generate\_code}
+    \subitem {codegen.c}, \hyperpage{27}
+    \subitem {codegen.h}, \hyperpage{28}
+  \item {get\_balance}
+    \subitem {symtable.c}, \hyperpage{47}
+  \item {get\_height}
+    \subitem {symtable.c}, \hyperpage{47}
+  \item {get\_type}
+    \subitem {parser.c}, \hyperpage{37}
+
+  \indexspace
+
+  \item {ifj\_get\_line}
+    \subitem {lex\_scanner.c}, \hyperpage{33}
+    \subitem {lex\_scanner.h}, \hyperpage{35}
+  \item {ifj\_get\_token}
+    \subitem {lex\_scanner.c}, \hyperpage{33}
+    \subitem {lex\_scanner.h}, \hyperpage{35}
+    \subitem {parser.c}, \hyperpage{38}
+  \item {ifj\_parse\_program}
+    \subitem {parser.c}, \hyperpage{38}
+    \subitem {parser.h}, \hyperpage{39}
+  \item {ifjexit}
+    \subitem {err.c}, \hyperpage{29}
+    \subitem {err.h}, \hyperpage{30}
+  \item {insert\_symbol}
+    \subitem {symtable.c}, \hyperpage{48}
+    \subitem {symtable.h}, \hyperpage{52}
+
+  \indexspace
+
+  \item {keywords}
+    \subitem {lex\_scanner.c}, \hyperpage{33}
+
+  \indexspace
+
+  \item {lex\_scanner.c}, \hyperpage{30}
+    \subitem {builtInFunctions}, \hyperpage{31}
+    \subitem {createToken}, \hyperpage{32}
+    \subitem {escapeChar}, \hyperpage{32}
+    \subitem {ifj\_get\_line}, \hyperpage{33}
+    \subitem {ifj\_get\_token}, \hyperpage{33}
+    \subitem {keywords}, \hyperpage{33}
+    \subitem {transition}, \hyperpage{33}
+  \item {lex\_scanner.h}, \hyperpage{34}
+    \subitem {ifj\_get\_line}, \hyperpage{35}
+    \subitem {ifj\_get\_token}, \hyperpage{35}
+    \subitem {Token}, \hyperpage{35}
+  \item {LexemeBuffer}, \hyperpage{12}
+
+  \indexspace
+
+  \item {main.c}, \hyperpage{36}
+
+  \indexspace
+
+  \item {parser.c}, \hyperpage{36}
+    \subitem {get\_type}, \hyperpage{37}
+    \subitem {ifj\_get\_token}, \hyperpage{38}
+    \subitem {ifj\_parse\_program}, \hyperpage{38}
+    \subitem {search\_scopes}, \hyperpage{38}
+    \subitem {TRACEF}, \hyperpage{37}
+  \item {parser.h}, \hyperpage{39}
+    \subitem {ifj\_parse\_program}, \hyperpage{39}
+  \item {put\_height}
+    \subitem {symtable.c}, \hyperpage{48}
+
+  \indexspace
+
+  \item {replace\_by\_rightmost}
+    \subitem {symtable.c}, \hyperpage{48}
+  \item {rotate\_left}
+    \subitem {symtable.c}, \hyperpage{49}
+  \item {rotate\_right}
+    \subitem {symtable.c}, \hyperpage{49}
+
+  \indexspace
+
+  \item {search\_scopes}
+    \subitem {parser.c}, \hyperpage{38}
+  \item {search\_symbol}
+    \subitem {symtable.c}, \hyperpage{49}
+    \subitem {symtable.h}, \hyperpage{52}
+  \item {stack\_dispose}
+    \subitem {symstack.c}, \hyperpage{41}
+    \subitem {symstack.h}, \hyperpage{43}
+  \item {stack\_init}
+    \subitem {symstack.c}, \hyperpage{41}
+    \subitem {symstack.h}, \hyperpage{44}
+  \item {stack\_node}, \hyperpage{12}
+  \item {stack\_pop}
+    \subitem {symstack.c}, \hyperpage{41}
+    \subitem {symstack.h}, \hyperpage{44}
+  \item {stack\_push}
+    \subitem {symstack.c}, \hyperpage{42}
+    \subitem {symstack.h}, \hyperpage{44}
+  \item {stack\_top}
+    \subitem {symstack.c}, \hyperpage{42}
+    \subitem {symstack.h}, \hyperpage{45}
+  \item {symbol\_data}, \hyperpage{13}
+  \item {symstack}, \hyperpage{13}
+  \item {symstack.c}, \hyperpage{40}
+    \subitem {stack\_dispose}, \hyperpage{41}
+    \subitem {stack\_init}, \hyperpage{41}
+    \subitem {stack\_pop}, \hyperpage{41}
+    \subitem {stack\_push}, \hyperpage{42}
+    \subitem {stack\_top}, \hyperpage{42}
+  \item {symstack.h}, \hyperpage{43}
+    \subitem {stack\_dispose}, \hyperpage{43}
+    \subitem {stack\_init}, \hyperpage{44}
+    \subitem {stack\_pop}, \hyperpage{44}
+    \subitem {stack\_push}, \hyperpage{44}
+    \subitem {stack\_top}, \hyperpage{45}
+  \item {symtable.c}, \hyperpage{45}
+    \subitem {balance\_tree}, \hyperpage{46}
+    \subitem {delete\_symbol}, \hyperpage{46}
+    \subitem {get\_balance}, \hyperpage{47}
+    \subitem {get\_height}, \hyperpage{47}
+    \subitem {insert\_symbol}, \hyperpage{48}
+    \subitem {put\_height}, \hyperpage{48}
+    \subitem {replace\_by\_rightmost}, \hyperpage{48}
+    \subitem {rotate\_left}, \hyperpage{49}
+    \subitem {rotate\_right}, \hyperpage{49}
+    \subitem {search\_symbol}, \hyperpage{49}
+    \subitem {tree\_dispose}, \hyperpage{50}
+    \subitem {tree\_init}, \hyperpage{50}
+  \item {symtable.h}, \hyperpage{51}
+    \subitem {delete\_symbol}, \hyperpage{52}
+    \subitem {insert\_symbol}, \hyperpage{52}
+    \subitem {search\_symbol}, \hyperpage{52}
+    \subitem {tree\_dispose}, \hyperpage{53}
+    \subitem {tree\_init}, \hyperpage{53}
+
+  \indexspace
+
+  \item {Token}, \hyperpage{14}
+    \subitem {lex\_scanner.h}, \hyperpage{35}
+  \item {Token::value}, \hyperpage{15}
+  \item {TRACEF}
+    \subitem {parser.c}, \hyperpage{37}
+  \item {transition}
+    \subitem {lex\_scanner.c}, \hyperpage{33}
+  \item {tree\_dispose}
+    \subitem {symtable.c}, \hyperpage{50}
+    \subitem {symtable.h}, \hyperpage{53}
+  \item {tree\_init}
+    \subitem {symtable.c}, \hyperpage{50}
+    \subitem {symtable.h}, \hyperpage{53}
+  \item {tree\_node}, \hyperpage{14}
+
+\end{theindex}

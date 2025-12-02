@@ -1,0 +1,280 @@
+\hypertarget{symtable_8c}{}\doxysection{Dokumentace souboru symtable.\+c}
+\label{symtable_8c}\index{symtable.c@{symtable.c}}
+
+
+Tabulka symbolů implementována pomocí výškově vyváženého bin. stromu.  
+
+
+{\ttfamily \#include \char`\"{}symtable.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}err.\+h\char`\"{}}\newline
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$string.\+h$>$}\newline
+Graf závislostí na vkládaných souborech pro symtable.\+c\+:
+% FIG 0
+\doxysubsection*{Funkce}
+\begin{Indent}\textbf{ IFJ25}\par
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{symtable_8c_a5b13542ebb7a39109f9f4cc9e44e763e}{tree\+\_\+init}} (\mbox{\hyperlink{structtree__node}{tree\+\_\+node}} $\ast$$\ast$tree)
+\begin{DoxyCompactList}\small\item\em Inicializace stromu. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{symtable_8c_a89876f68fec2a1ea5275ec58bfefd942}{get\+\_\+height}} (\mbox{\hyperlink{structtree__node}{tree\+\_\+node}} $\ast$node)
+\begin{DoxyCompactList}\small\item\em Zjištění výšky uzlu. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{symtable_8c_aa52972b1be8bdaba5a9888628942c669}{put\+\_\+height}} (\mbox{\hyperlink{structtree__node}{tree\+\_\+node}} $\ast$node)
+\begin{DoxyCompactList}\small\item\em Zjištění a přiřazení výšky uzlu. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{symtable_8c_a1b1454b4e377b3c1eeb75a730e50950b}{get\+\_\+balance}} (\mbox{\hyperlink{structtree__node}{tree\+\_\+node}} $\ast$node)
+\begin{DoxyCompactList}\small\item\em Získání hodnoty vyváženosti stromu. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{symtable_8c_ae77e1eef0f51700d0bae6ddf288a2329}{rotate\+\_\+right}} (\mbox{\hyperlink{structtree__node}{tree\+\_\+node}} $\ast$$\ast$tree)
+\begin{DoxyCompactList}\small\item\em Rotace uzlů směrem doprava. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{symtable_8c_a0d236aea3f1510711a390047f93e8c45}{rotate\+\_\+left}} (\mbox{\hyperlink{structtree__node}{tree\+\_\+node}} $\ast$$\ast$tree)
+\begin{DoxyCompactList}\small\item\em Rotace uzlů směrem doleva. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{symtable_8c_a7a04930ba429ee3b4ebf670558b0500b}{balance\+\_\+tree}} (\mbox{\hyperlink{structtree__node}{tree\+\_\+node}} $\ast$$\ast$tree)
+\begin{DoxyCompactList}\small\item\em Vyvážení stromu. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{symtable_8c_a84ec8006d1cf9da2caf604ad808a1583}{search\+\_\+symbol}} (\mbox{\hyperlink{structtree__node}{tree\+\_\+node}} $\ast$node, char $\ast$identifier, \mbox{\hyperlink{structsymbol__data}{symbol\+\_\+data}} $\ast$$\ast$found)
+\begin{DoxyCompactList}\small\item\em Vyhledání daného symbolu v tabulce. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{symtable_8c_a693cd9362cd35614004238c7fea96289}{insert\+\_\+symbol}} (\mbox{\hyperlink{structtree__node}{tree\+\_\+node}} $\ast$$\ast$tree, \mbox{\hyperlink{structsymbol__data}{symbol\+\_\+data}} $\ast$data)
+\begin{DoxyCompactList}\small\item\em Vložení symbolu do tabulky. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{symtable_8c_a0ed5d7f4ad86e9562768fc30ebaf1c87}{replace\+\_\+by\+\_\+rightmost}} (\mbox{\hyperlink{structtree__node}{tree\+\_\+node}} $\ast$target, \mbox{\hyperlink{structtree__node}{tree\+\_\+node}} $\ast$$\ast$tree)
+\begin{DoxyCompactList}\small\item\em Nahrazení uzlu nejpravějším uzlem. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{symtable_8c_a0d76ed27b8ae0e138c5d30734b69371f}{delete\+\_\+symbol}} (\mbox{\hyperlink{structtree__node}{tree\+\_\+node}} $\ast$$\ast$tree, char $\ast$identifier)
+\begin{DoxyCompactList}\small\item\em Smazání symbolu z tabulky. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{symtable_8c_ae799b5dc9375c28ffbe01412826d6dfb}{tree\+\_\+dispose}} (\mbox{\hyperlink{structtree__node}{tree\+\_\+node}} $\ast$$\ast$tree)
+\begin{DoxyCompactList}\small\item\em Smazání tabulky symbolů a uvolnění paměti. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\end{Indent}
+
+
+\doxysubsection{Detailní popis}
+Tabulka symbolů implementována pomocí výškově vyváženého bin. stromu. 
+
+\begin{DoxyAuthor}{Autor}
+Jakub Jan Kupčík xkupcij00 
+\end{DoxyAuthor}
+
+
+\doxysubsection{Dokumentace funkcí}
+\mbox{\Hypertarget{symtable_8c_a7a04930ba429ee3b4ebf670558b0500b}\label{symtable_8c_a7a04930ba429ee3b4ebf670558b0500b}} 
+\index{symtable.c@{symtable.c}!balance\_tree@{balance\_tree}}
+\index{balance\_tree@{balance\_tree}!symtable.c@{symtable.c}}
+\doxysubsubsection{\texorpdfstring{balance\_tree()}{balance\_tree()}}
+{\footnotesize\ttfamily void balance\+\_\+tree (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structtree__node}{tree\+\_\+node}} $\ast$$\ast$}]{tree }\end{DoxyParamCaption})}
+
+
+
+Vyvážení stromu. 
+
+
+\begin{DoxyParams}{Parametry}
+{\em tree} & ukazatel na ukazatel na kořen \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Návratová hodnota}
+void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{symtable_8c_a0d76ed27b8ae0e138c5d30734b69371f}\label{symtable_8c_a0d76ed27b8ae0e138c5d30734b69371f}} 
+\index{symtable.c@{symtable.c}!delete\_symbol@{delete\_symbol}}
+\index{delete\_symbol@{delete\_symbol}!symtable.c@{symtable.c}}
+\doxysubsubsection{\texorpdfstring{delete\_symbol()}{delete\_symbol()}}
+{\footnotesize\ttfamily void delete\+\_\+symbol (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structtree__node}{tree\+\_\+node}} $\ast$$\ast$}]{tree,  }\item[{char $\ast$}]{identifier }\end{DoxyParamCaption})}
+
+
+
+Smazání symbolu z tabulky. 
+
+
+\begin{DoxyParams}{Parametry}
+{\em tree} & ukazatel na ukazatel na kořen stromu \\
+\hline
+{\em identifier} & identifikátor\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Návratová hodnota}
+void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{symtable_8c_a1b1454b4e377b3c1eeb75a730e50950b}\label{symtable_8c_a1b1454b4e377b3c1eeb75a730e50950b}} 
+\index{symtable.c@{symtable.c}!get\_balance@{get\_balance}}
+\index{get\_balance@{get\_balance}!symtable.c@{symtable.c}}
+\doxysubsubsection{\texorpdfstring{get\_balance()}{get\_balance()}}
+{\footnotesize\ttfamily int get\+\_\+balance (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structtree__node}{tree\+\_\+node}} $\ast$}]{node }\end{DoxyParamCaption})}
+
+
+
+Získání hodnoty vyváženosti stromu. 
+
+
+\begin{DoxyParams}{Parametry}
+{\em node} & ukazatel na uzel stromu \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Návratová hodnota}
+int hodnota vyváženosti 
+\end{DoxyReturn}
+\mbox{\Hypertarget{symtable_8c_a89876f68fec2a1ea5275ec58bfefd942}\label{symtable_8c_a89876f68fec2a1ea5275ec58bfefd942}} 
+\index{symtable.c@{symtable.c}!get\_height@{get\_height}}
+\index{get\_height@{get\_height}!symtable.c@{symtable.c}}
+\doxysubsubsection{\texorpdfstring{get\_height()}{get\_height()}}
+{\footnotesize\ttfamily int get\+\_\+height (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structtree__node}{tree\+\_\+node}} $\ast$}]{node }\end{DoxyParamCaption})}
+
+
+
+Zjištění výšky uzlu. 
+
+
+\begin{DoxyParams}{Parametry}
+{\em node} & ukazatel na uzel stromu \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Návratová hodnota}
+int výška uzlu 
+\end{DoxyReturn}
+\mbox{\Hypertarget{symtable_8c_a693cd9362cd35614004238c7fea96289}\label{symtable_8c_a693cd9362cd35614004238c7fea96289}} 
+\index{symtable.c@{symtable.c}!insert\_symbol@{insert\_symbol}}
+\index{insert\_symbol@{insert\_symbol}!symtable.c@{symtable.c}}
+\doxysubsubsection{\texorpdfstring{insert\_symbol()}{insert\_symbol()}}
+{\footnotesize\ttfamily void insert\+\_\+symbol (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structtree__node}{tree\+\_\+node}} $\ast$$\ast$}]{tree,  }\item[{\mbox{\hyperlink{structsymbol__data}{symbol\+\_\+data}} $\ast$}]{data }\end{DoxyParamCaption})}
+
+
+
+Vložení symbolu do tabulky. 
+
+
+\begin{DoxyParams}{Parametry}
+{\em tree} & ukazatel na ukazatel na kořen stromu \\
+\hline
+{\em data} & ukazatel na data symbolu\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Návratová hodnota}
+void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{symtable_8c_aa52972b1be8bdaba5a9888628942c669}\label{symtable_8c_aa52972b1be8bdaba5a9888628942c669}} 
+\index{symtable.c@{symtable.c}!put\_height@{put\_height}}
+\index{put\_height@{put\_height}!symtable.c@{symtable.c}}
+\doxysubsubsection{\texorpdfstring{put\_height()}{put\_height()}}
+{\footnotesize\ttfamily void put\+\_\+height (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structtree__node}{tree\+\_\+node}} $\ast$}]{node }\end{DoxyParamCaption})}
+
+
+
+Zjištění a přiřazení výšky uzlu. 
+
+
+\begin{DoxyParams}{Parametry}
+{\em node} & ukazatel na uzel stromu \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Návratová hodnota}
+void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{symtable_8c_a0ed5d7f4ad86e9562768fc30ebaf1c87}\label{symtable_8c_a0ed5d7f4ad86e9562768fc30ebaf1c87}} 
+\index{symtable.c@{symtable.c}!replace\_by\_rightmost@{replace\_by\_rightmost}}
+\index{replace\_by\_rightmost@{replace\_by\_rightmost}!symtable.c@{symtable.c}}
+\doxysubsubsection{\texorpdfstring{replace\_by\_rightmost()}{replace\_by\_rightmost()}}
+{\footnotesize\ttfamily void replace\+\_\+by\+\_\+rightmost (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structtree__node}{tree\+\_\+node}} $\ast$}]{target,  }\item[{\mbox{\hyperlink{structtree__node}{tree\+\_\+node}} $\ast$$\ast$}]{tree }\end{DoxyParamCaption})}
+
+
+
+Nahrazení uzlu nejpravějším uzlem. 
+
+
+\begin{DoxyParams}{Parametry}
+{\em target} & cílový uzel k nahrazení \\
+\hline
+{\em tree} & ukazatel na ukazatel na kořen stromu \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Návratová hodnota}
+void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{symtable_8c_a0d236aea3f1510711a390047f93e8c45}\label{symtable_8c_a0d236aea3f1510711a390047f93e8c45}} 
+\index{symtable.c@{symtable.c}!rotate\_left@{rotate\_left}}
+\index{rotate\_left@{rotate\_left}!symtable.c@{symtable.c}}
+\doxysubsubsection{\texorpdfstring{rotate\_left()}{rotate\_left()}}
+{\footnotesize\ttfamily void rotate\+\_\+left (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structtree__node}{tree\+\_\+node}} $\ast$$\ast$}]{tree }\end{DoxyParamCaption})}
+
+
+
+Rotace uzlů směrem doleva. 
+
+
+\begin{DoxyParams}{Parametry}
+{\em tree} & ukazatel na ukazatel na kořen stromu \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Návratová hodnota}
+void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{symtable_8c_ae77e1eef0f51700d0bae6ddf288a2329}\label{symtable_8c_ae77e1eef0f51700d0bae6ddf288a2329}} 
+\index{symtable.c@{symtable.c}!rotate\_right@{rotate\_right}}
+\index{rotate\_right@{rotate\_right}!symtable.c@{symtable.c}}
+\doxysubsubsection{\texorpdfstring{rotate\_right()}{rotate\_right()}}
+{\footnotesize\ttfamily void rotate\+\_\+right (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structtree__node}{tree\+\_\+node}} $\ast$$\ast$}]{tree }\end{DoxyParamCaption})}
+
+
+
+Rotace uzlů směrem doprava. 
+
+
+\begin{DoxyParams}{Parametry}
+{\em tree} & ukazatel na ukazatel na kořen stromu \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Návratová hodnota}
+void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{symtable_8c_a84ec8006d1cf9da2caf604ad808a1583}\label{symtable_8c_a84ec8006d1cf9da2caf604ad808a1583}} 
+\index{symtable.c@{symtable.c}!search\_symbol@{search\_symbol}}
+\index{search\_symbol@{search\_symbol}!symtable.c@{symtable.c}}
+\doxysubsubsection{\texorpdfstring{search\_symbol()}{search\_symbol()}}
+{\footnotesize\ttfamily bool search\+\_\+symbol (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structtree__node}{tree\+\_\+node}} $\ast$}]{node,  }\item[{char $\ast$}]{identifier,  }\item[{\mbox{\hyperlink{structsymbol__data}{symbol\+\_\+data}} $\ast$$\ast$}]{found }\end{DoxyParamCaption})}
+
+
+
+Vyhledání daného symbolu v tabulce. 
+
+
+\begin{DoxyParams}{Parametry}
+{\em node} & ukazatel na uzel \\
+\hline
+{\em identifier} & identifikátor symbolu \\
+\hline
+{\em found} & ukazatel na nalezený symbol\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Návratová hodnota}
+bool true pokud byl symbol nalezen 
+\end{DoxyReturn}
+\mbox{\Hypertarget{symtable_8c_ae799b5dc9375c28ffbe01412826d6dfb}\label{symtable_8c_ae799b5dc9375c28ffbe01412826d6dfb}} 
+\index{symtable.c@{symtable.c}!tree\_dispose@{tree\_dispose}}
+\index{tree\_dispose@{tree\_dispose}!symtable.c@{symtable.c}}
+\doxysubsubsection{\texorpdfstring{tree\_dispose()}{tree\_dispose()}}
+{\footnotesize\ttfamily void tree\+\_\+dispose (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structtree__node}{tree\+\_\+node}} $\ast$$\ast$}]{tree }\end{DoxyParamCaption})}
+
+
+
+Smazání tabulky symbolů a uvolnění paměti. 
+
+
+\begin{DoxyParams}{Parametry}
+{\em tree} & ukazatel na ukazatel na kořen \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Návratová hodnota}
+void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{symtable_8c_a5b13542ebb7a39109f9f4cc9e44e763e}\label{symtable_8c_a5b13542ebb7a39109f9f4cc9e44e763e}} 
+\index{symtable.c@{symtable.c}!tree\_init@{tree\_init}}
+\index{tree\_init@{tree\_init}!symtable.c@{symtable.c}}
+\doxysubsubsection{\texorpdfstring{tree\_init()}{tree\_init()}}
+{\footnotesize\ttfamily void tree\+\_\+init (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structtree__node}{tree\+\_\+node}} $\ast$$\ast$}]{tree }\end{DoxyParamCaption})}
+
+
+
+Inicializace stromu. 
+
+
+\begin{DoxyParams}{Parametry}
+{\em tree} & ukazatel na ukazatel na kořen stromu \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Návratová hodnota}
+void 
+\end{DoxyReturn}

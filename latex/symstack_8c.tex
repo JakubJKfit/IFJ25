@@ -1,0 +1,133 @@
+\hypertarget{symstack_8c}{}\doxysection{Dokumentace souboru symstack.\+c}
+\label{symstack_8c}\index{symstack.c@{symstack.c}}
+
+
+Zásobník tabulek určený k vytvoření nové tabulky symbolů pro vnořené bloky.  
+
+
+{\ttfamily \#include \char`\"{}symtable.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}symstack.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}err.\+h\char`\"{}}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$string.\+h$>$}\newline
+Graf závislostí na vkládaných souborech pro symstack.\+c\+:
+% FIG 0
+\doxysubsection*{Funkce}
+\begin{Indent}\textbf{ IFJ25}\par
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{symstack_8c_a8a2b484eb47e41daa8ab3b7d0b154756}{stack\+\_\+init}} (\mbox{\hyperlink{structsymstack}{symstack}} $\ast$stack)
+\begin{DoxyCompactList}\small\item\em Inicializace zásobníku. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{symstack_8c_adcd53e91ea0d9ba940d248469cb89cf8}{stack\+\_\+push}} (\mbox{\hyperlink{structsymstack}{symstack}} $\ast$stack, char $\ast$identifier)
+\begin{DoxyCompactList}\small\item\em Vložení nového uzlu do zásobníku. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{symstack_8c_a7cfc2e5e448eaf87baa89db69bd6f22b}{stack\+\_\+pop}} (\mbox{\hyperlink{structsymstack}{symstack}} $\ast$stack)
+\begin{DoxyCompactList}\small\item\em Odstranění vrcholu zásobníku a určení nového vrcholu. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structtree__node}{tree\+\_\+node}} $\ast$$\ast$ \mbox{\hyperlink{symstack_8c_a37719224e10824d2f1e5a2eccf83d407}{stack\+\_\+top}} (\mbox{\hyperlink{structsymstack}{symstack}} $\ast$stack)
+\begin{DoxyCompactList}\small\item\em Vracení ukazatele na kořen tabulky vrcholu zásobníku. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{symstack_8c_a35898ddbd48ed6bb7249620e39d4d0c7}{stack\+\_\+dispose}} (\mbox{\hyperlink{structsymstack}{symstack}} $\ast$stack)
+\begin{DoxyCompactList}\small\item\em Smazání zásobníku. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\end{Indent}
+
+
+\doxysubsection{Detailní popis}
+Zásobník tabulek určený k vytvoření nové tabulky symbolů pro vnořené bloky. 
+
+\begin{DoxyAuthor}{Autor}
+Jakub Jan Kupčík xkupcij00 
+\end{DoxyAuthor}
+
+
+\doxysubsection{Dokumentace funkcí}
+\mbox{\Hypertarget{symstack_8c_a35898ddbd48ed6bb7249620e39d4d0c7}\label{symstack_8c_a35898ddbd48ed6bb7249620e39d4d0c7}} 
+\index{symstack.c@{symstack.c}!stack\_dispose@{stack\_dispose}}
+\index{stack\_dispose@{stack\_dispose}!symstack.c@{symstack.c}}
+\doxysubsubsection{\texorpdfstring{stack\_dispose()}{stack\_dispose()}}
+{\footnotesize\ttfamily void stack\+\_\+dispose (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structsymstack}{symstack}} $\ast$}]{stack }\end{DoxyParamCaption})}
+
+
+
+Smazání zásobníku. 
+
+
+\begin{DoxyParams}{Parametry}
+{\em stack} & ukazatel na zásobník \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Návratová hodnota}
+void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{symstack_8c_a8a2b484eb47e41daa8ab3b7d0b154756}\label{symstack_8c_a8a2b484eb47e41daa8ab3b7d0b154756}} 
+\index{symstack.c@{symstack.c}!stack\_init@{stack\_init}}
+\index{stack\_init@{stack\_init}!symstack.c@{symstack.c}}
+\doxysubsubsection{\texorpdfstring{stack\_init()}{stack\_init()}}
+{\footnotesize\ttfamily void stack\+\_\+init (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structsymstack}{symstack}} $\ast$}]{stack }\end{DoxyParamCaption})}
+
+
+
+Inicializace zásobníku. 
+
+
+\begin{DoxyParams}{Parametry}
+{\em stack} & ukazatel na zásobník \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Návratová hodnota}
+void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{symstack_8c_a7cfc2e5e448eaf87baa89db69bd6f22b}\label{symstack_8c_a7cfc2e5e448eaf87baa89db69bd6f22b}} 
+\index{symstack.c@{symstack.c}!stack\_pop@{stack\_pop}}
+\index{stack\_pop@{stack\_pop}!symstack.c@{symstack.c}}
+\doxysubsubsection{\texorpdfstring{stack\_pop()}{stack\_pop()}}
+{\footnotesize\ttfamily void stack\+\_\+pop (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structsymstack}{symstack}} $\ast$}]{stack }\end{DoxyParamCaption})}
+
+
+
+Odstranění vrcholu zásobníku a určení nového vrcholu. 
+
+
+\begin{DoxyParams}{Parametry}
+{\em stack} & ukazatel na stack \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Návratová hodnota}
+void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{symstack_8c_adcd53e91ea0d9ba940d248469cb89cf8}\label{symstack_8c_adcd53e91ea0d9ba940d248469cb89cf8}} 
+\index{symstack.c@{symstack.c}!stack\_push@{stack\_push}}
+\index{stack\_push@{stack\_push}!symstack.c@{symstack.c}}
+\doxysubsubsection{\texorpdfstring{stack\_push()}{stack\_push()}}
+{\footnotesize\ttfamily void stack\+\_\+push (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structsymstack}{symstack}} $\ast$}]{stack,  }\item[{char $\ast$}]{identifier }\end{DoxyParamCaption})}
+
+
+
+Vložení nového uzlu do zásobníku. 
+
+
+\begin{DoxyParams}{Parametry}
+{\em stack} & ukazatel na zásobník \\
+\hline
+{\em identifier} & identifikátor \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Návratová hodnota}
+void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{symstack_8c_a37719224e10824d2f1e5a2eccf83d407}\label{symstack_8c_a37719224e10824d2f1e5a2eccf83d407}} 
+\index{symstack.c@{symstack.c}!stack\_top@{stack\_top}}
+\index{stack\_top@{stack\_top}!symstack.c@{symstack.c}}
+\doxysubsubsection{\texorpdfstring{stack\_top()}{stack\_top()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structtree__node}{tree\+\_\+node}}$\ast$$\ast$ stack\+\_\+top (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structsymstack}{symstack}} $\ast$}]{stack }\end{DoxyParamCaption})}
+
+
+
+Vracení ukazatele na kořen tabulky vrcholu zásobníku. 
+
+
+\begin{DoxyParams}{Parametry}
+{\em stack} & ukazatel na zásobník \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Návratová hodnota}
+\mbox{\hyperlink{structtree__node}{tree\+\_\+node}} adresa ukazatele na kořen tabulky vrcholu zásobníku 
+\end{DoxyReturn}

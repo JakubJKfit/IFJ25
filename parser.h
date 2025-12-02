@@ -1,9 +1,9 @@
 /**
  * @name IFJ25
  * 
- * @headerfile parser.h
+ * @file parser.h
  * @author Jakub Jan Kupčík xkupcij00
- * @author xkostej00
+ * @author Jan Kostečka xkostej00
  * @brief Hlavičkový soubor pro syntaktický analyzátor (parser)
  */
 

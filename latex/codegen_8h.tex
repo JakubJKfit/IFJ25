@@ -1,0 +1,46 @@
+\hypertarget{codegen_8h}{}\doxysection{Dokumentace souboru codegen.\+h}
+\label{codegen_8h}\index{codegen.h@{codegen.h}}
+
+
+generování cílového kódu IFJcode25  
+
+
+{\ttfamily \#include \char`\"{}ast.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}parser.\+h\char`\"{}}\newline
+Graf závislostí na vkládaných souborech pro codegen.\+h\+:
+% FIG 0
+Následující graf ukazuje, které soubory přímo nebo nepřímo vkládají tento soubor\+:
+% FIG 1
+\doxysubsection*{Funkce}
+\begin{Indent}\textbf{ IFJ25}\par
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{codegen_8h_a21c0510ab7ceb6ef021080f79c4fdfe0}{generate\+\_\+code}} (\mbox{\hyperlink{structAstNode}{Ast\+Node}} $\ast$root)
+\begin{DoxyCompactList}\small\item\em Vstupní funkce pro generování kódu z AST volání z \mbox{\hyperlink{main_8c}{main.\+c}}. Nejprve spustí první průchod pro sběr globálních proměných, potom se vypíšou globální proměnné, pomocné proměnné a vestavěné funkce. Nakonec se provede hlavní průchod AST pro generování kódu. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\end{Indent}
+
+
+\doxysubsection{Detailní popis}
+generování cílového kódu IFJcode25 
+
+\begin{DoxyAuthor}{Autor}
+Jáchym Turek xturekj01
+\end{DoxyAuthor}
+Hlavičkový soubor pro generátor kódu. 
+
+\doxysubsection{Dokumentace funkcí}
+\mbox{\Hypertarget{codegen_8h_a21c0510ab7ceb6ef021080f79c4fdfe0}\label{codegen_8h_a21c0510ab7ceb6ef021080f79c4fdfe0}} 
+\index{codegen.h@{codegen.h}!generate\_code@{generate\_code}}
+\index{generate\_code@{generate\_code}!codegen.h@{codegen.h}}
+\doxysubsubsection{\texorpdfstring{generate\_code()}{generate\_code()}}
+{\footnotesize\ttfamily void generate\+\_\+code (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structAstNode}{Ast\+Node}} $\ast$}]{root }\end{DoxyParamCaption})}
+
+
+
+Vstupní funkce pro generování kódu z AST volání z \mbox{\hyperlink{main_8c}{main.\+c}}. Nejprve spustí první průchod pro sběr globálních proměných, potom se vypíšou globální proměnné, pomocné proměnné a vestavěné funkce. Nakonec se provede hlavní průchod AST pro generování kódu. 
+
+
+\begin{DoxyParams}{Parametry}
+{\em root} & Kořen AST \\
+\hline
+\end{DoxyParams}

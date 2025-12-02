@@ -3,7 +3,7 @@
  * 
  * @file parser.c
  * @author Jakub Jan Kupčík xkupcij00
- * @author xkostej00 
+ * @author Jan Kostečka xkostej00 
  * @brief Syntaktická analýza (rekurzivní sestup + precedenční pro výrazy)
  *          a generování AST pro jazyk IFJ25
  */

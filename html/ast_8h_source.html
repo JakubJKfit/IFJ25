@@ -1,0 +1,314 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>IFJ25: Zdrojový soubor ast.h</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">IFJ25
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generováno programem Doxygen 1.9.1 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+var searchBox = new SearchBox("searchBox", "search",false,'Hledat','.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(function() {
+  initMenu('',true,false,'search.php','Hledat');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div class="header">
+  <div class="headertitle">
+<div class="title">ast.h</div>  </div>
+</div><!--header-->
+<div class="contents">
+<a href="ast_8h.html">Zobrazit dokumentaci tohoto souboru.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160; </div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#ifndef AST_H</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#define AST_H</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160; </div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="lex__scanner_8h.html">lex_scanner.h</a>&quot;</span> <span class="comment">// Pro přístup k Token</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="symtable_8h.html">symtable.h</a>&quot;</span></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor">#include &lt;stdlib.h&gt;</span></div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160; </div>
+<div class="line"><a name="l00019"></a><span class="lineno"><a class="line" href="ast_8h.html#a1e0354e1cfa4d729a8b30688d18256fd">   19</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">enum</span></div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;{</div>
+<div class="line"><a name="l00021"></a><span class="lineno"><a class="line" href="ast_8h.html#a1e0354e1cfa4d729a8b30688d18256fda8148247ea6847daa4ccd34690e3a2415">   21</a></span>&#160;    <a class="code" href="ast_8h.html#a1e0354e1cfa4d729a8b30688d18256fda8148247ea6847daa4ccd34690e3a2415">AST_PROGRAM</a>,       </div>
+<div class="line"><a name="l00022"></a><span class="lineno"><a class="line" href="ast_8h.html#a1e0354e1cfa4d729a8b30688d18256fda3d4401570e9beb69422e129de4db9643">   22</a></span>&#160;    <a class="code" href="ast_8h.html#a1e0354e1cfa4d729a8b30688d18256fda3d4401570e9beb69422e129de4db9643">AST_FUNC_DEF</a>,      </div>
+<div class="line"><a name="l00023"></a><span class="lineno"><a class="line" href="ast_8h.html#a1e0354e1cfa4d729a8b30688d18256fdad946ab95f05097160f92db906f5fd53b">   23</a></span>&#160;    <a class="code" href="ast_8h.html#a1e0354e1cfa4d729a8b30688d18256fdad946ab95f05097160f92db906f5fd53b">AST_FUNC_CALL</a>,     </div>
+<div class="line"><a name="l00024"></a><span class="lineno"><a class="line" href="ast_8h.html#a1e0354e1cfa4d729a8b30688d18256fdaa465324438c7fb522327d7f837ddc185">   24</a></span>&#160;    <a class="code" href="ast_8h.html#a1e0354e1cfa4d729a8b30688d18256fdaa465324438c7fb522327d7f837ddc185">AST_STMT_BLOCK</a>,    </div>
+<div class="line"><a name="l00025"></a><span class="lineno"><a class="line" href="ast_8h.html#a1e0354e1cfa4d729a8b30688d18256fdae02fc150b95cdd0928d89a5d25e6e360">   25</a></span>&#160;    <a class="code" href="ast_8h.html#a1e0354e1cfa4d729a8b30688d18256fdae02fc150b95cdd0928d89a5d25e6e360">AST_STMT_VAR_DECL</a>, </div>
+<div class="line"><a name="l00026"></a><span class="lineno"><a class="line" href="ast_8h.html#a1e0354e1cfa4d729a8b30688d18256fda5892c2e665a3a2e0b3aa456646a4c50a">   26</a></span>&#160;    <a class="code" href="ast_8h.html#a1e0354e1cfa4d729a8b30688d18256fda5892c2e665a3a2e0b3aa456646a4c50a">AST_STMT_ASSIGN</a>,   </div>
+<div class="line"><a name="l00027"></a><span class="lineno"><a class="line" href="ast_8h.html#a1e0354e1cfa4d729a8b30688d18256fda217cfcc016d416af16744a84f8c5812c">   27</a></span>&#160;    <a class="code" href="ast_8h.html#a1e0354e1cfa4d729a8b30688d18256fda217cfcc016d416af16744a84f8c5812c">AST_STMT_IF</a>,       </div>
+<div class="line"><a name="l00028"></a><span class="lineno"><a class="line" href="ast_8h.html#a1e0354e1cfa4d729a8b30688d18256fdacf6973064a0ea397514571d40417464c">   28</a></span>&#160;    <a class="code" href="ast_8h.html#a1e0354e1cfa4d729a8b30688d18256fdacf6973064a0ea397514571d40417464c">AST_STMT_WHILE</a>,    </div>
+<div class="line"><a name="l00029"></a><span class="lineno"><a class="line" href="ast_8h.html#a1e0354e1cfa4d729a8b30688d18256fda654096fe18b3cf2b82e464cfd7c16428">   29</a></span>&#160;    <a class="code" href="ast_8h.html#a1e0354e1cfa4d729a8b30688d18256fda654096fe18b3cf2b82e464cfd7c16428">AST_STMT_RETURN</a>,   </div>
+<div class="line"><a name="l00030"></a><span class="lineno"><a class="line" href="ast_8h.html#a1e0354e1cfa4d729a8b30688d18256fda1c3e85982f693dd775ffd0a0900782d4">   30</a></span>&#160;    <a class="code" href="ast_8h.html#a1e0354e1cfa4d729a8b30688d18256fda1c3e85982f693dd775ffd0a0900782d4">AST_EXPR_BINARY</a>,   </div>
+<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="ast_8h.html#a1e0354e1cfa4d729a8b30688d18256fda1f2a74731165fd3062f610d569793ce9">   31</a></span>&#160;    <a class="code" href="ast_8h.html#a1e0354e1cfa4d729a8b30688d18256fda1f2a74731165fd3062f610d569793ce9">AST_EXPR_LITERAL</a>,  </div>
+<div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="ast_8h.html#a1e0354e1cfa4d729a8b30688d18256fda09435ba312db447e28e0d94c6099390f">   32</a></span>&#160;    <a class="code" href="ast_8h.html#a1e0354e1cfa4d729a8b30688d18256fda09435ba312db447e28e0d94c6099390f">AST_EXPR_VARIABLE</a>, </div>
+<div class="line"><a name="l00033"></a><span class="lineno"><a class="line" href="ast_8h.html#a1e0354e1cfa4d729a8b30688d18256fda6489e93c1ea083a03310bc39178732f9">   33</a></span>&#160;    <a class="code" href="ast_8h.html#a1e0354e1cfa4d729a8b30688d18256fda6489e93c1ea083a03310bc39178732f9">AST_NODE_LIST</a>,     </div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;} <a class="code" href="ast_8h.html#a1e0354e1cfa4d729a8b30688d18256fd">AstNodeType</a>;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
+<div class="line"><a name="l00039"></a><span class="lineno"><a class="line" href="ast_8h.html#aeb77b11ff120d929f7abb72ffbdb350f">   39</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">enum</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;{</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    FUNC_IS_FUNC,</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    FUNC_IS_GETTER,</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    FUNC_IS_SETTER</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;} <a class="code" href="ast_8h.html#aeb77b11ff120d929f7abb72ffbdb350f">AstFuncKind</a>;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
+<div class="line"><a name="l00049"></a><span class="lineno"><a class="line" href="structAstNode.html">   49</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="structAstNode.html">AstNode</a></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;{</div>
+<div class="line"><a name="l00051"></a><span class="lineno"><a class="line" href="structAstNode.html#a809eaca6ed0bacfa0014f5f981e143e8">   51</a></span>&#160;    <a class="code" href="ast_8h.html#a1e0354e1cfa4d729a8b30688d18256fd">AstNodeType</a> <a class="code" href="structAstNode.html#a809eaca6ed0bacfa0014f5f981e143e8">type</a>; </div>
+<div class="line"><a name="l00052"></a><span class="lineno"><a class="line" href="structAstNode.html#a2416a4696f3355656a089c7531dec62e">   52</a></span>&#160;    <span class="keywordtype">int</span> <a class="code" href="structAstNode.html#a2416a4696f3355656a089c7531dec62e">line_number</a>;  </div>
+<div class="line"><a name="l00053"></a><span class="lineno"><a class="line" href="ast_8h.html#ac5d357560c27118d67e61e2c3cb171aa">   53</a></span>&#160;} <a class="code" href="ast_8h.html#ac5d357560c27118d67e61e2c3cb171aa">AstNode</a>;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
+<div class="line"><a name="l00058"></a><span class="lineno"><a class="line" href="structAstNodeList.html">   58</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct</span></div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;{</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <a class="code" href="structAstNode.html">AstNode</a> base;</div>
+<div class="line"><a name="l00061"></a><span class="lineno"><a class="line" href="structAstNodeList.html#abdf1fde1549508a633f6ec9a994e1d4b">   61</a></span>&#160;    <span class="keyword">struct </span><a class="code" href="structAstNode.html">AstNode</a> **<a class="code" href="structAstNodeList.html#abdf1fde1549508a633f6ec9a994e1d4b">items</a>; </div>
+<div class="line"><a name="l00062"></a><span class="lineno"><a class="line" href="structAstNodeList.html#aa57ea2509473ca2656e03b90eba71476">   62</a></span>&#160;    <span class="keywordtype">int</span> <a class="code" href="structAstNodeList.html#aa57ea2509473ca2656e03b90eba71476">count</a>;              </div>
+<div class="line"><a name="l00063"></a><span class="lineno"><a class="line" href="structAstNodeList.html#a5d80f362072219506762b2ae01c2c63f">   63</a></span>&#160;    <span class="keywordtype">int</span> <a class="code" href="structAstNodeList.html#a5d80f362072219506762b2ae01c2c63f">capacity</a>;           </div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;} <a class="code" href="structAstNodeList.html">AstNodeList</a>;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160; </div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="comment">// Uzly výrazů (Expressions)</span></div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160; </div>
+<div class="line"><a name="l00068"></a><span class="lineno"><a class="line" href="structAstNodeLiteral.html">   68</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct</span></div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;{</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <a class="code" href="structAstNode.html">AstNode</a> base;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <a class="code" href="structToken.html">Token</a> token;                <span class="comment">// Uložíme si celý token s hodnotou (INT, FLOAT, STRING, null)</span></div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <a class="code" href="symtable_8h.html#aa050af49744c720a049776c79a906766">symbol_data_type</a> data_type; <span class="comment">// pro semantiku</span></div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;} <a class="code" href="structAstNodeLiteral.html">AstNodeLiteral</a>;</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
+<div class="line"><a name="l00075"></a><span class="lineno"><a class="line" href="structAstNodeVariable.html">   75</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct</span></div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;{</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <a class="code" href="structAstNode.html">AstNode</a> base;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <a class="code" href="structToken.html">Token</a> token; <span class="comment">// Uložíme si token s IDENTIFIER</span></div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <span class="comment">// semantika</span></div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <span class="keywordtype">int</span> stack_offset;</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <a class="code" href="symtable_8h.html#aa050af49744c720a049776c79a906766">symbol_data_type</a> data_type;</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;} <a class="code" href="structAstNodeVariable.html">AstNodeVariable</a>;</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160; </div>
+<div class="line"><a name="l00084"></a><span class="lineno"><a class="line" href="structAstNodeBinaryExpr.html">   84</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct</span></div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;{</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <a class="code" href="structAstNode.html">AstNode</a> base;</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <a class="code" href="lex__scanner_8h.html#aa520fbf142ba1e7e659590c07da31921">TokenType</a> op; <span class="comment">// Např. PLUS, LESSER, KEYWORD_is</span></div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <span class="keyword">struct </span><a class="code" href="structAstNode.html">AstNode</a> *left;</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <span class="keyword">struct </span><a class="code" href="structAstNode.html">AstNode</a> *right;</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <a class="code" href="symtable_8h.html#aa050af49744c720a049776c79a906766">symbol_data_type</a> data_type; <span class="comment">// semantika</span></div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;} <a class="code" href="structAstNodeBinaryExpr.html">AstNodeBinaryExpr</a>;</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160; </div>
+<div class="line"><a name="l00093"></a><span class="lineno"><a class="line" href="structAstNodeFuncCall.html">   93</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct</span></div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;{</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    <a class="code" href="structAstNode.html">AstNode</a> base;</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <a class="code" href="structToken.html">Token</a> func_id;     <span class="comment">// IDENTIFIER nebo IFJ_WRITE, atd.</span></div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <a class="code" href="structAstNodeList.html">AstNodeList</a> *args; <span class="comment">// Seznam argumentů (výrazů)</span></div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <a class="code" href="symtable_8h.html#aa050af49744c720a049776c79a906766">symbol_data_type</a> data_type;</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;} <a class="code" href="structAstNodeFuncCall.html">AstNodeFuncCall</a>;</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160; </div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;<span class="comment">// Uzly příkazů (Statements) </span></div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160; </div>
+<div class="line"><a name="l00103"></a><span class="lineno"><a class="line" href="structAstNodeBlock.html">  103</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct</span></div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;{</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    <a class="code" href="structAstNode.html">AstNode</a> base;</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    <a class="code" href="structAstNodeList.html">AstNodeList</a> *statements; <span class="comment">// Seznam příkazů v bloku</span></div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;} <a class="code" href="structAstNodeBlock.html">AstNodeBlock</a>;</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160; </div>
+<div class="line"><a name="l00109"></a><span class="lineno"><a class="line" href="structAstNodeIfStmt.html">  109</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct</span></div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;{</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    <a class="code" href="structAstNode.html">AstNode</a> base;</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    <span class="keyword">struct </span><a class="code" href="structAstNode.html">AstNode</a> *condition;</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    <a class="code" href="structAstNodeBlock.html">AstNodeBlock</a> *then_block;</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    <a class="code" href="structAstNodeBlock.html">AstNodeBlock</a> *else_block; <span class="comment">// Může být NULL</span></div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;} <a class="code" href="structAstNodeIfStmt.html">AstNodeIfStmt</a>;</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160; </div>
+<div class="line"><a name="l00117"></a><span class="lineno"><a class="line" href="structAstNodeWhileStmt.html">  117</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct</span></div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;{</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    <a class="code" href="structAstNode.html">AstNode</a> base;</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    <span class="keyword">struct </span><a class="code" href="structAstNode.html">AstNode</a> *condition;</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    <a class="code" href="structAstNodeBlock.html">AstNodeBlock</a> *body_block;</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;} <a class="code" href="structAstNodeWhileStmt.html">AstNodeWhileStmt</a>;</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160; </div>
+<div class="line"><a name="l00124"></a><span class="lineno"><a class="line" href="structAstNodeVarDecl.html">  124</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct</span></div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;{</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;    <a class="code" href="structAstNode.html">AstNode</a> base;</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;    <a class="code" href="structToken.html">Token</a> var_id; <span class="comment">// Token s IDENTIFIER</span></div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;    <span class="comment">// semantika</span></div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;    <span class="keywordtype">int</span> stack_offset;</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    <a class="code" href="symtable_8h.html#aa050af49744c720a049776c79a906766">symbol_data_type</a> data_type;</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;} <a class="code" href="structAstNodeVarDecl.html">AstNodeVarDecl</a>;</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160; </div>
+<div class="line"><a name="l00133"></a><span class="lineno"><a class="line" href="structAstNodeAssignStmt.html">  133</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct</span></div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;{</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;    <a class="code" href="structAstNode.html">AstNode</a> base;</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;    <a class="code" href="structAstNodeVariable.html">AstNodeVariable</a> *lvalue; <span class="comment">// Levá strana (proměnná)</span></div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;    <span class="keyword">struct </span><a class="code" href="structAstNode.html">AstNode</a> *rvalue;  <span class="comment">// Pravá strana (výraz)</span></div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;} <a class="code" href="structAstNodeAssignStmt.html">AstNodeAssignStmt</a>;</div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160; </div>
+<div class="line"><a name="l00140"></a><span class="lineno"><a class="line" href="structAstNodeReturnStmt.html">  140</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct</span></div>
+<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;{</div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;    <a class="code" href="structAstNode.html">AstNode</a> base;</div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;    <span class="keyword">struct </span><a class="code" href="structAstNode.html">AstNode</a> *expr; <span class="comment">// Výraz, který se vrací (může být NULL)</span></div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;} <a class="code" href="structAstNodeReturnStmt.html">AstNodeReturnStmt</a>;</div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160; </div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;<span class="comment">// Uzly nejvyšší úrovně </span></div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160; </div>
+<div class="line"><a name="l00148"></a><span class="lineno"><a class="line" href="structAstNodeFuncDef.html">  148</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct</span></div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;{</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;    <a class="code" href="structAstNode.html">AstNode</a> base;</div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;    <a class="code" href="structToken.html">Token</a> func_id;</div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;    <a class="code" href="structAstNodeList.html">AstNodeList</a> *params; <span class="comment">// Seznam IDENTIFIERů</span></div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;    <a class="code" href="structAstNodeBlock.html">AstNodeBlock</a> *body;</div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;    <a class="code" href="ast_8h.html#aeb77b11ff120d929f7abb72ffbdb350f">AstFuncKind</a> kind; <span class="comment">// pro semantiku</span></div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;} <a class="code" href="structAstNodeFuncDef.html">AstNodeFuncDef</a>;</div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160; </div>
+<div class="line"><a name="l00157"></a><span class="lineno"><a class="line" href="structAstNodeProgram.html">  157</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct</span></div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;{</div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;    <a class="code" href="structAstNode.html">AstNode</a> base;</div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;    <a class="code" href="structAstNodeList.html">AstNodeList</a> *functions; <span class="comment">// Seznam AstNodeFuncDef</span></div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;} <a class="code" href="structAstNodeProgram.html">AstNodeProgram</a>;</div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160; </div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;<span class="comment">// Prototypy konstruktorů (z ast.c)</span></div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160; </div>
+<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;<a class="code" href="structAstNode.html">AstNode</a> *<a class="code" href="ast_8h.html#a63836e2b3c18400cbe2377306248613b">create_literal</a>(<a class="code" href="structToken.html">Token</a> token);</div>
+<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160; </div>
+<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;<a class="code" href="structAstNode.html">AstNode</a> *<a class="code" href="ast_8h.html#a4fe2732ebefa75e899d6861d52494f8a">create_variable</a>(<a class="code" href="structToken.html">Token</a> token);</div>
+<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160; </div>
+<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;<a class="code" href="structAstNode.html">AstNode</a> *<a class="code" href="ast_8h.html#ad5ae50e21dac4ac7127ceea60ded7989">create_binary_expr</a>(<a class="code" href="lex__scanner_8h.html#aa520fbf142ba1e7e659590c07da31921">TokenType</a> op, <a class="code" href="structAstNode.html">AstNode</a> *left, <a class="code" href="structAstNode.html">AstNode</a> *right, <span class="keywordtype">int</span> line);</div>
+<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160; </div>
+<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;<a class="code" href="structAstNode.html">AstNode</a> *<a class="code" href="ast_8h.html#af4f839eef05f86fb6bc6b948ac8fcbf3">create_func_call</a>(<a class="code" href="structToken.html">Token</a> func_id, <a class="code" href="structAstNodeList.html">AstNodeList</a> *args);</div>
+<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160; </div>
+<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;<a class="code" href="structAstNode.html">AstNode</a> *<a class="code" href="ast_8h.html#a5e4bd940423b1a3180e44f737dcfe717">create_if_stmt</a>(<a class="code" href="structAstNode.html">AstNode</a> *cond, <a class="code" href="structAstNodeBlock.html">AstNodeBlock</a> *then_b, <a class="code" href="structAstNodeBlock.html">AstNodeBlock</a> *else_b, <span class="keywordtype">int</span> line);</div>
+<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160; </div>
+<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;<a class="code" href="structAstNode.html">AstNode</a> *<a class="code" href="ast_8h.html#a5d1572fae977c7e5d82a593e1d7a83ba">create_while_stmt</a>(<a class="code" href="structAstNode.html">AstNode</a> *cond, <a class="code" href="structAstNodeBlock.html">AstNodeBlock</a> *body, <span class="keywordtype">int</span> line);</div>
+<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160; </div>
+<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;<a class="code" href="structAstNode.html">AstNode</a> *<a class="code" href="ast_8h.html#ae8e155acda1316babd2c527ff3e5bd87">create_return_stmt</a>(<a class="code" href="structAstNode.html">AstNode</a> *expr, <span class="keywordtype">int</span> line);</div>
+<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160; </div>
+<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;<a class="code" href="structAstNode.html">AstNode</a> *<a class="code" href="ast_8h.html#a124bd7d75c5823b2e19705b318a491ed">create_vardecl</a>(<a class="code" href="structToken.html">Token</a> var_id);</div>
+<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160; </div>
+<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;<a class="code" href="structAstNode.html">AstNode</a> *<a class="code" href="ast_8h.html#aec1bb220f0bd89a0e65cb9fdfa17a29e">create_assign_stmt</a>(<a class="code" href="structAstNodeVariable.html">AstNodeVariable</a> *lvalue, <a class="code" href="structAstNode.html">AstNode</a> *rvalue, <span class="keywordtype">int</span> line);</div>
+<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160; </div>
+<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;<a class="code" href="structAstNodeList.html">AstNodeList</a> *<a class="code" href="ast_8h.html#a690f381c55dd6eb32a3adc32f1f17815">create_list</a>(<span class="keywordtype">void</span>);</div>
+<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160; </div>
+<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;<span class="keywordtype">void</span> <a class="code" href="ast_8h.html#aa6a0bdf14ed9b5b04135974fdf2c4389">add_to_list</a>(<a class="code" href="structAstNodeList.html">AstNodeList</a> *list, <a class="code" href="structAstNode.html">AstNode</a> *item);</div>
+<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160; </div>
+<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;<a class="code" href="structAstNodeBlock.html">AstNodeBlock</a> *<a class="code" href="ast_8h.html#a577dbe2ca4e580fd88d8fc8263909dfb">create_block</a>(<span class="keywordtype">int</span> line);</div>
+<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160; </div>
+<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;<span class="keywordtype">void</span> <a class="code" href="ast_8h.html#a9ab81c5cb9766b0d61e3867a0166aa7a">add_stmt_to_block</a>(<a class="code" href="structAstNodeBlock.html">AstNodeBlock</a> *block, <a class="code" href="structAstNode.html">AstNode</a> *stmt);</div>
+<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160; </div>
+<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;<a class="code" href="structAstNodeFuncDef.html">AstNodeFuncDef</a> *<a class="code" href="ast_8h.html#a996816c74ae54bf676b40279d87057fd">create_func_def</a>(<a class="code" href="structToken.html">Token</a> func_id, <a class="code" href="structAstNodeList.html">AstNodeList</a> *params, <a class="code" href="structAstNodeBlock.html">AstNodeBlock</a> *body, <a class="code" href="ast_8h.html#aeb77b11ff120d929f7abb72ffbdb350f">AstFuncKind</a> kind);</div>
+<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160; </div>
+<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;<a class="code" href="structAstNodeProgram.html">AstNodeProgram</a> *<a class="code" href="ast_8h.html#a77530f5813f1fc5a07b65eda865e634e">create_program</a>(<span class="keywordtype">void</span>);</div>
+<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160; </div>
+<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;<span class="keywordtype">void</span> <a class="code" href="ast_8h.html#a9315a13edccba9748c5dcee0db2f8149">add_func_to_program</a>(<a class="code" href="structAstNodeProgram.html">AstNodeProgram</a> *prog, <a class="code" href="structAstNodeFuncDef.html">AstNodeFuncDef</a> *func);</div>
+<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160; </div>
+<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;<span class="keywordtype">void</span> <a class="code" href="ast_8h.html#a110b20dfcc7ff03e58989487828a5651">free_ast_node</a>(<a class="code" href="structAstNode.html">AstNode</a> *node);</div>
+<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160; </div>
+<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;<span class="keywordtype">void</span> <a class="code" href="ast_8h.html#a4b452c0a2c126ccb091d2283cbcf4f52">free_token_lexeme</a>(<a class="code" href="structToken.html">Token</a> *t);</div>
+<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160; </div>
+<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// AST_H</span></div>
+<div class="ttc" id="aast_8h_html_a110b20dfcc7ff03e58989487828a5651"><div class="ttname"><a href="ast_8h.html#a110b20dfcc7ff03e58989487828a5651">free_ast_node</a></div><div class="ttdeci">void free_ast_node(AstNode *node)</div><div class="ttdoc">Rekurzivně uvolní uzel AST a všechny jeho potomky.</div><div class="ttdef"><b>Definition:</b> ast.c:354</div></div>
+<div class="ttc" id="aast_8h_html_a124bd7d75c5823b2e19705b318a491ed"><div class="ttname"><a href="ast_8h.html#a124bd7d75c5823b2e19705b318a491ed">create_vardecl</a></div><div class="ttdeci">AstNode * create_vardecl(Token var_id)</div><div class="ttdoc">Vytvoří AST uzel pro deklaraci proměnné.</div><div class="ttdef"><b>Definition:</b> ast.c:233</div></div>
+<div class="ttc" id="aast_8h_html_a1e0354e1cfa4d729a8b30688d18256fd"><div class="ttname"><a href="ast_8h.html#a1e0354e1cfa4d729a8b30688d18256fd">AstNodeType</a></div><div class="ttdeci">AstNodeType</div><div class="ttdoc">Typ uzlu v abstraktním syntaktickém stromu.</div><div class="ttdef"><b>Definition:</b> ast.h:20</div></div>
+<div class="ttc" id="aast_8h_html_a1e0354e1cfa4d729a8b30688d18256fda09435ba312db447e28e0d94c6099390f"><div class="ttname"><a href="ast_8h.html#a1e0354e1cfa4d729a8b30688d18256fda09435ba312db447e28e0d94c6099390f">AST_EXPR_VARIABLE</a></div><div class="ttdeci">@ AST_EXPR_VARIABLE</div><div class="ttdoc">id</div><div class="ttdef"><b>Definition:</b> ast.h:32</div></div>
+<div class="ttc" id="aast_8h_html_a1e0354e1cfa4d729a8b30688d18256fda1c3e85982f693dd775ffd0a0900782d4"><div class="ttname"><a href="ast_8h.html#a1e0354e1cfa4d729a8b30688d18256fda1c3e85982f693dd775ffd0a0900782d4">AST_EXPR_BINARY</a></div><div class="ttdeci">@ AST_EXPR_BINARY</div><div class="ttdoc">expr OP expr</div><div class="ttdef"><b>Definition:</b> ast.h:30</div></div>
+<div class="ttc" id="aast_8h_html_a1e0354e1cfa4d729a8b30688d18256fda1f2a74731165fd3062f610d569793ce9"><div class="ttname"><a href="ast_8h.html#a1e0354e1cfa4d729a8b30688d18256fda1f2a74731165fd3062f610d569793ce9">AST_EXPR_LITERAL</a></div><div class="ttdeci">@ AST_EXPR_LITERAL</div><div class="ttdoc">123, &quot;abc&quot;, null</div><div class="ttdef"><b>Definition:</b> ast.h:31</div></div>
+<div class="ttc" id="aast_8h_html_a1e0354e1cfa4d729a8b30688d18256fda217cfcc016d416af16744a84f8c5812c"><div class="ttname"><a href="ast_8h.html#a1e0354e1cfa4d729a8b30688d18256fda217cfcc016d416af16744a84f8c5812c">AST_STMT_IF</a></div><div class="ttdeci">@ AST_STMT_IF</div><div class="ttdoc">if (cond) then else</div><div class="ttdef"><b>Definition:</b> ast.h:27</div></div>
+<div class="ttc" id="aast_8h_html_a1e0354e1cfa4d729a8b30688d18256fda3d4401570e9beb69422e129de4db9643"><div class="ttname"><a href="ast_8h.html#a1e0354e1cfa4d729a8b30688d18256fda3d4401570e9beb69422e129de4db9643">AST_FUNC_DEF</a></div><div class="ttdeci">@ AST_FUNC_DEF</div><div class="ttdoc">Definice funkce (static name(params) block)</div><div class="ttdef"><b>Definition:</b> ast.h:22</div></div>
+<div class="ttc" id="aast_8h_html_a1e0354e1cfa4d729a8b30688d18256fda5892c2e665a3a2e0b3aa456646a4c50a"><div class="ttname"><a href="ast_8h.html#a1e0354e1cfa4d729a8b30688d18256fda5892c2e665a3a2e0b3aa456646a4c50a">AST_STMT_ASSIGN</a></div><div class="ttdeci">@ AST_STMT_ASSIGN</div><div class="ttdoc">id = expr</div><div class="ttdef"><b>Definition:</b> ast.h:26</div></div>
+<div class="ttc" id="aast_8h_html_a1e0354e1cfa4d729a8b30688d18256fda6489e93c1ea083a03310bc39178732f9"><div class="ttname"><a href="ast_8h.html#a1e0354e1cfa4d729a8b30688d18256fda6489e93c1ea083a03310bc39178732f9">AST_NODE_LIST</a></div><div class="ttdeci">@ AST_NODE_LIST</div><div class="ttdoc">Obecný seznam (pro argumenty, parametry, příkazy)</div><div class="ttdef"><b>Definition:</b> ast.h:33</div></div>
+<div class="ttc" id="aast_8h_html_a1e0354e1cfa4d729a8b30688d18256fda654096fe18b3cf2b82e464cfd7c16428"><div class="ttname"><a href="ast_8h.html#a1e0354e1cfa4d729a8b30688d18256fda654096fe18b3cf2b82e464cfd7c16428">AST_STMT_RETURN</a></div><div class="ttdeci">@ AST_STMT_RETURN</div><div class="ttdoc">return expr</div><div class="ttdef"><b>Definition:</b> ast.h:29</div></div>
+<div class="ttc" id="aast_8h_html_a1e0354e1cfa4d729a8b30688d18256fda8148247ea6847daa4ccd34690e3a2415"><div class="ttname"><a href="ast_8h.html#a1e0354e1cfa4d729a8b30688d18256fda8148247ea6847daa4ccd34690e3a2415">AST_PROGRAM</a></div><div class="ttdeci">@ AST_PROGRAM</div><div class="ttdoc">Kořen stromu, obsahuje seznam funkcí</div><div class="ttdef"><b>Definition:</b> ast.h:21</div></div>
+<div class="ttc" id="aast_8h_html_a1e0354e1cfa4d729a8b30688d18256fdaa465324438c7fb522327d7f837ddc185"><div class="ttname"><a href="ast_8h.html#a1e0354e1cfa4d729a8b30688d18256fdaa465324438c7fb522327d7f837ddc185">AST_STMT_BLOCK</a></div><div class="ttdeci">@ AST_STMT_BLOCK</div><div class="ttdoc">Blok kódu { ... }.</div><div class="ttdef"><b>Definition:</b> ast.h:24</div></div>
+<div class="ttc" id="aast_8h_html_a1e0354e1cfa4d729a8b30688d18256fdacf6973064a0ea397514571d40417464c"><div class="ttname"><a href="ast_8h.html#a1e0354e1cfa4d729a8b30688d18256fdacf6973064a0ea397514571d40417464c">AST_STMT_WHILE</a></div><div class="ttdeci">@ AST_STMT_WHILE</div><div class="ttdoc">while (cond) block</div><div class="ttdef"><b>Definition:</b> ast.h:28</div></div>
+<div class="ttc" id="aast_8h_html_a1e0354e1cfa4d729a8b30688d18256fdad946ab95f05097160f92db906f5fd53b"><div class="ttname"><a href="ast_8h.html#a1e0354e1cfa4d729a8b30688d18256fdad946ab95f05097160f92db906f5fd53b">AST_FUNC_CALL</a></div><div class="ttdeci">@ AST_FUNC_CALL</div><div class="ttdoc">Volání funkce (name(args))</div><div class="ttdef"><b>Definition:</b> ast.h:23</div></div>
+<div class="ttc" id="aast_8h_html_a1e0354e1cfa4d729a8b30688d18256fdae02fc150b95cdd0928d89a5d25e6e360"><div class="ttname"><a href="ast_8h.html#a1e0354e1cfa4d729a8b30688d18256fdae02fc150b95cdd0928d89a5d25e6e360">AST_STMT_VAR_DECL</a></div><div class="ttdeci">@ AST_STMT_VAR_DECL</div><div class="ttdoc">var id</div><div class="ttdef"><b>Definition:</b> ast.h:25</div></div>
+<div class="ttc" id="aast_8h_html_a4b452c0a2c126ccb091d2283cbcf4f52"><div class="ttname"><a href="ast_8h.html#a4b452c0a2c126ccb091d2283cbcf4f52">free_token_lexeme</a></div><div class="ttdeci">void free_token_lexeme(Token *t)</div><div class="ttdoc">Uvolní dynamicky alokované části tokenu (lexeme, string_val).</div><div class="ttdef"><b>Definition:</b> ast.c:313</div></div>
+<div class="ttc" id="aast_8h_html_a4fe2732ebefa75e899d6861d52494f8a"><div class="ttname"><a href="ast_8h.html#a4fe2732ebefa75e899d6861d52494f8a">create_variable</a></div><div class="ttdeci">AstNode * create_variable(Token token)</div><div class="ttdoc">Vytvoří AST uzel pro proměnnou.</div><div class="ttdef"><b>Definition:</b> ast.c:101</div></div>
+<div class="ttc" id="aast_8h_html_a577dbe2ca4e580fd88d8fc8263909dfb"><div class="ttname"><a href="ast_8h.html#a577dbe2ca4e580fd88d8fc8263909dfb">create_block</a></div><div class="ttdeci">AstNodeBlock * create_block(int line)</div><div class="ttdoc">Vytvoří AST uzel pro blok příkazů.</div><div class="ttdef"><b>Definition:</b> ast.c:154</div></div>
+<div class="ttc" id="aast_8h_html_a5d1572fae977c7e5d82a593e1d7a83ba"><div class="ttname"><a href="ast_8h.html#a5d1572fae977c7e5d82a593e1d7a83ba">create_while_stmt</a></div><div class="ttdeci">AstNode * create_while_stmt(AstNode *cond, AstNodeBlock *body, int line)</div><div class="ttdoc">Vytvoří AST uzel pro příkaz while.</div><div class="ttdef"><b>Definition:</b> ast.c:203</div></div>
+<div class="ttc" id="aast_8h_html_a5e4bd940423b1a3180e44f737dcfe717"><div class="ttname"><a href="ast_8h.html#a5e4bd940423b1a3180e44f737dcfe717">create_if_stmt</a></div><div class="ttdeci">AstNode * create_if_stmt(AstNode *cond, AstNodeBlock *then_b, AstNodeBlock *else_b, int line)</div><div class="ttdoc">Vytvoří AST uzel pro příkaz if.</div><div class="ttdef"><b>Definition:</b> ast.c:185</div></div>
+<div class="ttc" id="aast_8h_html_a63836e2b3c18400cbe2377306248613b"><div class="ttname"><a href="ast_8h.html#a63836e2b3c18400cbe2377306248613b">create_literal</a></div><div class="ttdeci">AstNode * create_literal(Token token)</div><div class="ttdoc">Vytvoří AST uzel pro literál.</div><div class="ttdef"><b>Definition:</b> ast.c:87</div></div>
+<div class="ttc" id="aast_8h_html_a690f381c55dd6eb32a3adc32f1f17815"><div class="ttname"><a href="ast_8h.html#a690f381c55dd6eb32a3adc32f1f17815">create_list</a></div><div class="ttdeci">AstNodeList * create_list(void)</div><div class="ttdoc">Vytvoří prázdný seznam AST uzlů.</div><div class="ttdef"><b>Definition:</b> ast.c:42</div></div>
+<div class="ttc" id="aast_8h_html_a77530f5813f1fc5a07b65eda865e634e"><div class="ttname"><a href="ast_8h.html#a77530f5813f1fc5a07b65eda865e634e">create_program</a></div><div class="ttdeci">AstNodeProgram * create_program(void)</div><div class="ttdoc">Vytvoří kořenový uzel programu.</div><div class="ttdef"><b>Definition:</b> ast.c:287</div></div>
+<div class="ttc" id="aast_8h_html_a9315a13edccba9748c5dcee0db2f8149"><div class="ttname"><a href="ast_8h.html#a9315a13edccba9748c5dcee0db2f8149">add_func_to_program</a></div><div class="ttdeci">void add_func_to_program(AstNodeProgram *prog, AstNodeFuncDef *func)</div><div class="ttdoc">Přidá definici funkce do kořenového uzlu programu.</div><div class="ttdef"><b>Definition:</b> ast.c:300</div></div>
+<div class="ttc" id="aast_8h_html_a996816c74ae54bf676b40279d87057fd"><div class="ttname"><a href="ast_8h.html#a996816c74ae54bf676b40279d87057fd">create_func_def</a></div><div class="ttdeci">AstNodeFuncDef * create_func_def(Token func_id, AstNodeList *params, AstNodeBlock *body, AstFuncKind kind)</div><div class="ttdoc">Vytvoří AST uzel pro definici funkce.</div><div class="ttdef"><b>Definition:</b> ast.c:270</div></div>
+<div class="ttc" id="aast_8h_html_a9ab81c5cb9766b0d61e3867a0166aa7a"><div class="ttname"><a href="ast_8h.html#a9ab81c5cb9766b0d61e3867a0166aa7a">add_stmt_to_block</a></div><div class="ttdeci">void add_stmt_to_block(AstNodeBlock *block, AstNode *stmt)</div><div class="ttdoc">Přidá příkaz do bloku.</div><div class="ttdef"><b>Definition:</b> ast.c:168</div></div>
+<div class="ttc" id="aast_8h_html_aa6a0bdf14ed9b5b04135974fdf2c4389"><div class="ttname"><a href="ast_8h.html#aa6a0bdf14ed9b5b04135974fdf2c4389">add_to_list</a></div><div class="ttdeci">void add_to_list(AstNodeList *list, AstNode *item)</div><div class="ttdoc">Přidá položku na konec seznamu AST uzlů.</div><div class="ttdef"><b>Definition:</b> ast.c:64</div></div>
+<div class="ttc" id="aast_8h_html_ac5d357560c27118d67e61e2c3cb171aa"><div class="ttname"><a href="ast_8h.html#ac5d357560c27118d67e61e2c3cb171aa">AstNode</a></div><div class="ttdeci">struct AstNode AstNode</div><div class="ttdoc">Základní struktura každého uzlu AST.</div></div>
+<div class="ttc" id="aast_8h_html_ad5ae50e21dac4ac7127ceea60ded7989"><div class="ttname"><a href="ast_8h.html#ad5ae50e21dac4ac7127ceea60ded7989">create_binary_expr</a></div><div class="ttdeci">AstNode * create_binary_expr(TokenType op, AstNode *left, AstNode *right, int line)</div><div class="ttdoc">Vytvoří AST uzel pro binární výraz.</div><div class="ttdef"><b>Definition:</b> ast.c:119</div></div>
+<div class="ttc" id="aast_8h_html_ae8e155acda1316babd2c527ff3e5bd87"><div class="ttname"><a href="ast_8h.html#ae8e155acda1316babd2c527ff3e5bd87">create_return_stmt</a></div><div class="ttdeci">AstNode * create_return_stmt(AstNode *expr, int line)</div><div class="ttdoc">Vytvoří AST uzel pro příkaz return.</div><div class="ttdef"><b>Definition:</b> ast.c:219</div></div>
+<div class="ttc" id="aast_8h_html_aeb77b11ff120d929f7abb72ffbdb350f"><div class="ttname"><a href="ast_8h.html#aeb77b11ff120d929f7abb72ffbdb350f">AstFuncKind</a></div><div class="ttdeci">AstFuncKind</div><div class="ttdoc">Druh funkce (běžná funkce, getter, setter).</div><div class="ttdef"><b>Definition:</b> ast.h:40</div></div>
+<div class="ttc" id="aast_8h_html_aec1bb220f0bd89a0e65cb9fdfa17a29e"><div class="ttname"><a href="ast_8h.html#aec1bb220f0bd89a0e65cb9fdfa17a29e">create_assign_stmt</a></div><div class="ttdeci">AstNode * create_assign_stmt(AstNodeVariable *lvalue, AstNode *rvalue, int line)</div><div class="ttdoc">Vytvoří AST uzel pro přiřazení.</div><div class="ttdef"><b>Definition:</b> ast.c:250</div></div>
+<div class="ttc" id="aast_8h_html_af4f839eef05f86fb6bc6b948ac8fcbf3"><div class="ttname"><a href="ast_8h.html#af4f839eef05f86fb6bc6b948ac8fcbf3">create_func_call</a></div><div class="ttdeci">AstNode * create_func_call(Token func_id, AstNodeList *args)</div><div class="ttdoc">Vytvoří AST uzel pro volání funkce.</div><div class="ttdef"><b>Definition:</b> ast.c:137</div></div>
+<div class="ttc" id="alex__scanner_8h_html"><div class="ttname"><a href="lex__scanner_8h.html">lex_scanner.h</a></div><div class="ttdoc">Lexikální analýza.</div></div>
+<div class="ttc" id="alex__scanner_8h_html_aa520fbf142ba1e7e659590c07da31921"><div class="ttname"><a href="lex__scanner_8h.html#aa520fbf142ba1e7e659590c07da31921">TokenType</a></div><div class="ttdeci">TokenType</div><div class="ttdoc">Všechny typy tokenů</div><div class="ttdef"><b>Definition:</b> lex_scanner.h:56</div></div>
+<div class="ttc" id="astructAstNodeAssignStmt_html"><div class="ttname"><a href="structAstNodeAssignStmt.html">AstNodeAssignStmt</a></div><div class="ttdef"><b>Definition:</b> ast.h:134</div></div>
+<div class="ttc" id="astructAstNodeBinaryExpr_html"><div class="ttname"><a href="structAstNodeBinaryExpr.html">AstNodeBinaryExpr</a></div><div class="ttdef"><b>Definition:</b> ast.h:85</div></div>
+<div class="ttc" id="astructAstNodeBlock_html"><div class="ttname"><a href="structAstNodeBlock.html">AstNodeBlock</a></div><div class="ttdef"><b>Definition:</b> ast.h:104</div></div>
+<div class="ttc" id="astructAstNodeFuncCall_html"><div class="ttname"><a href="structAstNodeFuncCall.html">AstNodeFuncCall</a></div><div class="ttdef"><b>Definition:</b> ast.h:94</div></div>
+<div class="ttc" id="astructAstNodeFuncDef_html"><div class="ttname"><a href="structAstNodeFuncDef.html">AstNodeFuncDef</a></div><div class="ttdef"><b>Definition:</b> ast.h:149</div></div>
+<div class="ttc" id="astructAstNodeIfStmt_html"><div class="ttname"><a href="structAstNodeIfStmt.html">AstNodeIfStmt</a></div><div class="ttdef"><b>Definition:</b> ast.h:110</div></div>
+<div class="ttc" id="astructAstNodeList_html"><div class="ttname"><a href="structAstNodeList.html">AstNodeList</a></div><div class="ttdoc">Obecný seznam AST uzlů.</div><div class="ttdef"><b>Definition:</b> ast.h:59</div></div>
+<div class="ttc" id="astructAstNodeList_html_a5d80f362072219506762b2ae01c2c63f"><div class="ttname"><a href="structAstNodeList.html#a5d80f362072219506762b2ae01c2c63f">AstNodeList::capacity</a></div><div class="ttdeci">int capacity</div><div class="ttdoc">Celková kapacita pole.</div><div class="ttdef"><b>Definition:</b> ast.h:63</div></div>
+<div class="ttc" id="astructAstNodeList_html_aa57ea2509473ca2656e03b90eba71476"><div class="ttname"><a href="structAstNodeList.html#aa57ea2509473ca2656e03b90eba71476">AstNodeList::count</a></div><div class="ttdeci">int count</div><div class="ttdoc">Aktuální počet položek.</div><div class="ttdef"><b>Definition:</b> ast.h:62</div></div>
+<div class="ttc" id="astructAstNodeList_html_abdf1fde1549508a633f6ec9a994e1d4b"><div class="ttname"><a href="structAstNodeList.html#abdf1fde1549508a633f6ec9a994e1d4b">AstNodeList::items</a></div><div class="ttdeci">struct AstNode ** items</div><div class="ttdoc">Dynamické pole ukazatelů na uzly.</div><div class="ttdef"><b>Definition:</b> ast.h:61</div></div>
+<div class="ttc" id="astructAstNodeLiteral_html"><div class="ttname"><a href="structAstNodeLiteral.html">AstNodeLiteral</a></div><div class="ttdef"><b>Definition:</b> ast.h:69</div></div>
+<div class="ttc" id="astructAstNodeProgram_html"><div class="ttname"><a href="structAstNodeProgram.html">AstNodeProgram</a></div><div class="ttdef"><b>Definition:</b> ast.h:158</div></div>
+<div class="ttc" id="astructAstNodeReturnStmt_html"><div class="ttname"><a href="structAstNodeReturnStmt.html">AstNodeReturnStmt</a></div><div class="ttdef"><b>Definition:</b> ast.h:141</div></div>
+<div class="ttc" id="astructAstNodeVarDecl_html"><div class="ttname"><a href="structAstNodeVarDecl.html">AstNodeVarDecl</a></div><div class="ttdef"><b>Definition:</b> ast.h:125</div></div>
+<div class="ttc" id="astructAstNodeVariable_html"><div class="ttname"><a href="structAstNodeVariable.html">AstNodeVariable</a></div><div class="ttdef"><b>Definition:</b> ast.h:76</div></div>
+<div class="ttc" id="astructAstNodeWhileStmt_html"><div class="ttname"><a href="structAstNodeWhileStmt.html">AstNodeWhileStmt</a></div><div class="ttdef"><b>Definition:</b> ast.h:118</div></div>
+<div class="ttc" id="astructAstNode_html"><div class="ttname"><a href="structAstNode.html">AstNode</a></div><div class="ttdoc">Základní struktura každého uzlu AST.</div><div class="ttdef"><b>Definition:</b> ast.h:50</div></div>
+<div class="ttc" id="astructAstNode_html_a2416a4696f3355656a089c7531dec62e"><div class="ttname"><a href="structAstNode.html#a2416a4696f3355656a089c7531dec62e">AstNode::line_number</a></div><div class="ttdeci">int line_number</div><div class="ttdoc">Číslo řádku ve zdrojovém souboru.</div><div class="ttdef"><b>Definition:</b> ast.h:52</div></div>
+<div class="ttc" id="astructAstNode_html_a809eaca6ed0bacfa0014f5f981e143e8"><div class="ttname"><a href="structAstNode.html#a809eaca6ed0bacfa0014f5f981e143e8">AstNode::type</a></div><div class="ttdeci">AstNodeType type</div><div class="ttdoc">Typ uzlu.</div><div class="ttdef"><b>Definition:</b> ast.h:51</div></div>
+<div class="ttc" id="astructToken_html"><div class="ttname"><a href="structToken.html">Token</a></div><div class="ttdoc">Struktura tokenu s načteným řčetězcem a jeho hodnotou.</div><div class="ttdef"><b>Definition:</b> lex_scanner.h:114</div></div>
+<div class="ttc" id="asymtable_8h_html"><div class="ttname"><a href="symtable_8h.html">symtable.h</a></div><div class="ttdoc">Hlavičkový soubor pro tabulku symbolů</div></div>
+<div class="ttc" id="asymtable_8h_html_aa050af49744c720a049776c79a906766"><div class="ttname"><a href="symtable_8h.html#aa050af49744c720a049776c79a906766">symbol_data_type</a></div><div class="ttdeci">symbol_data_type</div><div class="ttdoc">Datový typ uloženého symbolu, návratové pro funkce.</div><div class="ttdef"><b>Definition:</b> symtable.h:24</div></div>
+</div><!-- fragment --></div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Generováno programem&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+</small></address>
+</body>
+</html>

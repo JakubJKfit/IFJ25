@@ -1,0 +1,152 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>IFJ25: Zdrojový soubor symstack.c</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">IFJ25
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generováno programem Doxygen 1.9.1 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+var searchBox = new SearchBox("searchBox", "search",false,'Hledat','.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(function() {
+  initMenu('',true,false,'search.php','Hledat');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div class="header">
+  <div class="headertitle">
+<div class="title">symstack.c</div>  </div>
+</div><!--header-->
+<div class="contents">
+<a href="symstack_8c.html">Zobrazit dokumentaci tohoto souboru.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160; </div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="symtable_8h.html">symtable.h</a>&quot;</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="symstack_8h.html">symstack.h</a>&quot;</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="err_8h.html">err.h</a>&quot;</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &lt;stdlib.h&gt;</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">#include &lt;stdio.h&gt;</span></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor">#include &lt;string.h&gt;</span></div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160; </div>
+<div class="line"><a name="l00023"></a><span class="lineno"><a class="line" href="symstack_8c.html#aac436c079f812359004ac16a425f96ed">   23</a></span>&#160;<span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="symstack_8c.html#aac436c079f812359004ac16a425f96ed">alloc_identif</a>(<a class="code" href="structstack__node.html">stack_node</a> *node, <span class="keywordtype">char</span> *identifier){</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    node-&gt;<a class="code" href="structstack__node.html#a34c75d168729a67f49b68a3e6ca23fa0">identifier</a> = malloc(strlen(identifier) + 1);</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <span class="keywordflow">if</span>(node-&gt;<a class="code" href="structstack__node.html#a34c75d168729a67f49b68a3e6ca23fa0">identifier</a> == NULL){</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;        fprintf(stderr, <span class="stringliteral">&quot;Stack indentifier malloc error\n&quot;</span>);</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;        <a class="code" href="err_8c.html#a6bf768b8fa20fc3b2c4dd990a66633ff">ifjexit</a>(<a class="code" href="err_8h.html#a6084679069ce82f37778a3ed56860557">ERR_INTERNAL</a>);</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    }</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    strcpy(node-&gt;<a class="code" href="structstack__node.html#a34c75d168729a67f49b68a3e6ca23fa0">identifier</a>, identifier);</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;}</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
+<div class="line"><a name="l00037"></a><span class="lineno"><a class="line" href="symstack_8c.html#a8a2b484eb47e41daa8ab3b7d0b154756">   37</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="symstack_8c.html#a8a2b484eb47e41daa8ab3b7d0b154756">stack_init</a>(<a class="code" href="structsymstack.html">symstack</a> *stack){</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    stack-&gt;<a class="code" href="structsymstack.html#aabd62acbd231946a88c8b47b3eb7e3a3">top</a> = NULL;</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;}</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
+<div class="line"><a name="l00047"></a><span class="lineno"><a class="line" href="symstack_8c.html#adcd53e91ea0d9ba940d248469cb89cf8">   47</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="symstack_8c.html#adcd53e91ea0d9ba940d248469cb89cf8">stack_push</a>(<a class="code" href="structsymstack.html">symstack</a> *stack, <span class="keywordtype">char</span> *identifier){</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <a class="code" href="structstack__node.html">stack_node</a> *new_node = (<a class="code" href="structstack__node.html">stack_node</a> *)malloc(<span class="keyword">sizeof</span>(<a class="code" href="structstack__node.html">stack_node</a>));</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keywordflow">if</span>(new_node == NULL){</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        fprintf(stderr, <span class="stringliteral">&quot;Stack malloc error\n&quot;</span>);</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        <a class="code" href="err_8c.html#a6bf768b8fa20fc3b2c4dd990a66633ff">ifjexit</a>(<a class="code" href="err_8h.html#a6084679069ce82f37778a3ed56860557">ERR_INTERNAL</a>);</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    }</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    new_node-&gt;<a class="code" href="structstack__node.html#a6a07428e493b3f9d0361699323f8216b">symtable</a> = NULL; <span class="comment">// nová prázdná tabulka</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    new_node-&gt;<a class="code" href="structstack__node.html#af7b9916a0daa501304a00810a33a0b8c">next</a> = stack-&gt;<a class="code" href="structsymstack.html#aabd62acbd231946a88c8b47b3eb7e3a3">top</a>; <span class="comment">// starý vrchol bude následovat po nově uloženém uzlu</span></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keywordflow">if</span>(identifier != NULL) <a class="code" href="symstack_8c.html#aac436c079f812359004ac16a425f96ed">alloc_identif</a>(new_node, identifier);</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="keywordflow">else</span> new_node-&gt;<a class="code" href="structstack__node.html#a34c75d168729a67f49b68a3e6ca23fa0">identifier</a> = NULL;</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    stack-&gt;<a class="code" href="structsymstack.html#aabd62acbd231946a88c8b47b3eb7e3a3">top</a> = new_node; <span class="comment">// nový uzel je vrchol zásobníku</span></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;}</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160; </div>
+<div class="line"><a name="l00068"></a><span class="lineno"><a class="line" href="symstack_8c.html#a7cfc2e5e448eaf87baa89db69bd6f22b">   68</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="symstack_8c.html#a7cfc2e5e448eaf87baa89db69bd6f22b">stack_pop</a>(<a class="code" href="structsymstack.html">symstack</a> *stack){</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <span class="keywordflow">if</span>(stack-&gt;<a class="code" href="structsymstack.html#aabd62acbd231946a88c8b47b3eb7e3a3">top</a> != NULL){ <span class="comment">// zasobnik nesmi byt prazdny</span></div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        <a class="code" href="structstack__node.html">stack_node</a> *top_node = stack-&gt;<a class="code" href="structsymstack.html#aabd62acbd231946a88c8b47b3eb7e3a3">top</a>;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        stack-&gt;<a class="code" href="structsymstack.html#aabd62acbd231946a88c8b47b3eb7e3a3">top</a> = top_node-&gt;<a class="code" href="structstack__node.html#af7b9916a0daa501304a00810a33a0b8c">next</a>; <span class="comment">// druhy z vrcholu bude novy vrchol</span></div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        <a class="code" href="symtable_8c.html#ae799b5dc9375c28ffbe01412826d6dfb">tree_dispose</a>(&amp;(top_node-&gt;<a class="code" href="structstack__node.html#a6a07428e493b3f9d0361699323f8216b">symtable</a>)); <span class="comment">// uklizeni tabulky smazaneho vrcholu</span></div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        <span class="keywordflow">if</span>(top_node-&gt;<a class="code" href="structstack__node.html#a34c75d168729a67f49b68a3e6ca23fa0">identifier</a> != NULL) free(top_node-&gt;<a class="code" href="structstack__node.html#a34c75d168729a67f49b68a3e6ca23fa0">identifier</a>);</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        free(top_node);</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    }</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;}</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160; </div>
+<div class="line"><a name="l00083"></a><span class="lineno"><a class="line" href="symstack_8c.html#a37719224e10824d2f1e5a2eccf83d407">   83</a></span>&#160;<a class="code" href="structtree__node.html">tree_node</a> **<a class="code" href="symstack_8c.html#a37719224e10824d2f1e5a2eccf83d407">stack_top</a>(<a class="code" href="structsymstack.html">symstack</a> *stack){</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="keywordflow">if</span>(stack-&gt;<a class="code" href="structsymstack.html#aabd62acbd231946a88c8b47b3eb7e3a3">top</a> == NULL){</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        fprintf(stderr, <span class="stringliteral">&quot;Stack is empty!\n&quot;</span>);</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        <a class="code" href="err_8c.html#a6bf768b8fa20fc3b2c4dd990a66633ff">ifjexit</a>(<a class="code" href="err_8h.html#a6084679069ce82f37778a3ed56860557">ERR_INTERNAL</a>);</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    }</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <span class="keywordflow">return</span> &amp;(stack-&gt;<a class="code" href="structsymstack.html#aabd62acbd231946a88c8b47b3eb7e3a3">top</a>-&gt;<a class="code" href="structstack__node.html#a6a07428e493b3f9d0361699323f8216b">symtable</a>);</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;}</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160; </div>
+<div class="line"><a name="l00096"></a><span class="lineno"><a class="line" href="symstack_8c.html#a35898ddbd48ed6bb7249620e39d4d0c7">   96</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="symstack_8c.html#a35898ddbd48ed6bb7249620e39d4d0c7">stack_dispose</a>(<a class="code" href="structsymstack.html">symstack</a> *stack){</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <span class="keywordflow">while</span>(stack-&gt;<a class="code" href="structsymstack.html#aabd62acbd231946a88c8b47b3eb7e3a3">top</a> != NULL){</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;        <a class="code" href="symstack_8c.html#a7cfc2e5e448eaf87baa89db69bd6f22b">stack_pop</a>(stack);</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    }</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;}</div>
+<div class="ttc" id="aerr_8c_html_a6bf768b8fa20fc3b2c4dd990a66633ff"><div class="ttname"><a href="err_8c.html#a6bf768b8fa20fc3b2c4dd990a66633ff">ifjexit</a></div><div class="ttdeci">void ifjexit(int err_code)</div><div class="ttdoc">Funkce vypne program.</div><div class="ttdef"><b>Definition:</b> <a href="err_8c_source.html#l00018">err.c:18</a></div></div>
+<div class="ttc" id="aerr_8h_html"><div class="ttname"><a href="err_8h.html">err.h</a></div><div class="ttdoc">Hlavičkový soubor deklarující všechny návratové hodnoty.</div></div>
+<div class="ttc" id="aerr_8h_html_a6084679069ce82f37778a3ed56860557"><div class="ttname"><a href="err_8h.html#a6084679069ce82f37778a3ed56860557">ERR_INTERNAL</a></div><div class="ttdeci">#define ERR_INTERNAL</div><div class="ttdef"><b>Definition:</b> <a href="err_8h_source.html#l00021">err.h:21</a></div></div>
+<div class="ttc" id="astructstack__node_html"><div class="ttname"><a href="structstack__node.html">stack_node</a></div><div class="ttdoc">uzel v zásobníku</div><div class="ttdef"><b>Definition:</b> <a href="symstack_8h_source.html#l00017">symstack.h:17</a></div></div>
+<div class="ttc" id="astructstack__node_html_a34c75d168729a67f49b68a3e6ca23fa0"><div class="ttname"><a href="structstack__node.html#a34c75d168729a67f49b68a3e6ca23fa0">stack_node::identifier</a></div><div class="ttdeci">char * identifier</div><div class="ttdef"><b>Definition:</b> <a href="symstack_8h_source.html#l00019">symstack.h:19</a></div></div>
+<div class="ttc" id="astructstack__node_html_a6a07428e493b3f9d0361699323f8216b"><div class="ttname"><a href="structstack__node.html#a6a07428e493b3f9d0361699323f8216b">stack_node::symtable</a></div><div class="ttdeci">tree_node * symtable</div><div class="ttdef"><b>Definition:</b> <a href="symstack_8h_source.html#l00018">symstack.h:18</a></div></div>
+<div class="ttc" id="astructstack__node_html_af7b9916a0daa501304a00810a33a0b8c"><div class="ttname"><a href="structstack__node.html#af7b9916a0daa501304a00810a33a0b8c">stack_node::next</a></div><div class="ttdeci">struct stack_node * next</div><div class="ttdef"><b>Definition:</b> <a href="symstack_8h_source.html#l00020">symstack.h:20</a></div></div>
+<div class="ttc" id="astructsymstack_html"><div class="ttname"><a href="structsymstack.html">symstack</a></div><div class="ttdoc">zásobník, ukazatel na vrchol zásobníku</div><div class="ttdef"><b>Definition:</b> <a href="symstack_8h_source.html#l00026">symstack.h:26</a></div></div>
+<div class="ttc" id="astructsymstack_html_aabd62acbd231946a88c8b47b3eb7e3a3"><div class="ttname"><a href="structsymstack.html#aabd62acbd231946a88c8b47b3eb7e3a3">symstack::top</a></div><div class="ttdeci">stack_node * top</div><div class="ttdef"><b>Definition:</b> <a href="symstack_8h_source.html#l00027">symstack.h:27</a></div></div>
+<div class="ttc" id="astructtree__node_html"><div class="ttname"><a href="structtree__node.html">tree_node</a></div><div class="ttdoc">Uzel stromu.</div><div class="ttdef"><b>Definition:</b> <a href="symtable_8h_source.html#l00046">symtable.h:46</a></div></div>
+<div class="ttc" id="asymstack_8c_html_a35898ddbd48ed6bb7249620e39d4d0c7"><div class="ttname"><a href="symstack_8c.html#a35898ddbd48ed6bb7249620e39d4d0c7">stack_dispose</a></div><div class="ttdeci">void stack_dispose(symstack *stack)</div><div class="ttdoc">Smazání zásobníku.</div><div class="ttdef"><b>Definition:</b> <a href="symstack_8c_source.html#l00096">symstack.c:96</a></div></div>
+<div class="ttc" id="asymstack_8c_html_a37719224e10824d2f1e5a2eccf83d407"><div class="ttname"><a href="symstack_8c.html#a37719224e10824d2f1e5a2eccf83d407">stack_top</a></div><div class="ttdeci">tree_node ** stack_top(symstack *stack)</div><div class="ttdoc">Vracení ukazatele na kořen tabulky vrcholu zásobníku.</div><div class="ttdef"><b>Definition:</b> <a href="symstack_8c_source.html#l00083">symstack.c:83</a></div></div>
+<div class="ttc" id="asymstack_8c_html_a7cfc2e5e448eaf87baa89db69bd6f22b"><div class="ttname"><a href="symstack_8c.html#a7cfc2e5e448eaf87baa89db69bd6f22b">stack_pop</a></div><div class="ttdeci">void stack_pop(symstack *stack)</div><div class="ttdoc">Odstranění vrcholu zásobníku a určení nového vrcholu.</div><div class="ttdef"><b>Definition:</b> <a href="symstack_8c_source.html#l00068">symstack.c:68</a></div></div>
+<div class="ttc" id="asymstack_8c_html_a8a2b484eb47e41daa8ab3b7d0b154756"><div class="ttname"><a href="symstack_8c.html#a8a2b484eb47e41daa8ab3b7d0b154756">stack_init</a></div><div class="ttdeci">void stack_init(symstack *stack)</div><div class="ttdoc">Inicializace zásobníku.</div><div class="ttdef"><b>Definition:</b> <a href="symstack_8c_source.html#l00037">symstack.c:37</a></div></div>
+<div class="ttc" id="asymstack_8c_html_aac436c079f812359004ac16a425f96ed"><div class="ttname"><a href="symstack_8c.html#aac436c079f812359004ac16a425f96ed">alloc_identif</a></div><div class="ttdeci">static void alloc_identif(stack_node *node, char *identifier)</div><div class="ttdoc">Alokování paměti pro identifiátor.</div><div class="ttdef"><b>Definition:</b> <a href="symstack_8c_source.html#l00023">symstack.c:23</a></div></div>
+<div class="ttc" id="asymstack_8c_html_adcd53e91ea0d9ba940d248469cb89cf8"><div class="ttname"><a href="symstack_8c.html#adcd53e91ea0d9ba940d248469cb89cf8">stack_push</a></div><div class="ttdeci">void stack_push(symstack *stack, char *identifier)</div><div class="ttdoc">Vložení nového uzlu do zásobníku.</div><div class="ttdef"><b>Definition:</b> <a href="symstack_8c_source.html#l00047">symstack.c:47</a></div></div>
+<div class="ttc" id="asymstack_8h_html"><div class="ttname"><a href="symstack_8h.html">symstack.h</a></div><div class="ttdoc">Hlavičkový soubor pro zásobník tabulek.</div></div>
+<div class="ttc" id="asymtable_8c_html_ae799b5dc9375c28ffbe01412826d6dfb"><div class="ttname"><a href="symtable_8c.html#ae799b5dc9375c28ffbe01412826d6dfb">tree_dispose</a></div><div class="ttdeci">void tree_dispose(tree_node **tree)</div><div class="ttdoc">Smazání tabulky symbolů a uvolnění paměti.</div><div class="ttdef"><b>Definition:</b> <a href="symtable_8c_source.html#l00302">symtable.c:302</a></div></div>
+<div class="ttc" id="asymtable_8h_html"><div class="ttname"><a href="symtable_8h.html">symtable.h</a></div><div class="ttdoc">Hlavičkový soubor pro tabulku symbolů</div></div>
+</div><!-- fragment --></div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Generováno programem&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+</small></address>
+</body>
+</html>

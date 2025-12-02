@@ -1,0 +1,789 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>IFJ25: Dokumentace souboru ast.c</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">IFJ25
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generováno programem Doxygen 1.9.1 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+var searchBox = new SearchBox("searchBox", "search",false,'Hledat','.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(function() {
+  initMenu('',true,false,'search.php','Hledat');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+</div><!-- top -->
+<div class="header">
+  <div class="headertitle">
+<div class="title">Dokumentace souboru ast.c</div>  </div>
+</div><!--header-->
+<div class="contents">
+
+<p>Implementace funkcí pro tvorbu a uvolnění uzlů AST.  
+<a href="#details">...</a></p>
+<div class="textblock"><code>#include &quot;<a class="el" href="ast_8h_source.html">ast.h</a>&quot;</code><br />
+<code>#include &lt;stdio.h&gt;</code><br />
+<code>#include &lt;stdlib.h&gt;</code><br />
+<code>#include &lt;string.h&gt;</code><br />
+<code>#include &lt;assert.h&gt;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Graf závislostí na vkládaných souborech pro ast.c:</div>
+<div class="dyncontent">
+<div class="center"><img src="ast_8c__incl.png" border="0" usemap="#aast_8c" alt=""/></div>
+</div>
+</div><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Funkce</h2></td></tr>
+<tr><td colspan="2"><div class="groupHeader">IFJ25</div></td></tr>
+<tr class="memitem:a690f381c55dd6eb32a3adc32f1f17815"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structAstNodeList.html">AstNodeList</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ast_8c.html#a690f381c55dd6eb32a3adc32f1f17815">create_list</a> (void)</td></tr>
+<tr class="memdesc:a690f381c55dd6eb32a3adc32f1f17815"><td class="mdescLeft">&#160;</td><td class="mdescRight">Vytvoří prázdný seznam AST uzlů.  <a href="ast_8c.html#a690f381c55dd6eb32a3adc32f1f17815">...</a><br /></td></tr>
+<tr class="separator:a690f381c55dd6eb32a3adc32f1f17815"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa6a0bdf14ed9b5b04135974fdf2c4389"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ast_8c.html#aa6a0bdf14ed9b5b04135974fdf2c4389">add_to_list</a> (<a class="el" href="structAstNodeList.html">AstNodeList</a> *list, <a class="el" href="structAstNode.html">AstNode</a> *item)</td></tr>
+<tr class="memdesc:aa6a0bdf14ed9b5b04135974fdf2c4389"><td class="mdescLeft">&#160;</td><td class="mdescRight">Přidá položku na konec seznamu AST uzlů.  <a href="ast_8c.html#aa6a0bdf14ed9b5b04135974fdf2c4389">...</a><br /></td></tr>
+<tr class="separator:aa6a0bdf14ed9b5b04135974fdf2c4389"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a63836e2b3c18400cbe2377306248613b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structAstNode.html">AstNode</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ast_8c.html#a63836e2b3c18400cbe2377306248613b">create_literal</a> (<a class="el" href="structToken.html">Token</a> token)</td></tr>
+<tr class="memdesc:a63836e2b3c18400cbe2377306248613b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Vytvoří AST uzel pro literál (číslo, řetězec, null).  <a href="ast_8c.html#a63836e2b3c18400cbe2377306248613b">...</a><br /></td></tr>
+<tr class="separator:a63836e2b3c18400cbe2377306248613b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4fe2732ebefa75e899d6861d52494f8a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structAstNode.html">AstNode</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ast_8c.html#a4fe2732ebefa75e899d6861d52494f8a">create_variable</a> (<a class="el" href="structToken.html">Token</a> token)</td></tr>
+<tr class="memdesc:a4fe2732ebefa75e899d6861d52494f8a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Vytvoří AST uzel pro proměnnou.  <a href="ast_8c.html#a4fe2732ebefa75e899d6861d52494f8a">...</a><br /></td></tr>
+<tr class="separator:a4fe2732ebefa75e899d6861d52494f8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad5ae50e21dac4ac7127ceea60ded7989"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structAstNode.html">AstNode</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ast_8c.html#ad5ae50e21dac4ac7127ceea60ded7989">create_binary_expr</a> (<a class="el" href="lex__scanner_8h.html#aa520fbf142ba1e7e659590c07da31921">TokenType</a> op, <a class="el" href="structAstNode.html">AstNode</a> *left, <a class="el" href="structAstNode.html">AstNode</a> *right, int line)</td></tr>
+<tr class="memdesc:ad5ae50e21dac4ac7127ceea60ded7989"><td class="mdescLeft">&#160;</td><td class="mdescRight">Vytvoří AST uzel pro binární výraz.  <a href="ast_8c.html#ad5ae50e21dac4ac7127ceea60ded7989">...</a><br /></td></tr>
+<tr class="separator:ad5ae50e21dac4ac7127ceea60ded7989"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af4f839eef05f86fb6bc6b948ac8fcbf3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structAstNode.html">AstNode</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ast_8c.html#af4f839eef05f86fb6bc6b948ac8fcbf3">create_func_call</a> (<a class="el" href="structToken.html">Token</a> func_id, <a class="el" href="structAstNodeList.html">AstNodeList</a> *args)</td></tr>
+<tr class="memdesc:af4f839eef05f86fb6bc6b948ac8fcbf3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Vytvoří AST uzel pro volání funkce.  <a href="ast_8c.html#af4f839eef05f86fb6bc6b948ac8fcbf3">...</a><br /></td></tr>
+<tr class="separator:af4f839eef05f86fb6bc6b948ac8fcbf3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a577dbe2ca4e580fd88d8fc8263909dfb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structAstNodeBlock.html">AstNodeBlock</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ast_8c.html#a577dbe2ca4e580fd88d8fc8263909dfb">create_block</a> (int line)</td></tr>
+<tr class="memdesc:a577dbe2ca4e580fd88d8fc8263909dfb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Vytvoří AST uzel pro blok příkazů.  <a href="ast_8c.html#a577dbe2ca4e580fd88d8fc8263909dfb">...</a><br /></td></tr>
+<tr class="separator:a577dbe2ca4e580fd88d8fc8263909dfb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9ab81c5cb9766b0d61e3867a0166aa7a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ast_8c.html#a9ab81c5cb9766b0d61e3867a0166aa7a">add_stmt_to_block</a> (<a class="el" href="structAstNodeBlock.html">AstNodeBlock</a> *block, <a class="el" href="structAstNode.html">AstNode</a> *stmt)</td></tr>
+<tr class="memdesc:a9ab81c5cb9766b0d61e3867a0166aa7a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Přidá příkaz do bloku.  <a href="ast_8c.html#a9ab81c5cb9766b0d61e3867a0166aa7a">...</a><br /></td></tr>
+<tr class="separator:a9ab81c5cb9766b0d61e3867a0166aa7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5e4bd940423b1a3180e44f737dcfe717"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structAstNode.html">AstNode</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ast_8c.html#a5e4bd940423b1a3180e44f737dcfe717">create_if_stmt</a> (<a class="el" href="structAstNode.html">AstNode</a> *cond, <a class="el" href="structAstNodeBlock.html">AstNodeBlock</a> *then_b, <a class="el" href="structAstNodeBlock.html">AstNodeBlock</a> *else_b, int line)</td></tr>
+<tr class="memdesc:a5e4bd940423b1a3180e44f737dcfe717"><td class="mdescLeft">&#160;</td><td class="mdescRight">Vytvoří AST uzel pro příkaz if.  <a href="ast_8c.html#a5e4bd940423b1a3180e44f737dcfe717">...</a><br /></td></tr>
+<tr class="separator:a5e4bd940423b1a3180e44f737dcfe717"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5d1572fae977c7e5d82a593e1d7a83ba"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structAstNode.html">AstNode</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ast_8c.html#a5d1572fae977c7e5d82a593e1d7a83ba">create_while_stmt</a> (<a class="el" href="structAstNode.html">AstNode</a> *cond, <a class="el" href="structAstNodeBlock.html">AstNodeBlock</a> *body, int line)</td></tr>
+<tr class="memdesc:a5d1572fae977c7e5d82a593e1d7a83ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Vytvoří AST uzel pro příkaz while.  <a href="ast_8c.html#a5d1572fae977c7e5d82a593e1d7a83ba">...</a><br /></td></tr>
+<tr class="separator:a5d1572fae977c7e5d82a593e1d7a83ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae8e155acda1316babd2c527ff3e5bd87"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structAstNode.html">AstNode</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ast_8c.html#ae8e155acda1316babd2c527ff3e5bd87">create_return_stmt</a> (<a class="el" href="structAstNode.html">AstNode</a> *expr, int line)</td></tr>
+<tr class="memdesc:ae8e155acda1316babd2c527ff3e5bd87"><td class="mdescLeft">&#160;</td><td class="mdescRight">Vytvoří AST uzel pro příkaz return.  <a href="ast_8c.html#ae8e155acda1316babd2c527ff3e5bd87">...</a><br /></td></tr>
+<tr class="separator:ae8e155acda1316babd2c527ff3e5bd87"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a124bd7d75c5823b2e19705b318a491ed"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structAstNode.html">AstNode</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ast_8c.html#a124bd7d75c5823b2e19705b318a491ed">create_vardecl</a> (<a class="el" href="structToken.html">Token</a> var_id)</td></tr>
+<tr class="memdesc:a124bd7d75c5823b2e19705b318a491ed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Vytvoří AST uzel pro deklaraci proměnné.  <a href="ast_8c.html#a124bd7d75c5823b2e19705b318a491ed">...</a><br /></td></tr>
+<tr class="separator:a124bd7d75c5823b2e19705b318a491ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aec1bb220f0bd89a0e65cb9fdfa17a29e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structAstNode.html">AstNode</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ast_8c.html#aec1bb220f0bd89a0e65cb9fdfa17a29e">create_assign_stmt</a> (<a class="el" href="structAstNodeVariable.html">AstNodeVariable</a> *lvalue, <a class="el" href="structAstNode.html">AstNode</a> *rvalue, int line)</td></tr>
+<tr class="memdesc:aec1bb220f0bd89a0e65cb9fdfa17a29e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Vytvoří AST uzel pro přiřazení.  <a href="ast_8c.html#aec1bb220f0bd89a0e65cb9fdfa17a29e">...</a><br /></td></tr>
+<tr class="separator:aec1bb220f0bd89a0e65cb9fdfa17a29e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a996816c74ae54bf676b40279d87057fd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structAstNodeFuncDef.html">AstNodeFuncDef</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ast_8c.html#a996816c74ae54bf676b40279d87057fd">create_func_def</a> (<a class="el" href="structToken.html">Token</a> func_id, <a class="el" href="structAstNodeList.html">AstNodeList</a> *params, <a class="el" href="structAstNodeBlock.html">AstNodeBlock</a> *body, <a class="el" href="ast_8h.html#aeb77b11ff120d929f7abb72ffbdb350f">AstFuncKind</a> kind)</td></tr>
+<tr class="memdesc:a996816c74ae54bf676b40279d87057fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Vytvoří AST uzel pro definici funkce.  <a href="ast_8c.html#a996816c74ae54bf676b40279d87057fd">...</a><br /></td></tr>
+<tr class="separator:a996816c74ae54bf676b40279d87057fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a77530f5813f1fc5a07b65eda865e634e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structAstNodeProgram.html">AstNodeProgram</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ast_8c.html#a77530f5813f1fc5a07b65eda865e634e">create_program</a> (void)</td></tr>
+<tr class="memdesc:a77530f5813f1fc5a07b65eda865e634e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Vytvoří kořenový uzel programu.  <a href="ast_8c.html#a77530f5813f1fc5a07b65eda865e634e">...</a><br /></td></tr>
+<tr class="separator:a77530f5813f1fc5a07b65eda865e634e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9315a13edccba9748c5dcee0db2f8149"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ast_8c.html#a9315a13edccba9748c5dcee0db2f8149">add_func_to_program</a> (<a class="el" href="structAstNodeProgram.html">AstNodeProgram</a> *prog, <a class="el" href="structAstNodeFuncDef.html">AstNodeFuncDef</a> *func)</td></tr>
+<tr class="memdesc:a9315a13edccba9748c5dcee0db2f8149"><td class="mdescLeft">&#160;</td><td class="mdescRight">Přidá definici funkce do kořenového uzlu programu.  <a href="ast_8c.html#a9315a13edccba9748c5dcee0db2f8149">...</a><br /></td></tr>
+<tr class="separator:a9315a13edccba9748c5dcee0db2f8149"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4b452c0a2c126ccb091d2283cbcf4f52"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ast_8c.html#a4b452c0a2c126ccb091d2283cbcf4f52">free_token_lexeme</a> (<a class="el" href="structToken.html">Token</a> *t)</td></tr>
+<tr class="memdesc:a4b452c0a2c126ccb091d2283cbcf4f52"><td class="mdescLeft">&#160;</td><td class="mdescRight">Uvolní dynamicky alokované části tokenu (lexeme, string_val).  <a href="ast_8c.html#a4b452c0a2c126ccb091d2283cbcf4f52">...</a><br /></td></tr>
+<tr class="separator:a4b452c0a2c126ccb091d2283cbcf4f52"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a110b20dfcc7ff03e58989487828a5651"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ast_8c.html#a110b20dfcc7ff03e58989487828a5651">free_ast_node</a> (<a class="el" href="structAstNode.html">AstNode</a> *node)</td></tr>
+<tr class="memdesc:a110b20dfcc7ff03e58989487828a5651"><td class="mdescLeft">&#160;</td><td class="mdescRight">Rekurzivně uvolní uzel AST a všechny jeho potomky.  <a href="ast_8c.html#a110b20dfcc7ff03e58989487828a5651">...</a><br /></td></tr>
+<tr class="separator:a110b20dfcc7ff03e58989487828a5651"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailní popis</h2>
+<div class="textblock"><p>Implementace funkcí pro tvorbu a uvolnění uzlů AST. </p>
+<dl class="section author"><dt>Autor</dt><dd>xkostej00 </dd></dl>
+</div><h2 class="groupheader">Dokumentace funkcí</h2>
+<a id="a9315a13edccba9748c5dcee0db2f8149"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9315a13edccba9748c5dcee0db2f8149">&#9670;&nbsp;</a></span>add_func_to_program()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void add_func_to_program </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structAstNodeProgram.html">AstNodeProgram</a> *&#160;</td>
+          <td class="paramname"><em>prog</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structAstNodeFuncDef.html">AstNodeFuncDef</a> *&#160;</td>
+          <td class="paramname"><em>func</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Přidá definici funkce do kořenového uzlu programu. </p>
+<dl class="params"><dt>Parametry</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">prog</td><td>Kořenový uzel programu. </td></tr>
+    <tr><td class="paramname">func</td><td>Definice funkce, která se má přidat. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a9ab81c5cb9766b0d61e3867a0166aa7a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9ab81c5cb9766b0d61e3867a0166aa7a">&#9670;&nbsp;</a></span>add_stmt_to_block()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void add_stmt_to_block </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structAstNodeBlock.html">AstNodeBlock</a> *&#160;</td>
+          <td class="paramname"><em>block</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structAstNode.html">AstNode</a> *&#160;</td>
+          <td class="paramname"><em>stmt</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Přidá příkaz do bloku. </p>
+<dl class="params"><dt>Parametry</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">block</td><td>Blok, do kterého se příkaz přidává. </td></tr>
+    <tr><td class="paramname">stmt</td><td>Přidávaný příkaz (AST uzel). </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="aa6a0bdf14ed9b5b04135974fdf2c4389"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa6a0bdf14ed9b5b04135974fdf2c4389">&#9670;&nbsp;</a></span>add_to_list()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void add_to_list </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structAstNodeList.html">AstNodeList</a> *&#160;</td>
+          <td class="paramname"><em>list</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structAstNode.html">AstNode</a> *&#160;</td>
+          <td class="paramname"><em>item</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Přidá položku na konec seznamu AST uzlů. </p>
+<p>Pokud je kapacita naplněna, seznam se zvětší pomocí realloc().</p>
+<dl class="params"><dt>Parametry</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">list</td><td>Seznam, do kterého se přidává. </td></tr>
+    <tr><td class="paramname">item</td><td>Přidávaný uzel AST. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="aec1bb220f0bd89a0e65cb9fdfa17a29e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aec1bb220f0bd89a0e65cb9fdfa17a29e">&#9670;&nbsp;</a></span>create_assign_stmt()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structAstNode.html">AstNode</a>* create_assign_stmt </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structAstNodeVariable.html">AstNodeVariable</a> *&#160;</td>
+          <td class="paramname"><em>lvalue</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structAstNode.html">AstNode</a> *&#160;</td>
+          <td class="paramname"><em>rvalue</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>line</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Vytvoří AST uzel pro přiřazení. </p>
+<dl class="params"><dt>Parametry</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">lvalue</td><td>Levá strana (proměnná). </td></tr>
+    <tr><td class="paramname">rvalue</td><td>Pravá strana (výraz). </td></tr>
+    <tr><td class="paramname">line</td><td>Číslo řádku, na kterém příkaz začíná. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Návratová hodnota</dt><dd>Ukazatel na nově vytvořený uzel. </dd></dl>
+
+</div>
+</div>
+<a id="ad5ae50e21dac4ac7127ceea60ded7989"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad5ae50e21dac4ac7127ceea60ded7989">&#9670;&nbsp;</a></span>create_binary_expr()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structAstNode.html">AstNode</a>* create_binary_expr </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="lex__scanner_8h.html#aa520fbf142ba1e7e659590c07da31921">TokenType</a>&#160;</td>
+          <td class="paramname"><em>op</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structAstNode.html">AstNode</a> *&#160;</td>
+          <td class="paramname"><em>left</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structAstNode.html">AstNode</a> *&#160;</td>
+          <td class="paramname"><em>right</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>line</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Vytvoří AST uzel pro binární výraz. </p>
+<dl class="params"><dt>Parametry</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">op</td><td>Typ operátoru (PLUS, MINUS, atd.). </td></tr>
+    <tr><td class="paramname">left</td><td>Levý operand. </td></tr>
+    <tr><td class="paramname">right</td><td>Pravý operand. </td></tr>
+    <tr><td class="paramname">line</td><td>Číslo řádku, na kterém se výraz nachází. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Návratová hodnota</dt><dd>Ukazatel na nově vytvořený uzel. </dd></dl>
+
+</div>
+</div>
+<a id="a577dbe2ca4e580fd88d8fc8263909dfb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a577dbe2ca4e580fd88d8fc8263909dfb">&#9670;&nbsp;</a></span>create_block()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structAstNodeBlock.html">AstNodeBlock</a>* create_block </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>line</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Vytvoří AST uzel pro blok příkazů. </p>
+<dl class="params"><dt>Parametry</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">line</td><td>Číslo řádku, na kterém blok začíná. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Návratová hodnota</dt><dd>Ukazatel na nově vytvořený blok. </dd></dl>
+
+</div>
+</div>
+<a id="af4f839eef05f86fb6bc6b948ac8fcbf3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af4f839eef05f86fb6bc6b948ac8fcbf3">&#9670;&nbsp;</a></span>create_func_call()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structAstNode.html">AstNode</a>* create_func_call </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structToken.html">Token</a>&#160;</td>
+          <td class="paramname"><em>func_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structAstNodeList.html">AstNodeList</a> *&#160;</td>
+          <td class="paramname"><em>args</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Vytvoří AST uzel pro volání funkce. </p>
+<dl class="params"><dt>Parametry</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">func_id</td><td><a class="el" href="structToken.html" title="Struktura tokenu s načteným řčetězcem a jeho hodnotou.">Token</a> s identifikátorem funkce (nebo vestavěné IFJ funkce). </td></tr>
+    <tr><td class="paramname">args</td><td>Seznam argumentů volání. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Návratová hodnota</dt><dd>Ukazatel na nově vytvořený uzel. </dd></dl>
+
+</div>
+</div>
+<a id="a996816c74ae54bf676b40279d87057fd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a996816c74ae54bf676b40279d87057fd">&#9670;&nbsp;</a></span>create_func_def()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structAstNodeFuncDef.html">AstNodeFuncDef</a>* create_func_def </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structToken.html">Token</a>&#160;</td>
+          <td class="paramname"><em>func_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structAstNodeList.html">AstNodeList</a> *&#160;</td>
+          <td class="paramname"><em>params</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structAstNodeBlock.html">AstNodeBlock</a> *&#160;</td>
+          <td class="paramname"><em>body</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="ast_8h.html#aeb77b11ff120d929f7abb72ffbdb350f">AstFuncKind</a>&#160;</td>
+          <td class="paramname"><em>kind</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Vytvoří AST uzel pro definici funkce. </p>
+<dl class="params"><dt>Parametry</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">func_id</td><td>Identifikátor funkce. </td></tr>
+    <tr><td class="paramname">params</td><td>Seznam parametrů. </td></tr>
+    <tr><td class="paramname">body</td><td>Tělo funkce. </td></tr>
+    <tr><td class="paramname">kind</td><td>Druh funkce (běžná, getter, setter). </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Návratová hodnota</dt><dd>Ukazatel na nově vytvořený uzel. </dd></dl>
+
+</div>
+</div>
+<a id="a5e4bd940423b1a3180e44f737dcfe717"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5e4bd940423b1a3180e44f737dcfe717">&#9670;&nbsp;</a></span>create_if_stmt()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structAstNode.html">AstNode</a>* create_if_stmt </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structAstNode.html">AstNode</a> *&#160;</td>
+          <td class="paramname"><em>cond</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structAstNodeBlock.html">AstNodeBlock</a> *&#160;</td>
+          <td class="paramname"><em>then_b</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structAstNodeBlock.html">AstNodeBlock</a> *&#160;</td>
+          <td class="paramname"><em>else_b</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>line</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Vytvoří AST uzel pro příkaz if. </p>
+<dl class="params"><dt>Parametry</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">cond</td><td>Podmínka. </td></tr>
+    <tr><td class="paramname">then_b</td><td>Větev then. </td></tr>
+    <tr><td class="paramname">else_b</td><td>Větev else (může být NULL). </td></tr>
+    <tr><td class="paramname">line</td><td>Číslo řádku, na kterém příkaz začíná. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Návratová hodnota</dt><dd>Ukazatel na nově vytvořený uzel. </dd></dl>
+
+</div>
+</div>
+<a id="a690f381c55dd6eb32a3adc32f1f17815"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a690f381c55dd6eb32a3adc32f1f17815">&#9670;&nbsp;</a></span>create_list()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structAstNodeList.html">AstNodeList</a>* create_list </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Vytvoří prázdný seznam AST uzlů. </p>
+<p>Seznam má počáteční kapacitu 8 položek a podle potřeby se dynamicky zvětšuje. </p>
+
+</div>
+</div>
+<a id="a63836e2b3c18400cbe2377306248613b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a63836e2b3c18400cbe2377306248613b">&#9670;&nbsp;</a></span>create_literal()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structAstNode.html">AstNode</a>* create_literal </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structToken.html">Token</a>&#160;</td>
+          <td class="paramname"><em>token</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Vytvoří AST uzel pro literál (číslo, řetězec, null). </p>
+<p>Vytvoří AST uzel pro literál.</p>
+<dl class="params"><dt>Parametry</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">token</td><td><a class="el" href="structToken.html" title="Struktura tokenu s načteným řčetězcem a jeho hodnotou.">Token</a> reprezentující literál. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Návratová hodnota</dt><dd>Ukazatel na nově vytvořený uzel. </dd></dl>
+
+</div>
+</div>
+<a id="a77530f5813f1fc5a07b65eda865e634e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a77530f5813f1fc5a07b65eda865e634e">&#9670;&nbsp;</a></span>create_program()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structAstNodeProgram.html">AstNodeProgram</a>* create_program </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Vytvoří kořenový uzel programu. </p>
+<p>Kořen obsahuje seznam definic funkcí.</p>
+<dl class="section return"><dt>Návratová hodnota</dt><dd>Ukazatel na nově vytvořený uzel programu. </dd></dl>
+
+</div>
+</div>
+<a id="ae8e155acda1316babd2c527ff3e5bd87"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae8e155acda1316babd2c527ff3e5bd87">&#9670;&nbsp;</a></span>create_return_stmt()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structAstNode.html">AstNode</a>* create_return_stmt </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structAstNode.html">AstNode</a> *&#160;</td>
+          <td class="paramname"><em>expr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>line</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Vytvoří AST uzel pro příkaz return. </p>
+<dl class="params"><dt>Parametry</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">expr</td><td>Vrácený výraz (může být NULL). </td></tr>
+    <tr><td class="paramname">line</td><td>Číslo řádku, na kterém příkaz začíná. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Návratová hodnota</dt><dd>Ukazatel na nově vytvořený uzel. </dd></dl>
+
+</div>
+</div>
+<a id="a124bd7d75c5823b2e19705b318a491ed"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a124bd7d75c5823b2e19705b318a491ed">&#9670;&nbsp;</a></span>create_vardecl()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structAstNode.html">AstNode</a>* create_vardecl </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structToken.html">Token</a>&#160;</td>
+          <td class="paramname"><em>var_id</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Vytvoří AST uzel pro deklaraci proměnné. </p>
+<dl class="params"><dt>Parametry</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">var_id</td><td><a class="el" href="structToken.html" title="Struktura tokenu s načteným řčetězcem a jeho hodnotou.">Token</a> s identifikátorem proměnné. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Návratová hodnota</dt><dd>Ukazatel na nově vytvořený uzel. </dd></dl>
+
+</div>
+</div>
+<a id="a4fe2732ebefa75e899d6861d52494f8a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4fe2732ebefa75e899d6861d52494f8a">&#9670;&nbsp;</a></span>create_variable()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structAstNode.html">AstNode</a>* create_variable </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structToken.html">Token</a>&#160;</td>
+          <td class="paramname"><em>token</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Vytvoří AST uzel pro proměnnou. </p>
+<dl class="params"><dt>Parametry</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">token</td><td><a class="el" href="structToken.html" title="Struktura tokenu s načteným řčetězcem a jeho hodnotou.">Token</a> s identifikátorem proměnné. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Návratová hodnota</dt><dd>Ukazatel na nově vytvořený uzel. </dd></dl>
+
+</div>
+</div>
+<a id="a5d1572fae977c7e5d82a593e1d7a83ba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5d1572fae977c7e5d82a593e1d7a83ba">&#9670;&nbsp;</a></span>create_while_stmt()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structAstNode.html">AstNode</a>* create_while_stmt </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structAstNode.html">AstNode</a> *&#160;</td>
+          <td class="paramname"><em>cond</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structAstNodeBlock.html">AstNodeBlock</a> *&#160;</td>
+          <td class="paramname"><em>body</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>line</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Vytvoří AST uzel pro příkaz while. </p>
+<dl class="params"><dt>Parametry</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">cond</td><td>Podmínka cyklu. </td></tr>
+    <tr><td class="paramname">body</td><td>Tělo cyklu. </td></tr>
+    <tr><td class="paramname">line</td><td>Číslo řádku, na kterém příkaz začíná. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Návratová hodnota</dt><dd>Ukazatel na nově vytvořený uzel. </dd></dl>
+
+</div>
+</div>
+<a id="a110b20dfcc7ff03e58989487828a5651"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a110b20dfcc7ff03e58989487828a5651">&#9670;&nbsp;</a></span>free_ast_node()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void free_ast_node </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structAstNode.html">AstNode</a> *&#160;</td>
+          <td class="paramname"><em>node</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Rekurzivně uvolní uzel AST a všechny jeho potomky. </p>
+<p>Funkce korektně uvolní i vnořené struktury (bloky, seznamy, výrazy, definice funkcí atd.) a všechny dynamicky alokované lexémy.</p>
+<dl class="params"><dt>Parametry</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">node</td><td>Kořen uvolňovaného podstromu (může být NULL). </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a4b452c0a2c126ccb091d2283cbcf4f52"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4b452c0a2c126ccb091d2283cbcf4f52">&#9670;&nbsp;</a></span>free_token_lexeme()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void free_token_lexeme </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structToken.html">Token</a> *&#160;</td>
+          <td class="paramname"><em>t</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Uvolní dynamicky alokované části tokenu (lexeme, string_val). </p>
+<dl class="params"><dt>Parametry</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">t</td><td>Ukazatel na token, jehož interní data se mají uvolnit. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Generováno programem&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+</small></address>
+</body>
+</html>

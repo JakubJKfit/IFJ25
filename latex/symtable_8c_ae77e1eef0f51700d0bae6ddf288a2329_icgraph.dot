@@ -1,0 +1,23 @@
+digraph "rotate_right"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="RL";
+  Node1 [label="rotate_right",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="Rotace uzlů směrem doprava."];
+  Node1 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node2 [label="balance_tree",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$symtable_8c.html#a7a04930ba429ee3b4ebf670558b0500b",tooltip="Vyvážení stromu."];
+  Node2 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node3 [label="delete_symbol",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$symtable_8c.html#a0d76ed27b8ae0e138c5d30734b69371f",tooltip="Smazání symbolu z tabulky."];
+  Node2 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node4 [label="insert_symbol",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$symtable_8c.html#a693cd9362cd35614004238c7fea96289",tooltip="Vložení symbolu do tabulky."];
+  Node4 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node5 [label="semantic_firstpass",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$parser_8c.html#a6871659a21ea54f60a52430085bb3c5a",tooltip="První průchod AST – založení záznamů o funkcích v globální tabulce."];
+  Node5 -> Node6 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node6 [label="ifj_parse_program",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$parser_8c.html#a47857415cd7349403de3bf884239f849",tooltip="Vstupní bod parseru."];
+  Node6 -> Node7 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node7 [label="main",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$main_8c.html#ae66f6b31b5ad750f1fe042a706a4e3d4",tooltip=" "];
+  Node4 -> Node8 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node8 [label="semantic_recurs",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$parser_8c.html#a081d17c4a36d3a2a822857bfe4e6456c",tooltip="Rekurzivní sémantická analýza AST."];
+  Node8 -> Node6 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+}

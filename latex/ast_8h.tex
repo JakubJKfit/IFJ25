@@ -1,0 +1,531 @@
+\hypertarget{ast_8h}{}\doxysection{Dokumentace souboru ast.\+h}
+\label{ast_8h}\index{ast.h@{ast.h}}
+
+
+Definice struktur pro abstraktní syntaktický strom (AST) jazyka IFJ25.  
+
+
+{\ttfamily \#include \char`\"{}lex\+\_\+scanner.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}symtable.\+h\char`\"{}}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+Graf závislostí na vkládaných souborech pro ast.\+h\+:
+% FIG 0
+Následující graf ukazuje, které soubory přímo nebo nepřímo vkládají tento soubor\+:
+% FIG 1
+\doxysubsection*{Datové struktry}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structAstNode}{Ast\+Node}}
+\begin{DoxyCompactList}\small\item\em Základní struktura každého uzlu AST. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structAstNodeList}{Ast\+Node\+List}}
+\begin{DoxyCompactList}\small\item\em Obecný seznam AST uzlů. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structAstNodeLiteral}{Ast\+Node\+Literal}}
+\item 
+struct \mbox{\hyperlink{structAstNodeVariable}{Ast\+Node\+Variable}}
+\item 
+struct \mbox{\hyperlink{structAstNodeBinaryExpr}{Ast\+Node\+Binary\+Expr}}
+\item 
+struct \mbox{\hyperlink{structAstNodeFuncCall}{Ast\+Node\+Func\+Call}}
+\item 
+struct \mbox{\hyperlink{structAstNodeBlock}{Ast\+Node\+Block}}
+\item 
+struct \mbox{\hyperlink{structAstNodeIfStmt}{Ast\+Node\+If\+Stmt}}
+\item 
+struct \mbox{\hyperlink{structAstNodeWhileStmt}{Ast\+Node\+While\+Stmt}}
+\item 
+struct \mbox{\hyperlink{structAstNodeVarDecl}{Ast\+Node\+Var\+Decl}}
+\item 
+struct \mbox{\hyperlink{structAstNodeAssignStmt}{Ast\+Node\+Assign\+Stmt}}
+\item 
+struct \mbox{\hyperlink{structAstNodeReturnStmt}{Ast\+Node\+Return\+Stmt}}
+\item 
+struct \mbox{\hyperlink{structAstNodeFuncDef}{Ast\+Node\+Func\+Def}}
+\item 
+struct \mbox{\hyperlink{structAstNodeProgram}{Ast\+Node\+Program}}
+\end{DoxyCompactItemize}
+\doxysubsection*{IFJ25}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{ast_8h_a1e0354e1cfa4d729a8b30688d18256fd}{Ast\+Node\+Type}} \{ \newline
+\mbox{\hyperlink{ast_8h_a1e0354e1cfa4d729a8b30688d18256fda8148247ea6847daa4ccd34690e3a2415}{AST\+\_\+\+PROGRAM}}
+, \mbox{\hyperlink{ast_8h_a1e0354e1cfa4d729a8b30688d18256fda3d4401570e9beb69422e129de4db9643}{AST\+\_\+\+FUNC\+\_\+\+DEF}}
+, \mbox{\hyperlink{ast_8h_a1e0354e1cfa4d729a8b30688d18256fdad946ab95f05097160f92db906f5fd53b}{AST\+\_\+\+FUNC\+\_\+\+CALL}}
+, \mbox{\hyperlink{ast_8h_a1e0354e1cfa4d729a8b30688d18256fdaa465324438c7fb522327d7f837ddc185}{AST\+\_\+\+STMT\+\_\+\+BLOCK}}
+, \newline
+\mbox{\hyperlink{ast_8h_a1e0354e1cfa4d729a8b30688d18256fdae02fc150b95cdd0928d89a5d25e6e360}{AST\+\_\+\+STMT\+\_\+\+VAR\+\_\+\+DECL}}
+, \mbox{\hyperlink{ast_8h_a1e0354e1cfa4d729a8b30688d18256fda5892c2e665a3a2e0b3aa456646a4c50a}{AST\+\_\+\+STMT\+\_\+\+ASSIGN}}
+, \mbox{\hyperlink{ast_8h_a1e0354e1cfa4d729a8b30688d18256fda217cfcc016d416af16744a84f8c5812c}{AST\+\_\+\+STMT\+\_\+\+IF}}
+, \mbox{\hyperlink{ast_8h_a1e0354e1cfa4d729a8b30688d18256fdacf6973064a0ea397514571d40417464c}{AST\+\_\+\+STMT\+\_\+\+WHILE}}
+, \newline
+\mbox{\hyperlink{ast_8h_a1e0354e1cfa4d729a8b30688d18256fda654096fe18b3cf2b82e464cfd7c16428}{AST\+\_\+\+STMT\+\_\+\+RETURN}}
+, \mbox{\hyperlink{ast_8h_a1e0354e1cfa4d729a8b30688d18256fda1c3e85982f693dd775ffd0a0900782d4}{AST\+\_\+\+EXPR\+\_\+\+BINARY}}
+, \mbox{\hyperlink{ast_8h_a1e0354e1cfa4d729a8b30688d18256fda1f2a74731165fd3062f610d569793ce9}{AST\+\_\+\+EXPR\+\_\+\+LITERAL}}
+, \mbox{\hyperlink{ast_8h_a1e0354e1cfa4d729a8b30688d18256fda09435ba312db447e28e0d94c6099390f}{AST\+\_\+\+EXPR\+\_\+\+VARIABLE}}
+, \newline
+\mbox{\hyperlink{ast_8h_a1e0354e1cfa4d729a8b30688d18256fda6489e93c1ea083a03310bc39178732f9}{AST\+\_\+\+NODE\+\_\+\+LIST}}
+ \}
+\begin{DoxyCompactList}\small\item\em Typ uzlu v abstraktním syntaktickém stromu. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{ast_8h_aeb77b11ff120d929f7abb72ffbdb350f}\label{ast_8h_aeb77b11ff120d929f7abb72ffbdb350f}} 
+enum \mbox{\hyperlink{ast_8h_aeb77b11ff120d929f7abb72ffbdb350f}{Ast\+Func\+Kind}} \{ {\bfseries FUNC\+\_\+\+IS\+\_\+\+FUNC}
+, {\bfseries FUNC\+\_\+\+IS\+\_\+\+GETTER}
+, {\bfseries FUNC\+\_\+\+IS\+\_\+\+SETTER}
+ \}
+\begin{DoxyCompactList}\small\item\em Druh funkce (běžná funkce, getter, setter). \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{ast_8h_ac5d357560c27118d67e61e2c3cb171aa}\label{ast_8h_ac5d357560c27118d67e61e2c3cb171aa}} 
+typedef struct \mbox{\hyperlink{structAstNode}{Ast\+Node}} \mbox{\hyperlink{ast_8h_ac5d357560c27118d67e61e2c3cb171aa}{Ast\+Node}}
+\begin{DoxyCompactList}\small\item\em Základní struktura každého uzlu AST. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structAstNode}{Ast\+Node}} $\ast$ \mbox{\hyperlink{ast_8h_a63836e2b3c18400cbe2377306248613b}{create\+\_\+literal}} (\mbox{\hyperlink{structToken}{Token}} token)
+\begin{DoxyCompactList}\small\item\em Vytvoří AST uzel pro literál. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structAstNode}{Ast\+Node}} $\ast$ \mbox{\hyperlink{ast_8h_a4fe2732ebefa75e899d6861d52494f8a}{create\+\_\+variable}} (\mbox{\hyperlink{structToken}{Token}} token)
+\begin{DoxyCompactList}\small\item\em Vytvoří AST uzel pro proměnnou. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structAstNode}{Ast\+Node}} $\ast$ \mbox{\hyperlink{ast_8h_ad5ae50e21dac4ac7127ceea60ded7989}{create\+\_\+binary\+\_\+expr}} (\mbox{\hyperlink{lex__scanner_8h_aa520fbf142ba1e7e659590c07da31921}{Token\+Type}} op, \mbox{\hyperlink{structAstNode}{Ast\+Node}} $\ast$left, \mbox{\hyperlink{structAstNode}{Ast\+Node}} $\ast$right, int line)
+\begin{DoxyCompactList}\small\item\em Vytvoří AST uzel pro binární výraz. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structAstNode}{Ast\+Node}} $\ast$ \mbox{\hyperlink{ast_8h_af4f839eef05f86fb6bc6b948ac8fcbf3}{create\+\_\+func\+\_\+call}} (\mbox{\hyperlink{structToken}{Token}} func\+\_\+id, \mbox{\hyperlink{structAstNodeList}{Ast\+Node\+List}} $\ast$args)
+\begin{DoxyCompactList}\small\item\em Vytvoří AST uzel pro volání funkce. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structAstNode}{Ast\+Node}} $\ast$ \mbox{\hyperlink{ast_8h_a5e4bd940423b1a3180e44f737dcfe717}{create\+\_\+if\+\_\+stmt}} (\mbox{\hyperlink{structAstNode}{Ast\+Node}} $\ast$cond, \mbox{\hyperlink{structAstNodeBlock}{Ast\+Node\+Block}} $\ast$then\+\_\+b, \mbox{\hyperlink{structAstNodeBlock}{Ast\+Node\+Block}} $\ast$else\+\_\+b, int line)
+\begin{DoxyCompactList}\small\item\em Vytvoří AST uzel pro příkaz if. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structAstNode}{Ast\+Node}} $\ast$ \mbox{\hyperlink{ast_8h_a5d1572fae977c7e5d82a593e1d7a83ba}{create\+\_\+while\+\_\+stmt}} (\mbox{\hyperlink{structAstNode}{Ast\+Node}} $\ast$cond, \mbox{\hyperlink{structAstNodeBlock}{Ast\+Node\+Block}} $\ast$body, int line)
+\begin{DoxyCompactList}\small\item\em Vytvoří AST uzel pro příkaz while. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structAstNode}{Ast\+Node}} $\ast$ \mbox{\hyperlink{ast_8h_ae8e155acda1316babd2c527ff3e5bd87}{create\+\_\+return\+\_\+stmt}} (\mbox{\hyperlink{structAstNode}{Ast\+Node}} $\ast$expr, int line)
+\begin{DoxyCompactList}\small\item\em Vytvoří AST uzel pro příkaz return. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structAstNode}{Ast\+Node}} $\ast$ \mbox{\hyperlink{ast_8h_a124bd7d75c5823b2e19705b318a491ed}{create\+\_\+vardecl}} (\mbox{\hyperlink{structToken}{Token}} var\+\_\+id)
+\begin{DoxyCompactList}\small\item\em Vytvoří AST uzel pro deklaraci proměnné. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structAstNode}{Ast\+Node}} $\ast$ \mbox{\hyperlink{ast_8h_aec1bb220f0bd89a0e65cb9fdfa17a29e}{create\+\_\+assign\+\_\+stmt}} (\mbox{\hyperlink{structAstNodeVariable}{Ast\+Node\+Variable}} $\ast$lvalue, \mbox{\hyperlink{structAstNode}{Ast\+Node}} $\ast$rvalue, int line)
+\begin{DoxyCompactList}\small\item\em Vytvoří AST uzel pro přiřazení. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structAstNodeList}{Ast\+Node\+List}} $\ast$ \mbox{\hyperlink{ast_8h_a690f381c55dd6eb32a3adc32f1f17815}{create\+\_\+list}} (void)
+\begin{DoxyCompactList}\small\item\em Vytvoří prázdný seznam AST uzlů. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{ast_8h_aa6a0bdf14ed9b5b04135974fdf2c4389}{add\+\_\+to\+\_\+list}} (\mbox{\hyperlink{structAstNodeList}{Ast\+Node\+List}} $\ast$list, \mbox{\hyperlink{structAstNode}{Ast\+Node}} $\ast$item)
+\begin{DoxyCompactList}\small\item\em Přidá položku na konec seznamu AST uzlů. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structAstNodeBlock}{Ast\+Node\+Block}} $\ast$ \mbox{\hyperlink{ast_8h_a577dbe2ca4e580fd88d8fc8263909dfb}{create\+\_\+block}} (int line)
+\begin{DoxyCompactList}\small\item\em Vytvoří AST uzel pro blok příkazů. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{ast_8h_a9ab81c5cb9766b0d61e3867a0166aa7a}{add\+\_\+stmt\+\_\+to\+\_\+block}} (\mbox{\hyperlink{structAstNodeBlock}{Ast\+Node\+Block}} $\ast$block, \mbox{\hyperlink{structAstNode}{Ast\+Node}} $\ast$stmt)
+\begin{DoxyCompactList}\small\item\em Přidá příkaz do bloku. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structAstNodeFuncDef}{Ast\+Node\+Func\+Def}} $\ast$ \mbox{\hyperlink{ast_8h_a996816c74ae54bf676b40279d87057fd}{create\+\_\+func\+\_\+def}} (\mbox{\hyperlink{structToken}{Token}} func\+\_\+id, \mbox{\hyperlink{structAstNodeList}{Ast\+Node\+List}} $\ast$params, \mbox{\hyperlink{structAstNodeBlock}{Ast\+Node\+Block}} $\ast$body, \mbox{\hyperlink{ast_8h_aeb77b11ff120d929f7abb72ffbdb350f}{Ast\+Func\+Kind}} kind)
+\begin{DoxyCompactList}\small\item\em Vytvoří AST uzel pro definici funkce. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structAstNodeProgram}{Ast\+Node\+Program}} $\ast$ \mbox{\hyperlink{ast_8h_a77530f5813f1fc5a07b65eda865e634e}{create\+\_\+program}} (void)
+\begin{DoxyCompactList}\small\item\em Vytvoří kořenový uzel programu. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{ast_8h_a9315a13edccba9748c5dcee0db2f8149}{add\+\_\+func\+\_\+to\+\_\+program}} (\mbox{\hyperlink{structAstNodeProgram}{Ast\+Node\+Program}} $\ast$prog, \mbox{\hyperlink{structAstNodeFuncDef}{Ast\+Node\+Func\+Def}} $\ast$func)
+\begin{DoxyCompactList}\small\item\em Přidá definici funkce do kořenového uzlu programu. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{ast_8h_a110b20dfcc7ff03e58989487828a5651}{free\+\_\+ast\+\_\+node}} (\mbox{\hyperlink{structAstNode}{Ast\+Node}} $\ast$node)
+\begin{DoxyCompactList}\small\item\em Rekurzivně uvolní uzel AST a všechny jeho potomky. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{ast_8h_a4b452c0a2c126ccb091d2283cbcf4f52}{free\+\_\+token\+\_\+lexeme}} (\mbox{\hyperlink{structToken}{Token}} $\ast$t)
+\begin{DoxyCompactList}\small\item\em Uvolní dynamicky alokované části tokenu (lexeme, string\+\_\+val). \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailní popis}
+Definice struktur pro abstraktní syntaktický strom (AST) jazyka IFJ25. 
+
+\begin{DoxyAuthor}{Autor}
+Jan Kostečka xkostej00 ~\newline
+ 
+\end{DoxyAuthor}
+
+
+\doxysubsection{Dokumentace výčtových typů}
+\mbox{\Hypertarget{ast_8h_a1e0354e1cfa4d729a8b30688d18256fd}\label{ast_8h_a1e0354e1cfa4d729a8b30688d18256fd}} 
+\index{ast.h@{ast.h}!AstNodeType@{AstNodeType}}
+\index{AstNodeType@{AstNodeType}!ast.h@{ast.h}}
+\doxysubsubsection{\texorpdfstring{AstNodeType}{AstNodeType}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{ast_8h_a1e0354e1cfa4d729a8b30688d18256fd}{Ast\+Node\+Type}}}
+
+
+
+Typ uzlu v abstraktním syntaktickém stromu. 
+
+\begin{DoxyEnumFields}{Hodnoty výčtu}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{AST\_PROGRAM@{AST\_PROGRAM}!ast.h@{ast.h}}\index{ast.h@{ast.h}!AST\_PROGRAM@{AST\_PROGRAM}}}\mbox{\Hypertarget{ast_8h_a1e0354e1cfa4d729a8b30688d18256fda8148247ea6847daa4ccd34690e3a2415}\label{ast_8h_a1e0354e1cfa4d729a8b30688d18256fda8148247ea6847daa4ccd34690e3a2415}} 
+AST\+\_\+\+PROGRAM&Kořen stromu, obsahuje seznam funkcí \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{AST\_FUNC\_DEF@{AST\_FUNC\_DEF}!ast.h@{ast.h}}\index{ast.h@{ast.h}!AST\_FUNC\_DEF@{AST\_FUNC\_DEF}}}\mbox{\Hypertarget{ast_8h_a1e0354e1cfa4d729a8b30688d18256fda3d4401570e9beb69422e129de4db9643}\label{ast_8h_a1e0354e1cfa4d729a8b30688d18256fda3d4401570e9beb69422e129de4db9643}} 
+AST\+\_\+\+FUNC\+\_\+\+DEF&Definice funkce (static name(params) block) \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{AST\_FUNC\_CALL@{AST\_FUNC\_CALL}!ast.h@{ast.h}}\index{ast.h@{ast.h}!AST\_FUNC\_CALL@{AST\_FUNC\_CALL}}}\mbox{\Hypertarget{ast_8h_a1e0354e1cfa4d729a8b30688d18256fdad946ab95f05097160f92db906f5fd53b}\label{ast_8h_a1e0354e1cfa4d729a8b30688d18256fdad946ab95f05097160f92db906f5fd53b}} 
+AST\+\_\+\+FUNC\+\_\+\+CALL&Volání funkce (name(args)) \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{AST\_STMT\_BLOCK@{AST\_STMT\_BLOCK}!ast.h@{ast.h}}\index{ast.h@{ast.h}!AST\_STMT\_BLOCK@{AST\_STMT\_BLOCK}}}\mbox{\Hypertarget{ast_8h_a1e0354e1cfa4d729a8b30688d18256fdaa465324438c7fb522327d7f837ddc185}\label{ast_8h_a1e0354e1cfa4d729a8b30688d18256fdaa465324438c7fb522327d7f837ddc185}} 
+AST\+\_\+\+STMT\+\_\+\+BLOCK&Blok kódu \{ ... \}. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{AST\_STMT\_VAR\_DECL@{AST\_STMT\_VAR\_DECL}!ast.h@{ast.h}}\index{ast.h@{ast.h}!AST\_STMT\_VAR\_DECL@{AST\_STMT\_VAR\_DECL}}}\mbox{\Hypertarget{ast_8h_a1e0354e1cfa4d729a8b30688d18256fdae02fc150b95cdd0928d89a5d25e6e360}\label{ast_8h_a1e0354e1cfa4d729a8b30688d18256fdae02fc150b95cdd0928d89a5d25e6e360}} 
+AST\+\_\+\+STMT\+\_\+\+VAR\+\_\+\+DECL&var id \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{AST\_STMT\_ASSIGN@{AST\_STMT\_ASSIGN}!ast.h@{ast.h}}\index{ast.h@{ast.h}!AST\_STMT\_ASSIGN@{AST\_STMT\_ASSIGN}}}\mbox{\Hypertarget{ast_8h_a1e0354e1cfa4d729a8b30688d18256fda5892c2e665a3a2e0b3aa456646a4c50a}\label{ast_8h_a1e0354e1cfa4d729a8b30688d18256fda5892c2e665a3a2e0b3aa456646a4c50a}} 
+AST\+\_\+\+STMT\+\_\+\+ASSIGN&id = expr \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{AST\_STMT\_IF@{AST\_STMT\_IF}!ast.h@{ast.h}}\index{ast.h@{ast.h}!AST\_STMT\_IF@{AST\_STMT\_IF}}}\mbox{\Hypertarget{ast_8h_a1e0354e1cfa4d729a8b30688d18256fda217cfcc016d416af16744a84f8c5812c}\label{ast_8h_a1e0354e1cfa4d729a8b30688d18256fda217cfcc016d416af16744a84f8c5812c}} 
+AST\+\_\+\+STMT\+\_\+\+IF&if (cond) then else \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{AST\_STMT\_WHILE@{AST\_STMT\_WHILE}!ast.h@{ast.h}}\index{ast.h@{ast.h}!AST\_STMT\_WHILE@{AST\_STMT\_WHILE}}}\mbox{\Hypertarget{ast_8h_a1e0354e1cfa4d729a8b30688d18256fdacf6973064a0ea397514571d40417464c}\label{ast_8h_a1e0354e1cfa4d729a8b30688d18256fdacf6973064a0ea397514571d40417464c}} 
+AST\+\_\+\+STMT\+\_\+\+WHILE&while (cond) block \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{AST\_STMT\_RETURN@{AST\_STMT\_RETURN}!ast.h@{ast.h}}\index{ast.h@{ast.h}!AST\_STMT\_RETURN@{AST\_STMT\_RETURN}}}\mbox{\Hypertarget{ast_8h_a1e0354e1cfa4d729a8b30688d18256fda654096fe18b3cf2b82e464cfd7c16428}\label{ast_8h_a1e0354e1cfa4d729a8b30688d18256fda654096fe18b3cf2b82e464cfd7c16428}} 
+AST\+\_\+\+STMT\+\_\+\+RETURN&return expr \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{AST\_EXPR\_BINARY@{AST\_EXPR\_BINARY}!ast.h@{ast.h}}\index{ast.h@{ast.h}!AST\_EXPR\_BINARY@{AST\_EXPR\_BINARY}}}\mbox{\Hypertarget{ast_8h_a1e0354e1cfa4d729a8b30688d18256fda1c3e85982f693dd775ffd0a0900782d4}\label{ast_8h_a1e0354e1cfa4d729a8b30688d18256fda1c3e85982f693dd775ffd0a0900782d4}} 
+AST\+\_\+\+EXPR\+\_\+\+BINARY&expr OP expr \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{AST\_EXPR\_LITERAL@{AST\_EXPR\_LITERAL}!ast.h@{ast.h}}\index{ast.h@{ast.h}!AST\_EXPR\_LITERAL@{AST\_EXPR\_LITERAL}}}\mbox{\Hypertarget{ast_8h_a1e0354e1cfa4d729a8b30688d18256fda1f2a74731165fd3062f610d569793ce9}\label{ast_8h_a1e0354e1cfa4d729a8b30688d18256fda1f2a74731165fd3062f610d569793ce9}} 
+AST\+\_\+\+EXPR\+\_\+\+LITERAL&123, \char`\"{}abc\char`\"{}, null \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{AST\_EXPR\_VARIABLE@{AST\_EXPR\_VARIABLE}!ast.h@{ast.h}}\index{ast.h@{ast.h}!AST\_EXPR\_VARIABLE@{AST\_EXPR\_VARIABLE}}}\mbox{\Hypertarget{ast_8h_a1e0354e1cfa4d729a8b30688d18256fda09435ba312db447e28e0d94c6099390f}\label{ast_8h_a1e0354e1cfa4d729a8b30688d18256fda09435ba312db447e28e0d94c6099390f}} 
+AST\+\_\+\+EXPR\+\_\+\+VARIABLE&id \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{AST\_NODE\_LIST@{AST\_NODE\_LIST}!ast.h@{ast.h}}\index{ast.h@{ast.h}!AST\_NODE\_LIST@{AST\_NODE\_LIST}}}\mbox{\Hypertarget{ast_8h_a1e0354e1cfa4d729a8b30688d18256fda6489e93c1ea083a03310bc39178732f9}\label{ast_8h_a1e0354e1cfa4d729a8b30688d18256fda6489e93c1ea083a03310bc39178732f9}} 
+AST\+\_\+\+NODE\+\_\+\+LIST&Obecný seznam (pro argumenty, parametry, příkazy) \\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\doxysubsection{Dokumentace funkcí}
+\mbox{\Hypertarget{ast_8h_a9315a13edccba9748c5dcee0db2f8149}\label{ast_8h_a9315a13edccba9748c5dcee0db2f8149}} 
+\index{ast.h@{ast.h}!add\_func\_to\_program@{add\_func\_to\_program}}
+\index{add\_func\_to\_program@{add\_func\_to\_program}!ast.h@{ast.h}}
+\doxysubsubsection{\texorpdfstring{add\_func\_to\_program()}{add\_func\_to\_program()}}
+{\footnotesize\ttfamily void add\+\_\+func\+\_\+to\+\_\+program (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structAstNodeProgram}{Ast\+Node\+Program}} $\ast$}]{prog,  }\item[{\mbox{\hyperlink{structAstNodeFuncDef}{Ast\+Node\+Func\+Def}} $\ast$}]{func }\end{DoxyParamCaption})}
+
+
+
+Přidá definici funkce do kořenového uzlu programu. 
+
+
+\begin{DoxyParams}{Parametry}
+{\em prog} & Kořenový uzel programu. \\
+\hline
+{\em func} & Definice funkce, která se má přidat. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{ast_8h_a9ab81c5cb9766b0d61e3867a0166aa7a}\label{ast_8h_a9ab81c5cb9766b0d61e3867a0166aa7a}} 
+\index{ast.h@{ast.h}!add\_stmt\_to\_block@{add\_stmt\_to\_block}}
+\index{add\_stmt\_to\_block@{add\_stmt\_to\_block}!ast.h@{ast.h}}
+\doxysubsubsection{\texorpdfstring{add\_stmt\_to\_block()}{add\_stmt\_to\_block()}}
+{\footnotesize\ttfamily void add\+\_\+stmt\+\_\+to\+\_\+block (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structAstNodeBlock}{Ast\+Node\+Block}} $\ast$}]{block,  }\item[{\mbox{\hyperlink{structAstNode}{Ast\+Node}} $\ast$}]{stmt }\end{DoxyParamCaption})}
+
+
+
+Přidá příkaz do bloku. 
+
+
+\begin{DoxyParams}{Parametry}
+{\em block} & Blok, do kterého se příkaz přidává. \\
+\hline
+{\em stmt} & Přidávaný příkaz (AST uzel). \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{ast_8h_aa6a0bdf14ed9b5b04135974fdf2c4389}\label{ast_8h_aa6a0bdf14ed9b5b04135974fdf2c4389}} 
+\index{ast.h@{ast.h}!add\_to\_list@{add\_to\_list}}
+\index{add\_to\_list@{add\_to\_list}!ast.h@{ast.h}}
+\doxysubsubsection{\texorpdfstring{add\_to\_list()}{add\_to\_list()}}
+{\footnotesize\ttfamily void add\+\_\+to\+\_\+list (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structAstNodeList}{Ast\+Node\+List}} $\ast$}]{list,  }\item[{\mbox{\hyperlink{structAstNode}{Ast\+Node}} $\ast$}]{item }\end{DoxyParamCaption})}
+
+
+
+Přidá položku na konec seznamu AST uzlů. 
+
+Pokud je kapacita naplněna, seznam se zvětší pomocí realloc().
+
+
+\begin{DoxyParams}{Parametry}
+{\em list} & Seznam, do kterého se přidává. \\
+\hline
+{\em item} & Přidávaný uzel AST. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{ast_8h_aec1bb220f0bd89a0e65cb9fdfa17a29e}\label{ast_8h_aec1bb220f0bd89a0e65cb9fdfa17a29e}} 
+\index{ast.h@{ast.h}!create\_assign\_stmt@{create\_assign\_stmt}}
+\index{create\_assign\_stmt@{create\_assign\_stmt}!ast.h@{ast.h}}
+\doxysubsubsection{\texorpdfstring{create\_assign\_stmt()}{create\_assign\_stmt()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structAstNode}{Ast\+Node}}$\ast$ create\+\_\+assign\+\_\+stmt (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structAstNodeVariable}{Ast\+Node\+Variable}} $\ast$}]{lvalue,  }\item[{\mbox{\hyperlink{structAstNode}{Ast\+Node}} $\ast$}]{rvalue,  }\item[{int}]{line }\end{DoxyParamCaption})}
+
+
+
+Vytvoří AST uzel pro přiřazení. 
+
+
+\begin{DoxyParams}{Parametry}
+{\em lvalue} & Levá strana (proměnná). \\
+\hline
+{\em rvalue} & Pravá strana (výraz). \\
+\hline
+{\em line} & Číslo řádku, na kterém příkaz začíná. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Návratová hodnota}
+Ukazatel na nově vytvořený uzel. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{ast_8h_ad5ae50e21dac4ac7127ceea60ded7989}\label{ast_8h_ad5ae50e21dac4ac7127ceea60ded7989}} 
+\index{ast.h@{ast.h}!create\_binary\_expr@{create\_binary\_expr}}
+\index{create\_binary\_expr@{create\_binary\_expr}!ast.h@{ast.h}}
+\doxysubsubsection{\texorpdfstring{create\_binary\_expr()}{create\_binary\_expr()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structAstNode}{Ast\+Node}}$\ast$ create\+\_\+binary\+\_\+expr (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{lex__scanner_8h_aa520fbf142ba1e7e659590c07da31921}{Token\+Type}}}]{op,  }\item[{\mbox{\hyperlink{structAstNode}{Ast\+Node}} $\ast$}]{left,  }\item[{\mbox{\hyperlink{structAstNode}{Ast\+Node}} $\ast$}]{right,  }\item[{int}]{line }\end{DoxyParamCaption})}
+
+
+
+Vytvoří AST uzel pro binární výraz. 
+
+
+\begin{DoxyParams}{Parametry}
+{\em op} & Typ operátoru (PLUS, MINUS, atd.). \\
+\hline
+{\em left} & Levý operand. \\
+\hline
+{\em right} & Pravý operand. \\
+\hline
+{\em line} & Číslo řádku, na kterém se výraz nachází. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Návratová hodnota}
+Ukazatel na nově vytvořený uzel. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{ast_8h_a577dbe2ca4e580fd88d8fc8263909dfb}\label{ast_8h_a577dbe2ca4e580fd88d8fc8263909dfb}} 
+\index{ast.h@{ast.h}!create\_block@{create\_block}}
+\index{create\_block@{create\_block}!ast.h@{ast.h}}
+\doxysubsubsection{\texorpdfstring{create\_block()}{create\_block()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structAstNodeBlock}{Ast\+Node\+Block}}$\ast$ create\+\_\+block (\begin{DoxyParamCaption}\item[{int}]{line }\end{DoxyParamCaption})}
+
+
+
+Vytvoří AST uzel pro blok příkazů. 
+
+
+\begin{DoxyParams}{Parametry}
+{\em line} & Číslo řádku, na kterém blok začíná. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Návratová hodnota}
+Ukazatel na nově vytvořený blok. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{ast_8h_af4f839eef05f86fb6bc6b948ac8fcbf3}\label{ast_8h_af4f839eef05f86fb6bc6b948ac8fcbf3}} 
+\index{ast.h@{ast.h}!create\_func\_call@{create\_func\_call}}
+\index{create\_func\_call@{create\_func\_call}!ast.h@{ast.h}}
+\doxysubsubsection{\texorpdfstring{create\_func\_call()}{create\_func\_call()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structAstNode}{Ast\+Node}}$\ast$ create\+\_\+func\+\_\+call (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structToken}{Token}}}]{func\+\_\+id,  }\item[{\mbox{\hyperlink{structAstNodeList}{Ast\+Node\+List}} $\ast$}]{args }\end{DoxyParamCaption})}
+
+
+
+Vytvoří AST uzel pro volání funkce. 
+
+
+\begin{DoxyParams}{Parametry}
+{\em func\+\_\+id} & \mbox{\hyperlink{structToken}{Token}} s identifikátorem funkce (nebo vestavěné IFJ funkce). \\
+\hline
+{\em args} & Seznam argumentů volání. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Návratová hodnota}
+Ukazatel na nově vytvořený uzel. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{ast_8h_a996816c74ae54bf676b40279d87057fd}\label{ast_8h_a996816c74ae54bf676b40279d87057fd}} 
+\index{ast.h@{ast.h}!create\_func\_def@{create\_func\_def}}
+\index{create\_func\_def@{create\_func\_def}!ast.h@{ast.h}}
+\doxysubsubsection{\texorpdfstring{create\_func\_def()}{create\_func\_def()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structAstNodeFuncDef}{Ast\+Node\+Func\+Def}}$\ast$ create\+\_\+func\+\_\+def (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structToken}{Token}}}]{func\+\_\+id,  }\item[{\mbox{\hyperlink{structAstNodeList}{Ast\+Node\+List}} $\ast$}]{params,  }\item[{\mbox{\hyperlink{structAstNodeBlock}{Ast\+Node\+Block}} $\ast$}]{body,  }\item[{\mbox{\hyperlink{ast_8h_aeb77b11ff120d929f7abb72ffbdb350f}{Ast\+Func\+Kind}}}]{kind }\end{DoxyParamCaption})}
+
+
+
+Vytvoří AST uzel pro definici funkce. 
+
+
+\begin{DoxyParams}{Parametry}
+{\em func\+\_\+id} & Identifikátor funkce. \\
+\hline
+{\em params} & Seznam parametrů. \\
+\hline
+{\em body} & Tělo funkce. \\
+\hline
+{\em kind} & Druh funkce (běžná, getter, setter). \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Návratová hodnota}
+Ukazatel na nově vytvořený uzel. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{ast_8h_a5e4bd940423b1a3180e44f737dcfe717}\label{ast_8h_a5e4bd940423b1a3180e44f737dcfe717}} 
+\index{ast.h@{ast.h}!create\_if\_stmt@{create\_if\_stmt}}
+\index{create\_if\_stmt@{create\_if\_stmt}!ast.h@{ast.h}}
+\doxysubsubsection{\texorpdfstring{create\_if\_stmt()}{create\_if\_stmt()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structAstNode}{Ast\+Node}}$\ast$ create\+\_\+if\+\_\+stmt (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structAstNode}{Ast\+Node}} $\ast$}]{cond,  }\item[{\mbox{\hyperlink{structAstNodeBlock}{Ast\+Node\+Block}} $\ast$}]{then\+\_\+b,  }\item[{\mbox{\hyperlink{structAstNodeBlock}{Ast\+Node\+Block}} $\ast$}]{else\+\_\+b,  }\item[{int}]{line }\end{DoxyParamCaption})}
+
+
+
+Vytvoří AST uzel pro příkaz if. 
+
+
+\begin{DoxyParams}{Parametry}
+{\em cond} & Podmínka. \\
+\hline
+{\em then\+\_\+b} & Větev then. \\
+\hline
+{\em else\+\_\+b} & Větev else (může být NULL). \\
+\hline
+{\em line} & Číslo řádku, na kterém příkaz začíná. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Návratová hodnota}
+Ukazatel na nově vytvořený uzel. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{ast_8h_a690f381c55dd6eb32a3adc32f1f17815}\label{ast_8h_a690f381c55dd6eb32a3adc32f1f17815}} 
+\index{ast.h@{ast.h}!create\_list@{create\_list}}
+\index{create\_list@{create\_list}!ast.h@{ast.h}}
+\doxysubsubsection{\texorpdfstring{create\_list()}{create\_list()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structAstNodeList}{Ast\+Node\+List}}$\ast$ create\+\_\+list (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Vytvoří prázdný seznam AST uzlů. 
+
+Seznam má počáteční kapacitu 8 položek a podle potřeby se dynamicky zvětšuje. \mbox{\Hypertarget{ast_8h_a63836e2b3c18400cbe2377306248613b}\label{ast_8h_a63836e2b3c18400cbe2377306248613b}} 
+\index{ast.h@{ast.h}!create\_literal@{create\_literal}}
+\index{create\_literal@{create\_literal}!ast.h@{ast.h}}
+\doxysubsubsection{\texorpdfstring{create\_literal()}{create\_literal()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structAstNode}{Ast\+Node}}$\ast$ create\+\_\+literal (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structToken}{Token}}}]{token }\end{DoxyParamCaption})}
+
+
+
+Vytvoří AST uzel pro literál. 
+
+Vytvoří AST uzel pro literál.
+
+
+\begin{DoxyParams}{Parametry}
+{\em token} & \mbox{\hyperlink{structToken}{Token}} reprezentující literál. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Návratová hodnota}
+Ukazatel na nově vytvořený uzel. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{ast_8h_a77530f5813f1fc5a07b65eda865e634e}\label{ast_8h_a77530f5813f1fc5a07b65eda865e634e}} 
+\index{ast.h@{ast.h}!create\_program@{create\_program}}
+\index{create\_program@{create\_program}!ast.h@{ast.h}}
+\doxysubsubsection{\texorpdfstring{create\_program()}{create\_program()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structAstNodeProgram}{Ast\+Node\+Program}}$\ast$ create\+\_\+program (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Vytvoří kořenový uzel programu. 
+
+Kořen obsahuje seznam definic funkcí.
+
+\begin{DoxyReturn}{Návratová hodnota}
+Ukazatel na nově vytvořený uzel programu. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{ast_8h_ae8e155acda1316babd2c527ff3e5bd87}\label{ast_8h_ae8e155acda1316babd2c527ff3e5bd87}} 
+\index{ast.h@{ast.h}!create\_return\_stmt@{create\_return\_stmt}}
+\index{create\_return\_stmt@{create\_return\_stmt}!ast.h@{ast.h}}
+\doxysubsubsection{\texorpdfstring{create\_return\_stmt()}{create\_return\_stmt()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structAstNode}{Ast\+Node}}$\ast$ create\+\_\+return\+\_\+stmt (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structAstNode}{Ast\+Node}} $\ast$}]{expr,  }\item[{int}]{line }\end{DoxyParamCaption})}
+
+
+
+Vytvoří AST uzel pro příkaz return. 
+
+
+\begin{DoxyParams}{Parametry}
+{\em expr} & Vrácený výraz (může být NULL). \\
+\hline
+{\em line} & Číslo řádku, na kterém příkaz začíná. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Návratová hodnota}
+Ukazatel na nově vytvořený uzel. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{ast_8h_a124bd7d75c5823b2e19705b318a491ed}\label{ast_8h_a124bd7d75c5823b2e19705b318a491ed}} 
+\index{ast.h@{ast.h}!create\_vardecl@{create\_vardecl}}
+\index{create\_vardecl@{create\_vardecl}!ast.h@{ast.h}}
+\doxysubsubsection{\texorpdfstring{create\_vardecl()}{create\_vardecl()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structAstNode}{Ast\+Node}}$\ast$ create\+\_\+vardecl (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structToken}{Token}}}]{var\+\_\+id }\end{DoxyParamCaption})}
+
+
+
+Vytvoří AST uzel pro deklaraci proměnné. 
+
+
+\begin{DoxyParams}{Parametry}
+{\em var\+\_\+id} & \mbox{\hyperlink{structToken}{Token}} s identifikátorem proměnné. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Návratová hodnota}
+Ukazatel na nově vytvořený uzel. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{ast_8h_a4fe2732ebefa75e899d6861d52494f8a}\label{ast_8h_a4fe2732ebefa75e899d6861d52494f8a}} 
+\index{ast.h@{ast.h}!create\_variable@{create\_variable}}
+\index{create\_variable@{create\_variable}!ast.h@{ast.h}}
+\doxysubsubsection{\texorpdfstring{create\_variable()}{create\_variable()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structAstNode}{Ast\+Node}}$\ast$ create\+\_\+variable (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structToken}{Token}}}]{token }\end{DoxyParamCaption})}
+
+
+
+Vytvoří AST uzel pro proměnnou. 
+
+
+\begin{DoxyParams}{Parametry}
+{\em token} & \mbox{\hyperlink{structToken}{Token}} s identifikátorem proměnné. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Návratová hodnota}
+Ukazatel na nově vytvořený uzel. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{ast_8h_a5d1572fae977c7e5d82a593e1d7a83ba}\label{ast_8h_a5d1572fae977c7e5d82a593e1d7a83ba}} 
+\index{ast.h@{ast.h}!create\_while\_stmt@{create\_while\_stmt}}
+\index{create\_while\_stmt@{create\_while\_stmt}!ast.h@{ast.h}}
+\doxysubsubsection{\texorpdfstring{create\_while\_stmt()}{create\_while\_stmt()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structAstNode}{Ast\+Node}}$\ast$ create\+\_\+while\+\_\+stmt (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structAstNode}{Ast\+Node}} $\ast$}]{cond,  }\item[{\mbox{\hyperlink{structAstNodeBlock}{Ast\+Node\+Block}} $\ast$}]{body,  }\item[{int}]{line }\end{DoxyParamCaption})}
+
+
+
+Vytvoří AST uzel pro příkaz while. 
+
+
+\begin{DoxyParams}{Parametry}
+{\em cond} & Podmínka cyklu. \\
+\hline
+{\em body} & Tělo cyklu. \\
+\hline
+{\em line} & Číslo řádku, na kterém příkaz začíná. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Návratová hodnota}
+Ukazatel na nově vytvořený uzel. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{ast_8h_a110b20dfcc7ff03e58989487828a5651}\label{ast_8h_a110b20dfcc7ff03e58989487828a5651}} 
+\index{ast.h@{ast.h}!free\_ast\_node@{free\_ast\_node}}
+\index{free\_ast\_node@{free\_ast\_node}!ast.h@{ast.h}}
+\doxysubsubsection{\texorpdfstring{free\_ast\_node()}{free\_ast\_node()}}
+{\footnotesize\ttfamily void free\+\_\+ast\+\_\+node (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structAstNode}{Ast\+Node}} $\ast$}]{node }\end{DoxyParamCaption})}
+
+
+
+Rekurzivně uvolní uzel AST a všechny jeho potomky. 
+
+Funkce korektně uvolní i vnořené struktury (bloky, seznamy, výrazy, definice funkcí atd.) a všechny dynamicky alokované lexémy.
+
+
+\begin{DoxyParams}{Parametry}
+{\em node} & Kořen uvolňovaného podstromu (může být NULL). \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{ast_8h_a4b452c0a2c126ccb091d2283cbcf4f52}\label{ast_8h_a4b452c0a2c126ccb091d2283cbcf4f52}} 
+\index{ast.h@{ast.h}!free\_token\_lexeme@{free\_token\_lexeme}}
+\index{free\_token\_lexeme@{free\_token\_lexeme}!ast.h@{ast.h}}
+\doxysubsubsection{\texorpdfstring{free\_token\_lexeme()}{free\_token\_lexeme()}}
+{\footnotesize\ttfamily void free\+\_\+token\+\_\+lexeme (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structToken}{Token}} $\ast$}]{t }\end{DoxyParamCaption})}
+
+
+
+Uvolní dynamicky alokované části tokenu (lexeme, string\+\_\+val). 
+
+
+\begin{DoxyParams}{Parametry}
+{\em t} & Ukazatel na token, jehož interní data se mají uvolnit. \\
+\hline
+\end{DoxyParams}

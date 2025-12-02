@@ -1,0 +1,56 @@
+digraph "create_list"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="RL";
+  Node1 [label="create_list",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="Vytvoří prázdný seznam AST uzlů."];
+  Node1 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="create_block",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$ast_8c.html#a577dbe2ca4e580fd88d8fc8263909dfb",tooltip="Vytvoří AST uzel pro blok příkazů."];
+  Node2 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="parse_block",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$parser_8c.html#a7c543052073b482cb179f83f5a96c543",tooltip="Parsuje blok příkazů uzavřený v { a } a vrací AST bloku."];
+  Node3 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="parse_funcdef",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$parser_8c.html#a54869742173499a71d7bf90f5c5778fe",tooltip=" "];
+  Node4 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="parse_func_list",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$parser_8c.html#af7cb72a6bb442c9582b1c25f7e2c4768",tooltip=" "];
+  Node5 -> Node6 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node6 [label="parse_class",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$parser_8c.html#ab6ab35f9638b1fb5015409c44841e01d",tooltip=" "];
+  Node6 -> Node7 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node7 [label="ifj_parse_program",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$parser_8c.html#a47857415cd7349403de3bf884239f849",tooltip="Vstupní bod parseru."];
+  Node7 -> Node8 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node8 [label="main",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$main_8c.html#ae66f6b31b5ad750f1fe042a706a4e3d4",tooltip=" "];
+  Node3 -> Node9 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node9 [label="parse_if_stmt",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$parser_8c.html#a7e1e4f63098a12f6a46c0ea4d103a254",tooltip=" "];
+  Node9 -> Node10 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node10 [label="parse_stmt",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$parser_8c.html#aceb0bce138366bba5ec16e1a39989f16",tooltip="Parsuje jeden příkaz (deklarace, přiřazení, if, while, return, blok)."];
+  Node10 -> Node11 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node11 [label="parse_stmt_list",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$parser_8c.html#aa0488ee5c5a2efaded0f765db9ec664f",tooltip="Parsuje sekvenci příkazů uvnitř bloku, dokud nenarazí na } nebo EOF."];
+  Node11 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 -> Node10 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 -> Node12 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node12 [label="parse_while_stmt",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$parser_8c.html#aff29c9210aab6ac43fdfca53dedbf7a5",tooltip=" "];
+  Node12 -> Node10 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node1 -> Node13 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node13 [label="create_program",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$ast_8c.html#a77530f5813f1fc5a07b65eda865e634e",tooltip="Vytvoří kořenový uzel programu."];
+  Node13 -> Node6 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node1 -> Node14 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node14 [label="parse_call_args_terms",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$parser_8c.html#a8c21fc82cf4ba5624982b738b2d24a79",tooltip="Parsuje seznam argumentů funkce v závorkách ( ... )."];
+  Node14 -> Node15 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node15 [label="parse_primary",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$parser_8c.html#a92121bd15fe952a20725678856f3cd94",tooltip="Parsuje primární výraz (literál, identifikátor, volání funkce, závorky)."];
+  Node15 -> Node16 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node16 [label="parse_expr_bp",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$parser_8c.html#a04753c5bd3b254d73743d0520679d0c3",tooltip="Precedenční parser výrazů (binding power)."];
+  Node16 -> Node17 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node17 [label="parse_expr",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$parser_8c.html#ae1517b135ed7bc40adeb2a03b31b6f50",tooltip="Parsuje výraz s nejnižší prioritou (vstupní bod precedenčního parseru)."];
+  Node17 -> Node18 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node18 [label="parse_assign_or_call_stmt",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$parser_8c.html#a6df78efab08ed55087fe5cb023d49841",tooltip=" "];
+  Node18 -> Node10 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node17 -> Node14 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node17 -> Node9 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node17 -> Node15 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node17 -> Node19 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node19 [label="parse_return_stmt",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$parser_8c.html#ae38f9106499af7efceab957ad9a85abf",tooltip=" "];
+  Node19 -> Node10 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node17 -> Node12 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node14 -> Node10 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node1 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+}

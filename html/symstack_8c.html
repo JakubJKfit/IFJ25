@@ -1,0 +1,258 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>IFJ25: Dokumentace souboru symstack.c</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">IFJ25
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generováno programem Doxygen 1.9.1 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+var searchBox = new SearchBox("searchBox", "search",false,'Hledat','.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(function() {
+  initMenu('',true,false,'search.php','Hledat');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+</div><!-- top -->
+<div class="header">
+  <div class="headertitle">
+<div class="title">Dokumentace souboru symstack.c</div>  </div>
+</div><!--header-->
+<div class="contents">
+
+<p>Zásobník tabulek určený k vytvoření nové tabulky symbolů pro vnořené bloky.  
+<a href="#details">...</a></p>
+<div class="textblock"><code>#include &quot;<a class="el" href="symtable_8h_source.html">symtable.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="symstack_8h_source.html">symstack.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="err_8h_source.html">err.h</a>&quot;</code><br />
+<code>#include &lt;stdlib.h&gt;</code><br />
+<code>#include &lt;stdio.h&gt;</code><br />
+<code>#include &lt;string.h&gt;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Graf závislostí na vkládaných souborech pro symstack.c:</div>
+<div class="dyncontent">
+<div class="center"><img src="symstack_8c__incl.png" border="0" usemap="#asymstack_8c" alt=""/></div>
+</div>
+</div><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Funkce</h2></td></tr>
+<tr><td colspan="2"><div class="groupHeader">IFJ25</div></td></tr>
+<tr class="memitem:a8a2b484eb47e41daa8ab3b7d0b154756"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="symstack_8c.html#a8a2b484eb47e41daa8ab3b7d0b154756">stack_init</a> (<a class="el" href="structsymstack.html">symstack</a> *stack)</td></tr>
+<tr class="memdesc:a8a2b484eb47e41daa8ab3b7d0b154756"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inicializace zásobníku.  <a href="symstack_8c.html#a8a2b484eb47e41daa8ab3b7d0b154756">...</a><br /></td></tr>
+<tr class="separator:a8a2b484eb47e41daa8ab3b7d0b154756"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adcd53e91ea0d9ba940d248469cb89cf8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="symstack_8c.html#adcd53e91ea0d9ba940d248469cb89cf8">stack_push</a> (<a class="el" href="structsymstack.html">symstack</a> *stack, char *identifier)</td></tr>
+<tr class="memdesc:adcd53e91ea0d9ba940d248469cb89cf8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Vložení nového uzlu do zásobníku.  <a href="symstack_8c.html#adcd53e91ea0d9ba940d248469cb89cf8">...</a><br /></td></tr>
+<tr class="separator:adcd53e91ea0d9ba940d248469cb89cf8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7cfc2e5e448eaf87baa89db69bd6f22b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="symstack_8c.html#a7cfc2e5e448eaf87baa89db69bd6f22b">stack_pop</a> (<a class="el" href="structsymstack.html">symstack</a> *stack)</td></tr>
+<tr class="memdesc:a7cfc2e5e448eaf87baa89db69bd6f22b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Odstranění vrcholu zásobníku a určení nového vrcholu.  <a href="symstack_8c.html#a7cfc2e5e448eaf87baa89db69bd6f22b">...</a><br /></td></tr>
+<tr class="separator:a7cfc2e5e448eaf87baa89db69bd6f22b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a37719224e10824d2f1e5a2eccf83d407"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtree__node.html">tree_node</a> **&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="symstack_8c.html#a37719224e10824d2f1e5a2eccf83d407">stack_top</a> (<a class="el" href="structsymstack.html">symstack</a> *stack)</td></tr>
+<tr class="memdesc:a37719224e10824d2f1e5a2eccf83d407"><td class="mdescLeft">&#160;</td><td class="mdescRight">Vracení ukazatele na kořen tabulky vrcholu zásobníku.  <a href="symstack_8c.html#a37719224e10824d2f1e5a2eccf83d407">...</a><br /></td></tr>
+<tr class="separator:a37719224e10824d2f1e5a2eccf83d407"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a35898ddbd48ed6bb7249620e39d4d0c7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="symstack_8c.html#a35898ddbd48ed6bb7249620e39d4d0c7">stack_dispose</a> (<a class="el" href="structsymstack.html">symstack</a> *stack)</td></tr>
+<tr class="memdesc:a35898ddbd48ed6bb7249620e39d4d0c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Smazání zásobníku.  <a href="symstack_8c.html#a35898ddbd48ed6bb7249620e39d4d0c7">...</a><br /></td></tr>
+<tr class="separator:a35898ddbd48ed6bb7249620e39d4d0c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailní popis</h2>
+<div class="textblock"><p>Zásobník tabulek určený k vytvoření nové tabulky symbolů pro vnořené bloky. </p>
+<dl class="section author"><dt>Autor</dt><dd>Jakub Jan Kupčík xkupcij00 </dd></dl>
+</div><h2 class="groupheader">Dokumentace funkcí</h2>
+<a id="a35898ddbd48ed6bb7249620e39d4d0c7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a35898ddbd48ed6bb7249620e39d4d0c7">&#9670;&nbsp;</a></span>stack_dispose()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void stack_dispose </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structsymstack.html">symstack</a> *&#160;</td>
+          <td class="paramname"><em>stack</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Smazání zásobníku. </p>
+<dl class="params"><dt>Parametry</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">stack</td><td>ukazatel na zásobník </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Návratová hodnota</dt><dd>void </dd></dl>
+
+</div>
+</div>
+<a id="a8a2b484eb47e41daa8ab3b7d0b154756"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8a2b484eb47e41daa8ab3b7d0b154756">&#9670;&nbsp;</a></span>stack_init()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void stack_init </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structsymstack.html">symstack</a> *&#160;</td>
+          <td class="paramname"><em>stack</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Inicializace zásobníku. </p>
+<dl class="params"><dt>Parametry</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">stack</td><td>ukazatel na zásobník </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Návratová hodnota</dt><dd>void </dd></dl>
+
+</div>
+</div>
+<a id="a7cfc2e5e448eaf87baa89db69bd6f22b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7cfc2e5e448eaf87baa89db69bd6f22b">&#9670;&nbsp;</a></span>stack_pop()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void stack_pop </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structsymstack.html">symstack</a> *&#160;</td>
+          <td class="paramname"><em>stack</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Odstranění vrcholu zásobníku a určení nového vrcholu. </p>
+<dl class="params"><dt>Parametry</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">stack</td><td>ukazatel na stack </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Návratová hodnota</dt><dd>void </dd></dl>
+
+</div>
+</div>
+<a id="adcd53e91ea0d9ba940d248469cb89cf8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adcd53e91ea0d9ba940d248469cb89cf8">&#9670;&nbsp;</a></span>stack_push()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void stack_push </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structsymstack.html">symstack</a> *&#160;</td>
+          <td class="paramname"><em>stack</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>identifier</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Vložení nového uzlu do zásobníku. </p>
+<dl class="params"><dt>Parametry</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">stack</td><td>ukazatel na zásobník </td></tr>
+    <tr><td class="paramname">identifier</td><td>identifikátor </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Návratová hodnota</dt><dd>void </dd></dl>
+
+</div>
+</div>
+<a id="a37719224e10824d2f1e5a2eccf83d407"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a37719224e10824d2f1e5a2eccf83d407">&#9670;&nbsp;</a></span>stack_top()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structtree__node.html">tree_node</a>** stack_top </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structsymstack.html">symstack</a> *&#160;</td>
+          <td class="paramname"><em>stack</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Vracení ukazatele na kořen tabulky vrcholu zásobníku. </p>
+<dl class="params"><dt>Parametry</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">stack</td><td>ukazatel na zásobník </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Návratová hodnota</dt><dd><a class="el" href="structtree__node.html" title="Uzel stromu.">tree_node</a> adresa ukazatele na kořen tabulky vrcholu zásobníku </dd></dl>
+
+</div>
+</div>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Generováno programem&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+</small></address>
+</body>
+</html>

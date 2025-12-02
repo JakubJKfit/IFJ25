@@ -1,7 +1,7 @@
 /**
  * @name IFJ25
  * 
- * @headerfile symtable.h
+ * @file symtable.h
  * @author Jakub Jan Kupčík xkupcij00
  * @brief Hlavičkový soubor pro tabulku symbolů
  */
@@ -36,7 +36,7 @@ typedef struct{
     symbol_data_type data_type;
     char *identifier;
     int arity;
-    int offset; // Uroven vnorenosti
+    int offset; // posun pro codegen
 } symbol_data;
 
 

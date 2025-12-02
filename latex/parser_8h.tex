@@ -1,0 +1,56 @@
+\hypertarget{parser_8h}{}\doxysection{Dokumentace souboru parser.\+h}
+\label{parser_8h}\index{parser.h@{parser.h}}
+
+
+Hlavičkový soubor pro syntaktický analyzátor (parser)  
+
+
+{\ttfamily \#include $<$stdbool.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}ast.\+h\char`\"{}}\newline
+Graf závislostí na vkládaných souborech pro parser.\+h\+:
+% FIG 0
+Následující graf ukazuje, které soubory přímo nebo nepřímo vkládají tento soubor\+:
+% FIG 1
+\doxysubsection*{IFJ25}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{parser_8h_a95ce32388985fb20f75838d3b9513d72}\label{parser_8h_a95ce32388985fb20f75838d3b9513d72}} 
+int \mbox{\hyperlink{parser_8h_a95ce32388985fb20f75838d3b9513d72}{ifj\+\_\+error\+\_\+code}}
+\begin{DoxyCompactList}\small\item\em Globální kód chyby nastavovaný funkcí \mbox{\hyperlink{err_8c_a6bf768b8fa20fc3b2c4dd990a66633ff}{ifjexit()}}. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structAstNode}{Ast\+Node}} $\ast$ \mbox{\hyperlink{parser_8h_a47857415cd7349403de3bf884239f849}{ifj\+\_\+parse\+\_\+program}} (void)
+\begin{DoxyCompactList}\small\item\em Vstupní bod parseru pro jazyk IFJ25. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailní popis}
+Hlavičkový soubor pro syntaktický analyzátor (parser) 
+
+\begin{DoxyAuthor}{Autor}
+Jakub Jan Kupčík xkupcij00 
+
+Jan Kostečka xkostej00 
+\end{DoxyAuthor}
+
+
+\doxysubsection{Dokumentace funkcí}
+\mbox{\Hypertarget{parser_8h_a47857415cd7349403de3bf884239f849}\label{parser_8h_a47857415cd7349403de3bf884239f849}} 
+\index{parser.h@{parser.h}!ifj\_parse\_program@{ifj\_parse\_program}}
+\index{ifj\_parse\_program@{ifj\_parse\_program}!parser.h@{parser.h}}
+\doxysubsubsection{\texorpdfstring{ifj\_parse\_program()}{ifj\_parse\_program()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structAstNode}{Ast\+Node}}$\ast$ ifj\+\_\+parse\+\_\+program (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Vstupní bod parseru pro jazyk IFJ25. 
+
+Načte vstupní program, provede syntaktickou a sémantickou analýzu a vytvoří strom AST. Při chybě volá \mbox{\hyperlink{err_8c_a6bf768b8fa20fc3b2c4dd990a66633ff}{ifjexit()}} a ukončí program.
+
+\begin{DoxyReturn}{Návratová hodnota}
+Ukazatel na kořenový uzel AST (AST\+\_\+\+PROGRAM).
+\end{DoxyReturn}
+Vstupní bod parseru pro jazyk IFJ25.
+
+Načte celý vstup pomocí lexikálního analyzátoru, provede syntaktickou analýzu, vytvoří AST a nad ním dvouprůchodovou sémantickou analýzu. Při chybě volá \mbox{\hyperlink{err_8c_a6bf768b8fa20fc3b2c4dd990a66633ff}{ifjexit()}} s odpovídajícím kódem chyby.
+
+\begin{DoxyReturn}{Návratová hodnota}
+Ukazatel na kořenový uzel AST (AST\+\_\+\+PROGRAM). V případě chyby funkce nevrací a ukončí běh programu. 
+\end{DoxyReturn}

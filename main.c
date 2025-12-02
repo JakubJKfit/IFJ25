@@ -1,4 +1,13 @@
-// main.c
+/**
+ * @name IFJ25
+ * 
+ * @file main.c
+ * @author Jan Kostečka xkostej00
+ * @author Jakub Jan Kupčík xkupcij00
+ * @author Jáchym Turek xturekj01
+ * @author Petr Molík xmolikp00
+ * @brief Hlavičkový soubor pro tabulku symbolů
+ */
 #include <stdio.h>
 #include <string.h>     
 #include "parser.h"

@@ -1,0 +1,151 @@
+\hypertarget{parser_8c}{}\doxysection{Dokumentace souboru parser.\+c}
+\label{parser_8c}\index{parser.c@{parser.c}}
+
+
+Syntaktická analýza (rekurzivní sestup + precedenční pro výrazy) a generování AST pro jazyk IFJ25.  
+
+
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$string.\+h$>$}\newline
+{\ttfamily \#include $<$stdbool.\+h$>$}\newline
+{\ttfamily \#include $<$assert.\+h$>$}\newline
+{\ttfamily \#include $<$stdarg.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}lex\+\_\+scanner.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}err.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}parser.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}ast.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}symtable.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}symstack.\+h\char`\"{}}\newline
+Graf závislostí na vkládaných souborech pro parser.\+c\+:
+% FIG 0
+\doxysubsection*{IFJ25}
+\begin{DoxyCompactItemize}
+\item 
+\#define {\bfseries TRACEF}(...)
+\item 
+\mbox{\Hypertarget{parser_8c_a6755944f7c0804477997c3fde0fdd9d5}\label{parser_8c_a6755944f7c0804477997c3fde0fdd9d5}} 
+enum {\bfseries EOL\+\_\+\+POLICY} \{ {\bfseries EOL\+\_\+\+ZERO\+\_\+\+OR\+\_\+\+MORE}
+, {\bfseries EOL\+\_\+\+ONE\+\_\+\+EXACT}
+ \}
+\item 
+\mbox{\Hypertarget{parser_8c_a76ed1bb163f76ef35c3f1df2a6614728}\label{parser_8c_a76ed1bb163f76ef35c3f1df2a6614728}} 
+enum {\bfseries Ifj\+Prec} \{ \newline
+{\bfseries PREC\+\_\+\+LOWEST} = 0
+, {\bfseries PREC\+\_\+\+EQ\+\_\+\+OP}
+, {\bfseries PREC\+\_\+\+IS\+\_\+\+OP}
+, {\bfseries PREC\+\_\+\+REL\+\_\+\+OP}
+, \newline
+{\bfseries PREC\+\_\+\+ADD\+\_\+\+OP}
+, {\bfseries PREC\+\_\+\+MUL\+\_\+\+OP}
+ \}
+\item 
+\mbox{\Hypertarget{parser_8c_a1c55b497d3102a98c4714c7d7f58d4ba}\label{parser_8c_a1c55b497d3102a98c4714c7d7f58d4ba}} 
+\mbox{\hyperlink{structsymstack}{symstack}} \mbox{\hyperlink{parser_8c_a1c55b497d3102a98c4714c7d7f58d4ba}{global\+\_\+symstack}}
+\begin{DoxyCompactList}\small\item\em Zásobník tabulek symbolů používaný při sémantické analýze. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structToken}{Token}} \mbox{\hyperlink{parser_8c_a88e8586763769c02663c4582266e5445}{ifj\+\_\+get\+\_\+token}} (void)
+\begin{DoxyCompactList}\small\item\em Vrátí další token z lexikálního analyzátoru. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{parser_8c_ac43b229633df3c7d2628df221ff19af9}{search\+\_\+scopes}} (\mbox{\hyperlink{structsymstack}{symstack}} $\ast$stack, char $\ast$identifier, \mbox{\hyperlink{structsymbol__data}{symbol\+\_\+data}} $\ast$$\ast$found)
+\begin{DoxyCompactList}\small\item\em Vyhledá symbol ve všech tabulkách symbolů na zásobníku. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{symtable_8h_aa050af49744c720a049776c79a906766}{symbol\+\_\+data\+\_\+type}} \mbox{\hyperlink{parser_8c_a258d319c31401a0a5b932b0ef67333aa}{get\+\_\+type}} (\mbox{\hyperlink{structAstNode}{Ast\+Node}} $\ast$node)
+\begin{DoxyCompactList}\small\item\em Vrátí datový typ výrazu podle anotací v AST. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structAstNode}{Ast\+Node}} $\ast$ \mbox{\hyperlink{parser_8c_a47857415cd7349403de3bf884239f849}{ifj\+\_\+parse\+\_\+program}} (void)
+\begin{DoxyCompactList}\small\item\em Vstupní bod parseru. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailní popis}
+Syntaktická analýza (rekurzivní sestup + precedenční pro výrazy) a generování AST pro jazyk IFJ25. 
+
+\begin{DoxyAuthor}{Autor}
+Jakub Jan Kupčík xkupcij00 
+
+Jan Kostečka xkostej00 
+\end{DoxyAuthor}
+
+
+\doxysubsection{Dokumentace k definicím maker}
+\mbox{\Hypertarget{parser_8c_a6020217e48d0570513daac54816dcc17}\label{parser_8c_a6020217e48d0570513daac54816dcc17}} 
+\index{parser.c@{parser.c}!TRACEF@{TRACEF}}
+\index{TRACEF@{TRACEF}!parser.c@{parser.c}}
+\doxysubsubsection{\texorpdfstring{TRACEF}{TRACEF}}
+{\footnotesize\ttfamily \#define TRACEF(\begin{DoxyParamCaption}\item[{}]{... }\end{DoxyParamCaption})}
+
+{\bfseries Hodnota\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{    \textcolor{keywordflow}{do}              \(\backslash\)}
+\DoxyCodeLine{    \{               \(\backslash\)}
+\DoxyCodeLine{    \} \textcolor{keywordflow}{while} (0)}
+
+\end{DoxyCode}
+
+
+\doxysubsection{Dokumentace funkcí}
+\mbox{\Hypertarget{parser_8c_a258d319c31401a0a5b932b0ef67333aa}\label{parser_8c_a258d319c31401a0a5b932b0ef67333aa}} 
+\index{parser.c@{parser.c}!get\_type@{get\_type}}
+\index{get\_type@{get\_type}!parser.c@{parser.c}}
+\doxysubsubsection{\texorpdfstring{get\_type()}{get\_type()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{symtable_8h_aa050af49744c720a049776c79a906766}{symbol\+\_\+data\+\_\+type}} get\+\_\+type (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structAstNode}{Ast\+Node}} $\ast$}]{node }\end{DoxyParamCaption})}
+
+
+
+Vrátí datový typ výrazu podle anotací v AST. 
+
+
+\begin{DoxyParams}{Parametry}
+{\em node} & Uzel AST představující výraz. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Návratová hodnota}
+Datový typ výrazu, nebo Undefined, pokud není možné typ určit. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{parser_8c_a88e8586763769c02663c4582266e5445}\label{parser_8c_a88e8586763769c02663c4582266e5445}} 
+\index{parser.c@{parser.c}!ifj\_get\_token@{ifj\_get\_token}}
+\index{ifj\_get\_token@{ifj\_get\_token}!parser.c@{parser.c}}
+\doxysubsubsection{\texorpdfstring{ifj\_get\_token()}{ifj\_get\_token()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structToken}{Token}} ifj\+\_\+get\+\_\+token (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Vrátí další token z lexikálního analyzátoru. 
+
+Vrátí další token ze vstupu. \mbox{\Hypertarget{parser_8c_a47857415cd7349403de3bf884239f849}\label{parser_8c_a47857415cd7349403de3bf884239f849}} 
+\index{parser.c@{parser.c}!ifj\_parse\_program@{ifj\_parse\_program}}
+\index{ifj\_parse\_program@{ifj\_parse\_program}!parser.c@{parser.c}}
+\doxysubsubsection{\texorpdfstring{ifj\_parse\_program()}{ifj\_parse\_program()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structAstNode}{Ast\+Node}}$\ast$ ifj\+\_\+parse\+\_\+program (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Vstupní bod parseru. 
+
+Vstupní bod parseru pro jazyk IFJ25.
+
+Načte celý vstup pomocí lexikálního analyzátoru, provede syntaktickou analýzu, vytvoří AST a nad ním dvouprůchodovou sémantickou analýzu. Při chybě volá \mbox{\hyperlink{err_8c_a6bf768b8fa20fc3b2c4dd990a66633ff}{ifjexit()}} s odpovídajícím kódem chyby.
+
+\begin{DoxyReturn}{Návratová hodnota}
+Ukazatel na kořenový uzel AST (AST\+\_\+\+PROGRAM). V případě chyby funkce nevrací a ukončí běh programu. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{parser_8c_ac43b229633df3c7d2628df221ff19af9}\label{parser_8c_ac43b229633df3c7d2628df221ff19af9}} 
+\index{parser.c@{parser.c}!search\_scopes@{search\_scopes}}
+\index{search\_scopes@{search\_scopes}!parser.c@{parser.c}}
+\doxysubsubsection{\texorpdfstring{search\_scopes()}{search\_scopes()}}
+{\footnotesize\ttfamily bool search\+\_\+scopes (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structsymstack}{symstack}} $\ast$}]{stack,  }\item[{char $\ast$}]{identifier,  }\item[{\mbox{\hyperlink{structsymbol__data}{symbol\+\_\+data}} $\ast$$\ast$}]{found }\end{DoxyParamCaption})}
+
+
+
+Vyhledá symbol ve všech tabulkách symbolů na zásobníku. 
+
+Prohledává tabulky od vrcholu zásobníku (nejvnitřnější scope) směrem ven.
+
+
+\begin{DoxyParams}{Parametry}
+{\em stack} & Zásobník tabulek symbolů. \\
+\hline
+{\em identifier} & Hledaný identifikátor. \\
+\hline
+{\em found} & Výstupní ukazatel na nalezený záznam (pokud je nalezen).\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Návratová hodnota}
+true, pokud byl symbol nalezen, jinak false. 
+\end{DoxyReturn}

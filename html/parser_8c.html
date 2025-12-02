@@ -1,0 +1,275 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>IFJ25: Dokumentace souboru parser.c</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">IFJ25
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generováno programem Doxygen 1.9.1 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+var searchBox = new SearchBox("searchBox", "search",false,'Hledat','.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(function() {
+  initMenu('',true,false,'search.php','Hledat');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+</div><!-- top -->
+<div class="header">
+  <div class="headertitle">
+<div class="title">Dokumentace souboru parser.c</div>  </div>
+</div><!--header-->
+<div class="contents">
+
+<p>Syntaktická analýza (rekurzivní sestup + precedenční pro výrazy) a generování AST pro jazyk IFJ25.  
+<a href="#details">...</a></p>
+<div class="textblock"><code>#include &lt;stdio.h&gt;</code><br />
+<code>#include &lt;stdlib.h&gt;</code><br />
+<code>#include &lt;string.h&gt;</code><br />
+<code>#include &lt;stdbool.h&gt;</code><br />
+<code>#include &lt;assert.h&gt;</code><br />
+<code>#include &lt;stdarg.h&gt;</code><br />
+<code>#include &quot;<a class="el" href="lex__scanner_8h_source.html">lex_scanner.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="err_8h_source.html">err.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="parser_8h_source.html">parser.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="ast_8h_source.html">ast.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="symtable_8h_source.html">symtable.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="symstack_8h_source.html">symstack.h</a>&quot;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Graf závislostí na vkládaných souborech pro parser.c:</div>
+<div class="dyncontent">
+<div class="center"><img src="parser_8c__incl.png" border="0" usemap="#aparser_8c" alt=""/></div>
+</div>
+</div><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader">IFJ25</h2></td></tr>
+<tr class="memitem:a6020217e48d0570513daac54816dcc17"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><b>TRACEF</b>(...)</td></tr>
+<tr class="separator:a6020217e48d0570513daac54816dcc17"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6755944f7c0804477997c3fde0fdd9d5"><td class="memItemLeft" align="right" valign="top"><a id="a6755944f7c0804477997c3fde0fdd9d5"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><b>EOL_POLICY</b> { <b>EOL_ZERO_OR_MORE</b>
+, <b>EOL_ONE_EXACT</b>
+ }</td></tr>
+<tr class="separator:a6755944f7c0804477997c3fde0fdd9d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a76ed1bb163f76ef35c3f1df2a6614728"><td class="memItemLeft" align="right" valign="top"><a id="a76ed1bb163f76ef35c3f1df2a6614728"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><b>IfjPrec</b> { <br />
+&#160;&#160;<b>PREC_LOWEST</b> = 0
+, <b>PREC_EQ_OP</b>
+, <b>PREC_IS_OP</b>
+, <b>PREC_REL_OP</b>
+, <br />
+&#160;&#160;<b>PREC_ADD_OP</b>
+, <b>PREC_MUL_OP</b>
+<br />
+ }</td></tr>
+<tr class="separator:a76ed1bb163f76ef35c3f1df2a6614728"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1c55b497d3102a98c4714c7d7f58d4ba"><td class="memItemLeft" align="right" valign="top"><a id="a1c55b497d3102a98c4714c7d7f58d4ba"></a>
+<a class="el" href="structsymstack.html">symstack</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parser_8c.html#a1c55b497d3102a98c4714c7d7f58d4ba">global_symstack</a></td></tr>
+<tr class="memdesc:a1c55b497d3102a98c4714c7d7f58d4ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Zásobník tabulek symbolů používaný při sémantické analýze. <br /></td></tr>
+<tr class="separator:a1c55b497d3102a98c4714c7d7f58d4ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a88e8586763769c02663c4582266e5445"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structToken.html">Token</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parser_8c.html#a88e8586763769c02663c4582266e5445">ifj_get_token</a> (void)</td></tr>
+<tr class="memdesc:a88e8586763769c02663c4582266e5445"><td class="mdescLeft">&#160;</td><td class="mdescRight">Vrátí další token z lexikálního analyzátoru.  <a href="parser_8c.html#a88e8586763769c02663c4582266e5445">...</a><br /></td></tr>
+<tr class="separator:a88e8586763769c02663c4582266e5445"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac43b229633df3c7d2628df221ff19af9"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parser_8c.html#ac43b229633df3c7d2628df221ff19af9">search_scopes</a> (<a class="el" href="structsymstack.html">symstack</a> *stack, char *identifier, <a class="el" href="structsymbol__data.html">symbol_data</a> **found)</td></tr>
+<tr class="memdesc:ac43b229633df3c7d2628df221ff19af9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Vyhledá symbol ve všech tabulkách symbolů na zásobníku.  <a href="parser_8c.html#ac43b229633df3c7d2628df221ff19af9">...</a><br /></td></tr>
+<tr class="separator:ac43b229633df3c7d2628df221ff19af9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a258d319c31401a0a5b932b0ef67333aa"><td class="memItemLeft" align="right" valign="top"><a class="el" href="symtable_8h.html#aa050af49744c720a049776c79a906766">symbol_data_type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parser_8c.html#a258d319c31401a0a5b932b0ef67333aa">get_type</a> (<a class="el" href="structAstNode.html">AstNode</a> *node)</td></tr>
+<tr class="memdesc:a258d319c31401a0a5b932b0ef67333aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Vrátí datový typ výrazu podle anotací v AST.  <a href="parser_8c.html#a258d319c31401a0a5b932b0ef67333aa">...</a><br /></td></tr>
+<tr class="separator:a258d319c31401a0a5b932b0ef67333aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a47857415cd7349403de3bf884239f849"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structAstNode.html">AstNode</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parser_8c.html#a47857415cd7349403de3bf884239f849">ifj_parse_program</a> (void)</td></tr>
+<tr class="memdesc:a47857415cd7349403de3bf884239f849"><td class="mdescLeft">&#160;</td><td class="mdescRight">Vstupní bod parseru.  <a href="parser_8c.html#a47857415cd7349403de3bf884239f849">...</a><br /></td></tr>
+<tr class="separator:a47857415cd7349403de3bf884239f849"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailní popis</h2>
+<div class="textblock"><p>Syntaktická analýza (rekurzivní sestup + precedenční pro výrazy) a generování AST pro jazyk IFJ25. </p>
+<dl class="section author"><dt>Autor</dt><dd>Jakub Jan Kupčík xkupcij00 </dd>
+<dd>
+Jan Kostečka xkostej00 </dd></dl>
+</div><h2 class="groupheader">Dokumentace k definicím maker</h2>
+<a id="a6020217e48d0570513daac54816dcc17"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6020217e48d0570513daac54816dcc17">&#9670;&nbsp;</a></span>TRACEF</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define TRACEF</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>...</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Hodnota:</b><div class="fragment"><div class="line">    <span class="keywordflow">do</span>              \</div>
+<div class="line">    {               \</div>
+<div class="line">    } <span class="keywordflow">while</span> (0)</div>
+</div><!-- fragment -->
+</div>
+</div>
+<h2 class="groupheader">Dokumentace funkcí</h2>
+<a id="a258d319c31401a0a5b932b0ef67333aa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a258d319c31401a0a5b932b0ef67333aa">&#9670;&nbsp;</a></span>get_type()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="symtable_8h.html#aa050af49744c720a049776c79a906766">symbol_data_type</a> get_type </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structAstNode.html">AstNode</a> *&#160;</td>
+          <td class="paramname"><em>node</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Vrátí datový typ výrazu podle anotací v AST. </p>
+<dl class="params"><dt>Parametry</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">node</td><td>Uzel AST představující výraz. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Návratová hodnota</dt><dd>Datový typ výrazu, nebo Undefined, pokud není možné typ určit. </dd></dl>
+
+</div>
+</div>
+<a id="a88e8586763769c02663c4582266e5445"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a88e8586763769c02663c4582266e5445">&#9670;&nbsp;</a></span>ifj_get_token()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structToken.html">Token</a> ifj_get_token </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Vrátí další token z lexikálního analyzátoru. </p>
+<p>Vrátí další token ze vstupu. </p>
+
+</div>
+</div>
+<a id="a47857415cd7349403de3bf884239f849"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a47857415cd7349403de3bf884239f849">&#9670;&nbsp;</a></span>ifj_parse_program()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structAstNode.html">AstNode</a>* ifj_parse_program </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Vstupní bod parseru. </p>
+<p>Vstupní bod parseru pro jazyk IFJ25.</p>
+<p>Načte celý vstup pomocí lexikálního analyzátoru, provede syntaktickou analýzu, vytvoří AST a nad ním dvouprůchodovou sémantickou analýzu. Při chybě volá <a class="el" href="err_8c.html#a6bf768b8fa20fc3b2c4dd990a66633ff" title="Funkce vypne program.">ifjexit()</a> s odpovídajícím kódem chyby.</p>
+<dl class="section return"><dt>Návratová hodnota</dt><dd>Ukazatel na kořenový uzel AST (AST_PROGRAM). V případě chyby funkce nevrací a ukončí běh programu. </dd></dl>
+
+</div>
+</div>
+<a id="ac43b229633df3c7d2628df221ff19af9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac43b229633df3c7d2628df221ff19af9">&#9670;&nbsp;</a></span>search_scopes()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool search_scopes </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structsymstack.html">symstack</a> *&#160;</td>
+          <td class="paramname"><em>stack</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>identifier</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structsymbol__data.html">symbol_data</a> **&#160;</td>
+          <td class="paramname"><em>found</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Vyhledá symbol ve všech tabulkách symbolů na zásobníku. </p>
+<p>Prohledává tabulky od vrcholu zásobníku (nejvnitřnější scope) směrem ven.</p>
+<dl class="params"><dt>Parametry</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">stack</td><td>Zásobník tabulek symbolů. </td></tr>
+    <tr><td class="paramname">identifier</td><td>Hledaný identifikátor. </td></tr>
+    <tr><td class="paramname">found</td><td>Výstupní ukazatel na nalezený záznam (pokud je nalezen).</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Návratová hodnota</dt><dd>true, pokud byl symbol nalezen, jinak false. </dd></dl>
+
+</div>
+</div>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Generováno programem&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+</small></address>
+</body>
+</html>

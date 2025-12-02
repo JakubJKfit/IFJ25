@@ -1,0 +1,156 @@
+\hypertarget{symtable_8h}{}\doxysection{Dokumentace souboru symtable.\+h}
+\label{symtable_8h}\index{symtable.h@{symtable.h}}
+
+
+Hlavičkový soubor pro tabulku symbolů  
+
+
+{\ttfamily \#include $<$stdbool.\+h$>$}\newline
+Graf závislostí na vkládaných souborech pro symtable.\+h\+:
+% FIG 0
+Následující graf ukazuje, které soubory přímo nebo nepřímo vkládají tento soubor\+:
+% FIG 1
+\doxysubsection*{Datové struktry}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structsymbol__data}{symbol\+\_\+data}}
+\begin{DoxyCompactList}\small\item\em Data uloženého symbolu. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structtree__node}{tree\+\_\+node}}
+\begin{DoxyCompactList}\small\item\em Uzel stromu. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{IFJ25}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{symtable_8h_a74eaa226a532f6c18f3d02a1d93f26f1}\label{symtable_8h_a74eaa226a532f6c18f3d02a1d93f26f1}} 
+enum \mbox{\hyperlink{symtable_8h_a74eaa226a532f6c18f3d02a1d93f26f1}{symbol\+\_\+id\+\_\+type}} \{ {\bfseries VARIABLE\+\_\+\+ID}
+, {\bfseries FUNC\+\_\+\+ID}
+ \}
+\begin{DoxyCompactList}\small\item\em Uložení symbolu jako identifikátor funkce nebo proměnné \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{symtable_8h_aa050af49744c720a049776c79a906766}\label{symtable_8h_aa050af49744c720a049776c79a906766}} 
+enum \mbox{\hyperlink{symtable_8h_aa050af49744c720a049776c79a906766}{symbol\+\_\+data\+\_\+type}} \{ {\bfseries Undefined}
+, {\bfseries Null}
+, {\bfseries String}
+, {\bfseries Num}
+ \}
+\begin{DoxyCompactList}\small\item\em Datový typ uloženého symbolu, návratové pro funkce. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{symtable_8h_a6dae47dcd4d115ec4657410802efb75b}\label{symtable_8h_a6dae47dcd4d115ec4657410802efb75b}} 
+typedef struct \mbox{\hyperlink{structtree__node}{tree\+\_\+node}} \mbox{\hyperlink{symtable_8h_a6dae47dcd4d115ec4657410802efb75b}{tree\+\_\+node}}
+\begin{DoxyCompactList}\small\item\em Uzel stromu. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{symtable_8h_a5b13542ebb7a39109f9f4cc9e44e763e}{tree\+\_\+init}} (\mbox{\hyperlink{structtree__node}{tree\+\_\+node}} $\ast$$\ast$tree)
+\begin{DoxyCompactList}\small\item\em Inicializace stromu. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{symtable_8h_a84ec8006d1cf9da2caf604ad808a1583}{search\+\_\+symbol}} (\mbox{\hyperlink{structtree__node}{tree\+\_\+node}} $\ast$node, char $\ast$identifier, \mbox{\hyperlink{structsymbol__data}{symbol\+\_\+data}} $\ast$$\ast$found)
+\begin{DoxyCompactList}\small\item\em Vyhledání daného symbolu v tabulce. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{symtable_8h_a693cd9362cd35614004238c7fea96289}{insert\+\_\+symbol}} (\mbox{\hyperlink{structtree__node}{tree\+\_\+node}} $\ast$$\ast$tree, \mbox{\hyperlink{structsymbol__data}{symbol\+\_\+data}} $\ast$data)
+\begin{DoxyCompactList}\small\item\em Vložení symbolu do tabulky. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{symtable_8h_a0d76ed27b8ae0e138c5d30734b69371f}{delete\+\_\+symbol}} (\mbox{\hyperlink{structtree__node}{tree\+\_\+node}} $\ast$$\ast$tree, char $\ast$identifier)
+\begin{DoxyCompactList}\small\item\em Smazání symbolu z tabulky. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{symtable_8h_ae799b5dc9375c28ffbe01412826d6dfb}{tree\+\_\+dispose}} (\mbox{\hyperlink{structtree__node}{tree\+\_\+node}} $\ast$$\ast$tree)
+\begin{DoxyCompactList}\small\item\em Smazání tabulky symbolů a uvolnění paměti. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailní popis}
+Hlavičkový soubor pro tabulku symbolů 
+
+\begin{DoxyAuthor}{Autor}
+Jakub Jan Kupčík xkupcij00 
+\end{DoxyAuthor}
+
+
+\doxysubsection{Dokumentace funkcí}
+\mbox{\Hypertarget{symtable_8h_a0d76ed27b8ae0e138c5d30734b69371f}\label{symtable_8h_a0d76ed27b8ae0e138c5d30734b69371f}} 
+\index{symtable.h@{symtable.h}!delete\_symbol@{delete\_symbol}}
+\index{delete\_symbol@{delete\_symbol}!symtable.h@{symtable.h}}
+\doxysubsubsection{\texorpdfstring{delete\_symbol()}{delete\_symbol()}}
+{\footnotesize\ttfamily void delete\+\_\+symbol (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structtree__node}{tree\+\_\+node}} $\ast$$\ast$}]{tree,  }\item[{char $\ast$}]{identifier }\end{DoxyParamCaption})}
+
+
+
+Smazání symbolu z tabulky. 
+
+
+\begin{DoxyParams}{Parametry}
+{\em tree} & ukazatel na ukazatel na kořen stromu \\
+\hline
+{\em identifier} & identifikátor\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Návratová hodnota}
+void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{symtable_8h_a693cd9362cd35614004238c7fea96289}\label{symtable_8h_a693cd9362cd35614004238c7fea96289}} 
+\index{symtable.h@{symtable.h}!insert\_symbol@{insert\_symbol}}
+\index{insert\_symbol@{insert\_symbol}!symtable.h@{symtable.h}}
+\doxysubsubsection{\texorpdfstring{insert\_symbol()}{insert\_symbol()}}
+{\footnotesize\ttfamily void insert\+\_\+symbol (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structtree__node}{tree\+\_\+node}} $\ast$$\ast$}]{tree,  }\item[{\mbox{\hyperlink{structsymbol__data}{symbol\+\_\+data}} $\ast$}]{data }\end{DoxyParamCaption})}
+
+
+
+Vložení symbolu do tabulky. 
+
+
+\begin{DoxyParams}{Parametry}
+{\em tree} & ukazatel na ukazatel na kořen stromu \\
+\hline
+{\em data} & ukazatel na data symbolu\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Návratová hodnota}
+void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{symtable_8h_a84ec8006d1cf9da2caf604ad808a1583}\label{symtable_8h_a84ec8006d1cf9da2caf604ad808a1583}} 
+\index{symtable.h@{symtable.h}!search\_symbol@{search\_symbol}}
+\index{search\_symbol@{search\_symbol}!symtable.h@{symtable.h}}
+\doxysubsubsection{\texorpdfstring{search\_symbol()}{search\_symbol()}}
+{\footnotesize\ttfamily bool search\+\_\+symbol (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structtree__node}{tree\+\_\+node}} $\ast$}]{node,  }\item[{char $\ast$}]{identifier,  }\item[{\mbox{\hyperlink{structsymbol__data}{symbol\+\_\+data}} $\ast$$\ast$}]{found }\end{DoxyParamCaption})}
+
+
+
+Vyhledání daného symbolu v tabulce. 
+
+
+\begin{DoxyParams}{Parametry}
+{\em node} & ukazatel na uzel \\
+\hline
+{\em identifier} & identifikátor symbolu \\
+\hline
+{\em found} & ukazatel na nalezený symbol\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Návratová hodnota}
+bool true pokud byl symbol nalezen 
+\end{DoxyReturn}
+\mbox{\Hypertarget{symtable_8h_ae799b5dc9375c28ffbe01412826d6dfb}\label{symtable_8h_ae799b5dc9375c28ffbe01412826d6dfb}} 
+\index{symtable.h@{symtable.h}!tree\_dispose@{tree\_dispose}}
+\index{tree\_dispose@{tree\_dispose}!symtable.h@{symtable.h}}
+\doxysubsubsection{\texorpdfstring{tree\_dispose()}{tree\_dispose()}}
+{\footnotesize\ttfamily void tree\+\_\+dispose (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structtree__node}{tree\+\_\+node}} $\ast$$\ast$}]{tree }\end{DoxyParamCaption})}
+
+
+
+Smazání tabulky symbolů a uvolnění paměti. 
+
+
+\begin{DoxyParams}{Parametry}
+{\em tree} & ukazatel na ukazatel na kořen \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Návratová hodnota}
+void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{symtable_8h_a5b13542ebb7a39109f9f4cc9e44e763e}\label{symtable_8h_a5b13542ebb7a39109f9f4cc9e44e763e}} 
+\index{symtable.h@{symtable.h}!tree\_init@{tree\_init}}
+\index{tree\_init@{tree\_init}!symtable.h@{symtable.h}}
+\doxysubsubsection{\texorpdfstring{tree\_init()}{tree\_init()}}
+{\footnotesize\ttfamily void tree\+\_\+init (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structtree__node}{tree\+\_\+node}} $\ast$$\ast$}]{tree }\end{DoxyParamCaption})}
+
+
+
+Inicializace stromu. 
+
+
+\begin{DoxyParams}{Parametry}
+{\em tree} & ukazatel na ukazatel na kořen stromu \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Návratová hodnota}
+void 
+\end{DoxyReturn}

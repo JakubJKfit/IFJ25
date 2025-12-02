@@ -1,0 +1,188 @@
+\hypertarget{lex__scanner_8c}{}\doxysection{Dokumentace souboru lex\+\_\+scanner.\+c}
+\label{lex__scanner_8c}\index{lex\_scanner.c@{lex\_scanner.c}}
+
+
+Lexikální analýza.  
+
+
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$ctype.\+h$>$}\newline
+{\ttfamily \#include $<$string.\+h$>$}\newline
+{\ttfamily \#include $<$stdbool.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}lex\+\_\+scanner.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}err.\+h\char`\"{}}\newline
+Graf závislostí na vkládaných souborech pro lex\+\_\+scanner.\+c\+:
+% FIG 0
+\doxysubsection*{Datové struktry}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structLexemeBuffer}{Lexeme\+Buffer}}
+\begin{DoxyCompactList}\small\item\em Struktura pro paměť lexému. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{IFJ25}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{structToken}{Token}} \mbox{\hyperlink{lex__scanner_8c_a56a48d3ecd9f807e19ff6097c5a04d35}{create\+Token}} (\mbox{\hyperlink{lex__scanner_8h_aa520fbf142ba1e7e659590c07da31921}{Token\+Type}} type, \mbox{\hyperlink{structLexemeBuffer}{Lexeme\+Buffer}} $\ast$lexeme)
+\begin{DoxyCompactList}\small\item\em Vytvoření tokenu. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{lex__scanner_8c_a8150d83909a254bba7606acfbeb5b4d6}\label{lex__scanner_8c_a8150d83909a254bba7606acfbeb5b4d6}} 
+\mbox{\hyperlink{structLexemeBuffer}{Lexeme\+Buffer}} $\ast$ \mbox{\hyperlink{lex__scanner_8c_a8150d83909a254bba7606acfbeb5b4d6}{init\+Buffer}} (size\+\_\+t initial\+\_\+size)
+\begin{DoxyCompactList}\small\item\em Přidělení paměti pro lexém. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{lex__scanner_8c_ae4fe4225ed935a90093db7c41dedf3b8}\label{lex__scanner_8c_ae4fe4225ed935a90093db7c41dedf3b8}} 
+void \mbox{\hyperlink{lex__scanner_8c_ae4fe4225ed935a90093db7c41dedf3b8}{free\+Buffer}} (\mbox{\hyperlink{structLexemeBuffer}{Lexeme\+Buffer}} $\ast$lb)
+\begin{DoxyCompactList}\small\item\em Uvolnění paměti lexému. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{lex__scanner_8c_ae1ee39cd12b617a1dc11b9fae4e8b37e}\label{lex__scanner_8c_ae1ee39cd12b617a1dc11b9fae4e8b37e}} 
+void \mbox{\hyperlink{lex__scanner_8c_ae1ee39cd12b617a1dc11b9fae4e8b37e}{reset\+Buffer}} (\mbox{\hyperlink{structLexemeBuffer}{Lexeme\+Buffer}} $\ast$lb)
+\begin{DoxyCompactList}\small\item\em Vymazání obsahu uloženého lexému. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{lex__scanner_8c_abbb13233f3f33d8f814f46f16e074716}\label{lex__scanner_8c_abbb13233f3f33d8f814f46f16e074716}} 
+void \mbox{\hyperlink{lex__scanner_8c_abbb13233f3f33d8f814f46f16e074716}{append\+Char}} (\mbox{\hyperlink{structLexemeBuffer}{Lexeme\+Buffer}} $\ast$lb, char c)
+\begin{DoxyCompactList}\small\item\em Přidání znaku do lexému. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{lex__scanner_8c_a1c4348c6b919f1da2cabe82812707c7c}\label{lex__scanner_8c_a1c4348c6b919f1da2cabe82812707c7c}} 
+void \mbox{\hyperlink{lex__scanner_8c_a1c4348c6b919f1da2cabe82812707c7c}{remove\+Last}} (\mbox{\hyperlink{structLexemeBuffer}{Lexeme\+Buffer}} $\ast$lb)
+\begin{DoxyCompactList}\small\item\em Odebrání posledního znaku z lexému. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{lex__scanner_8c_afecc34cc814ed4b65319e87108a7f726}\label{lex__scanner_8c_afecc34cc814ed4b65319e87108a7f726}} 
+char $\ast$ \mbox{\hyperlink{lex__scanner_8c_afecc34cc814ed4b65319e87108a7f726}{copy\+String}} (const char $\ast$str)
+\begin{DoxyCompactList}\small\item\em Pomocná funkce pro kopírování řetězce a přiřazení paměti. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{lex__scanner_8h_a5d74787dedbc4e11c1ab15bf487e61f8}{State}} \mbox{\hyperlink{lex__scanner_8c_adc15d287f9e84479dd9113681fefe513}{built\+In\+Functions}} (\mbox{\hyperlink{structLexemeBuffer}{Lexeme\+Buffer}} $\ast$lexeme)
+\begin{DoxyCompactList}\small\item\em Vytvoření tokenu vestavěné funkce. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{lex__scanner_8c_a8baca25376892a8188393043a040dfe6}{keywords}} (\mbox{\hyperlink{structLexemeBuffer}{Lexeme\+Buffer}} $\ast$lexeme)
+\begin{DoxyCompactList}\small\item\em Vyhodnocení klíčového slova. \end{DoxyCompactList}\item 
+char \mbox{\hyperlink{lex__scanner_8c_a68066f07c6f5da6197e5893f13cb8106}{escape\+Char}} ()
+\begin{DoxyCompactList}\small\item\em Přetypování escape sekvence. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{lex__scanner_8h_a5d74787dedbc4e11c1ab15bf487e61f8}{State}} \mbox{\hyperlink{lex__scanner_8c_a9db072562fb690ae3b1ecfc6cb9f906f}{transition}} (\mbox{\hyperlink{lex__scanner_8h_a5d74787dedbc4e11c1ab15bf487e61f8}{State}} state, int key, \mbox{\hyperlink{structLexemeBuffer}{Lexeme\+Buffer}} $\ast$lexeme)
+\begin{DoxyCompactList}\small\item\em Vytvoření tokenu vestavěné funkce. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structToken}{Token}} \mbox{\hyperlink{lex__scanner_8c_a88e8586763769c02663c4582266e5445}{ifj\+\_\+get\+\_\+token}} (void)
+\begin{DoxyCompactList}\small\item\em Vrátí další token z lexikálního analyzátoru. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{lex__scanner_8c_a1b93061ed5713f1dbf0ff815d8407b4f}{ifj\+\_\+get\+\_\+line}} (void)
+\begin{DoxyCompactList}\small\item\em Vrátí číslo aktuálního řádku. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailní popis}
+Lexikální analýza. 
+
+\begin{DoxyAuthor}{Autor}
+Petr Molík xmolikp00
+\end{DoxyAuthor}
+Soubor načte znak ze standartního vstupu, pomocí konečného automatu se přesouvá do stavů a zpracovává načtené znaky. Jakmile se dostane do koncového stavu, vytvoří se token a analýza pokračuje dalším znakem ze startovního stavu. 
+
+\doxysubsection{Dokumentace funkcí}
+\mbox{\Hypertarget{lex__scanner_8c_adc15d287f9e84479dd9113681fefe513}\label{lex__scanner_8c_adc15d287f9e84479dd9113681fefe513}} 
+\index{lex\_scanner.c@{lex\_scanner.c}!builtInFunctions@{builtInFunctions}}
+\index{builtInFunctions@{builtInFunctions}!lex\_scanner.c@{lex\_scanner.c}}
+\doxysubsubsection{\texorpdfstring{builtInFunctions()}{builtInFunctions()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{lex__scanner_8h_a5d74787dedbc4e11c1ab15bf487e61f8}{State}} built\+In\+Functions (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structLexemeBuffer}{Lexeme\+Buffer}} $\ast$}]{lexeme }\end{DoxyParamCaption})}
+
+
+
+Vytvoření tokenu vestavěné funkce. 
+
+Funkce podle načteného řetězce vytvoří token pro danou vestavěnou funkci. Pokud se token vytvořil vrací zpátky Start, jinak Error.
+
+\begin{DoxySeeAlso}{Viz také}
+\mbox{\hyperlink{lex__scanner_8c_a56a48d3ecd9f807e19ff6097c5a04d35}{create\+Token()}}
+\end{DoxySeeAlso}
+
+\begin{DoxyParams}{Parametry}
+{\em lexeme} & Načtený řetězec \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Návratová hodnota}
+State 
+\end{DoxyReturn}
+\mbox{\Hypertarget{lex__scanner_8c_a56a48d3ecd9f807e19ff6097c5a04d35}\label{lex__scanner_8c_a56a48d3ecd9f807e19ff6097c5a04d35}} 
+\index{lex\_scanner.c@{lex\_scanner.c}!createToken@{createToken}}
+\index{createToken@{createToken}!lex\_scanner.c@{lex\_scanner.c}}
+\doxysubsubsection{\texorpdfstring{createToken()}{createToken()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structToken}{Token}} create\+Token (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{lex__scanner_8h_aa520fbf142ba1e7e659590c07da31921}{Token\+Type}}}]{type,  }\item[{\mbox{\hyperlink{structLexemeBuffer}{Lexeme\+Buffer}} $\ast$}]{lexeme }\end{DoxyParamCaption})}
+
+
+
+Vytvoření tokenu. 
+
+Vytvoří token s daným typem a načteným řetězcem(lexem). Některým tokenům se přiřadí i číselná hodnota nebo řetězec, který předsatvují.
+
+
+\begin{DoxyParams}{Parametry}
+{\em type} & Typ tokenu \\
+\hline
+{\em lexeme} & Načtený řetězec tokenu \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Návratová hodnota}
+\mbox{\hyperlink{structToken}{Token}} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{lex__scanner_8c_a68066f07c6f5da6197e5893f13cb8106}\label{lex__scanner_8c_a68066f07c6f5da6197e5893f13cb8106}} 
+\index{lex\_scanner.c@{lex\_scanner.c}!escapeChar@{escapeChar}}
+\index{escapeChar@{escapeChar}!lex\_scanner.c@{lex\_scanner.c}}
+\doxysubsubsection{\texorpdfstring{escapeChar()}{escapeChar()}}
+{\footnotesize\ttfamily char escape\+Char (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Přetypování escape sekvence. 
+
+Pokud se jedná o escape sekvenci, vrácí funkce znak odpovídající dané sekvenci.
+
+\begin{DoxyReturn}{Návratová hodnota}
+char, nebo -\/1 při chybě/neplatné sekvenci 
+\end{DoxyReturn}
+\mbox{\Hypertarget{lex__scanner_8c_a1b93061ed5713f1dbf0ff815d8407b4f}\label{lex__scanner_8c_a1b93061ed5713f1dbf0ff815d8407b4f}} 
+\index{lex\_scanner.c@{lex\_scanner.c}!ifj\_get\_line@{ifj\_get\_line}}
+\index{ifj\_get\_line@{ifj\_get\_line}!lex\_scanner.c@{lex\_scanner.c}}
+\doxysubsubsection{\texorpdfstring{ifj\_get\_line()}{ifj\_get\_line()}}
+{\footnotesize\ttfamily int ifj\+\_\+get\+\_\+line (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Vrátí číslo aktuálního řádku. 
+
+Vrátí aktuální číslo řádku. \mbox{\Hypertarget{lex__scanner_8c_a88e8586763769c02663c4582266e5445}\label{lex__scanner_8c_a88e8586763769c02663c4582266e5445}} 
+\index{lex\_scanner.c@{lex\_scanner.c}!ifj\_get\_token@{ifj\_get\_token}}
+\index{ifj\_get\_token@{ifj\_get\_token}!lex\_scanner.c@{lex\_scanner.c}}
+\doxysubsubsection{\texorpdfstring{ifj\_get\_token()}{ifj\_get\_token()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structToken}{Token}} ifj\+\_\+get\+\_\+token (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Vrátí další token z lexikálního analyzátoru. 
+
+Vrátí další token ze vstupu. \mbox{\Hypertarget{lex__scanner_8c_a8baca25376892a8188393043a040dfe6}\label{lex__scanner_8c_a8baca25376892a8188393043a040dfe6}} 
+\index{lex\_scanner.c@{lex\_scanner.c}!keywords@{keywords}}
+\index{keywords@{keywords}!lex\_scanner.c@{lex\_scanner.c}}
+\doxysubsubsection{\texorpdfstring{keywords()}{keywords()}}
+{\footnotesize\ttfamily void keywords (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structLexemeBuffer}{Lexeme\+Buffer}} $\ast$}]{lexeme }\end{DoxyParamCaption})}
+
+
+
+Vyhodnocení klíčového slova. 
+
+Funkce zkontroluje, jestli není načtený retězec klíčové slovo. Pokud je, vytvoří pro něj token, jinak se vytvoří token identifikátoru.
+
+
+\begin{DoxyParams}{Parametry}
+{\em lexeme} & Načtený řetězec \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{lex__scanner_8c_a9db072562fb690ae3b1ecfc6cb9f906f}\label{lex__scanner_8c_a9db072562fb690ae3b1ecfc6cb9f906f}} 
+\index{lex\_scanner.c@{lex\_scanner.c}!transition@{transition}}
+\index{transition@{transition}!lex\_scanner.c@{lex\_scanner.c}}
+\doxysubsubsection{\texorpdfstring{transition()}{transition()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{lex__scanner_8h_a5d74787dedbc4e11c1ab15bf487e61f8}{State}} transition (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{lex__scanner_8h_a5d74787dedbc4e11c1ab15bf487e61f8}{State}}}]{state,  }\item[{int}]{key,  }\item[{\mbox{\hyperlink{structLexemeBuffer}{Lexeme\+Buffer}} $\ast$}]{lexeme }\end{DoxyParamCaption})}
+
+
+
+Vytvoření tokenu vestavěné funkce. 
+
+Jedná se o konečný automat. Podle vstupního stavu se funkce rozhodne do jakého stavu vstoupí. Tam se na základě načteného stavu vytvoří token (jedná se o koncový stav), nebo vrací následující stav.
+
+
+\begin{DoxyParams}{Parametry}
+{\em state} & Aktuální stav \\
+\hline
+{\em key} & Načtený znak \\
+\hline
+{\em lexeme} & Paměť pro uložení řetězce tokenu \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Návratová hodnota}
+State 
+\end{DoxyReturn}

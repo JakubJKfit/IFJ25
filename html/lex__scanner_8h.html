@@ -1,0 +1,286 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>IFJ25: Dokumentace souboru lex_scanner.h</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">IFJ25
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generováno programem Doxygen 1.9.1 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+var searchBox = new SearchBox("searchBox", "search",false,'Hledat','.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(function() {
+  initMenu('',true,false,'search.php','Hledat');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#nested-classes">Datové struktry</a>  </div>
+  <div class="headertitle">
+<div class="title">Dokumentace souboru lex_scanner.h</div>  </div>
+</div><!--header-->
+<div class="contents">
+
+<p>Lexikální analýza.  
+<a href="#details">...</a></p>
+<div class="textblock"><div class="dynheader">
+Následující graf ukazuje, které soubory přímo nebo nepřímo vkládají tento soubor:</div>
+<div class="dyncontent">
+<div class="center"><img src="lex__scanner_8h__dep__incl.png" border="0" usemap="#alex__scanner_8hdep" alt=""/></div>
+</div>
+</div>
+<p><a href="lex__scanner_8h_source.html">Zobrazit zdrojový text tohoto souboru.</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+Datové struktry</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structToken.html">Token</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Struktura tokenu s načteným řčetězcem a jeho hodnotou.  <a href="structToken.html#details">...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">union &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="unionToken_1_1value.html">Token::value</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader">IFJ25</h2></td></tr>
+<tr class="memitem:a5d74787dedbc4e11c1ab15bf487e61f8"><td class="memItemLeft" align="right" valign="top"><a id="a5d74787dedbc4e11c1ab15bf487e61f8"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lex__scanner_8h.html#a5d74787dedbc4e11c1ab15bf487e61f8">State</a> { <br />
+&#160;&#160;<b>Start</b>
+, <b>Letter</b>
+, <b>Zero</b>
+, <b>Number</b>
+, <br />
+&#160;&#160;<b>Hex</b>
+, <b>Exponent</b>
+, <b>Float</b>
+, <b>Exponent_sign</b>
+, <br />
+&#160;&#160;<b>Exponent_float</b>
+, <b>BuiltIn</b>
+, <b>BuiltIn_dot</b>
+, <b>BuiltIn_fun</b>
+, <br />
+&#160;&#160;<b>Divide</b>
+, <b>Lesser</b>
+, <b>Greater</b>
+, <b>Assign</b>
+, <br />
+&#160;&#160;<b>Comment_single</b>
+, <b>Comment_multi</b>
+, <b>Comment_multi_end</b>
+, <b>Comment_multi_end_check</b>
+, <br />
+&#160;&#160;<b>Comment_multi_slash</b>
+, <b>String_single</b>
+, <b>String_detect</b>
+, <b>String_q_check1</b>
+, <br />
+&#160;&#160;<b>String_q_check2</b>
+, <b>String_multi</b>
+, <b>Id_global0</b>
+, <b>Id_global</b>
+, <br />
+&#160;&#160;<b>Not</b>
+, <b>Error</b>
+<br />
+ }</td></tr>
+<tr class="memdesc:a5d74787dedbc4e11c1ab15bf487e61f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stavy konečného automatu. <br /></td></tr>
+<tr class="separator:a5d74787dedbc4e11c1ab15bf487e61f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa520fbf142ba1e7e659590c07da31921"><td class="memItemLeft" align="right" valign="top"><a id="aa520fbf142ba1e7e659590c07da31921"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lex__scanner_8h.html#aa520fbf142ba1e7e659590c07da31921">TokenType</a> { <br />
+&#160;&#160;<b>KEYWORD_class</b>
+, <b>KEYWORD_if</b>
+, <b>KEYWORD_else</b>
+, <b>KEYWORD_is</b>
+, <br />
+&#160;&#160;<b>KEYWORD_null</b>
+, <b>KEYWORD_return</b>
+, <b>KEYWORD_var</b>
+, <b>KEYWORD_while</b>
+, <br />
+&#160;&#160;<b>KEYWORD_Ifj</b>
+, <b>KEYWORD_static</b>
+, <b>KEYWORD_import</b>
+, <b>KEYWORD_for</b>
+, <br />
+&#160;&#160;<b>KEYWORD_Num</b>
+, <b>KEYWORD_String</b>
+, <b>KEYWORD_Null</b>
+, <b>IDENTIFIER_LOCAL</b>
+, <br />
+&#160;&#160;<b>IDENTIFIER_GLOBAL</b>
+, <b>INT</b>
+, <b>FLOAT</b>
+, <b>STRING</b>
+, <br />
+&#160;&#160;<b>TIMES</b>
+, <b>DIVIDE</b>
+, <b>PLUS</b>
+, <b>MINUS</b>
+, <br />
+&#160;&#160;<b>LESSER</b>
+, <b>GREATER</b>
+, <b>LESSER_EQUAL</b>
+, <b>GREATER_EQUAL</b>
+, <br />
+&#160;&#160;<b>EQUAL</b>
+, <b>NOT_EQUAL</b>
+, <b>ASSIGN</b>
+, <b>L_ROUND</b>
+, <br />
+&#160;&#160;<b>R_ROUND</b>
+, <b>L_CURLY</b>
+, <b>R_CURLY</b>
+, <b>IFJ_READ_STR</b>
+, <br />
+&#160;&#160;<b>IFJ_READ_NUM</b>
+, <b>IFJ_WRITE</b>
+, <b>IFJ_FLOOR</b>
+, <b>IFJ_STR</b>
+, <br />
+&#160;&#160;<b>IFJ_LENGTH</b>
+, <b>IFJ_SUBSTRING</b>
+, <b>IFJ_STRCMP</b>
+, <b>IFJ_ORD</b>
+, <br />
+&#160;&#160;<b>IFJ_CHR</b>
+, <b>COMMA</b>
+, <b>EOL</b>
+, <b>T_EOF</b>
+<br />
+ }</td></tr>
+<tr class="memdesc:aa520fbf142ba1e7e659590c07da31921"><td class="mdescLeft">&#160;</td><td class="mdescRight">Všechny typy tokenů <br /></td></tr>
+<tr class="separator:aa520fbf142ba1e7e659590c07da31921"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2b290a57d2211585af93443ed7cf5fa3"><td class="memItemLeft" align="right" valign="top"><a id="a2b290a57d2211585af93443ed7cf5fa3"></a>
+typedef enum <a class="el" href="lex__scanner_8h.html#a5d74787dedbc4e11c1ab15bf487e61f8">State</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lex__scanner_8h.html#a2b290a57d2211585af93443ed7cf5fa3">State</a></td></tr>
+<tr class="memdesc:a2b290a57d2211585af93443ed7cf5fa3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stavy konečného automatu. <br /></td></tr>
+<tr class="separator:a2b290a57d2211585af93443ed7cf5fa3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a223ce5df2488277839246d7ebf52a7f8"><td class="memItemLeft" align="right" valign="top"><a id="a223ce5df2488277839246d7ebf52a7f8"></a>
+typedef enum <a class="el" href="lex__scanner_8h.html#aa520fbf142ba1e7e659590c07da31921">TokenType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lex__scanner_8h.html#a223ce5df2488277839246d7ebf52a7f8">TokenType</a></td></tr>
+<tr class="memdesc:a223ce5df2488277839246d7ebf52a7f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Všechny typy tokenů <br /></td></tr>
+<tr class="separator:a223ce5df2488277839246d7ebf52a7f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae88d5c0259051080fda097b92d99d7ee"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="structToken.html">Token</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lex__scanner_8h.html#ae88d5c0259051080fda097b92d99d7ee">Token</a></td></tr>
+<tr class="memdesc:ae88d5c0259051080fda097b92d99d7ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Struktura tokenu s načteným řčetězcem a jeho hodnotou.  <a href="lex__scanner_8h.html#ae88d5c0259051080fda097b92d99d7ee">...</a><br /></td></tr>
+<tr class="separator:ae88d5c0259051080fda097b92d99d7ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a88e8586763769c02663c4582266e5445"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structToken.html">Token</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lex__scanner_8h.html#a88e8586763769c02663c4582266e5445">ifj_get_token</a> (void)</td></tr>
+<tr class="memdesc:a88e8586763769c02663c4582266e5445"><td class="mdescLeft">&#160;</td><td class="mdescRight">Vrátí další token ze vstupu.  <a href="lex__scanner_8h.html#a88e8586763769c02663c4582266e5445">...</a><br /></td></tr>
+<tr class="separator:a88e8586763769c02663c4582266e5445"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1b93061ed5713f1dbf0ff815d8407b4f"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="lex__scanner_8h.html#a1b93061ed5713f1dbf0ff815d8407b4f">ifj_get_line</a> (void)</td></tr>
+<tr class="memdesc:a1b93061ed5713f1dbf0ff815d8407b4f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Vrátí aktuální číslo řádku.  <a href="lex__scanner_8h.html#a1b93061ed5713f1dbf0ff815d8407b4f">...</a><br /></td></tr>
+<tr class="separator:a1b93061ed5713f1dbf0ff815d8407b4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailní popis</h2>
+<div class="textblock"><p>Lexikální analýza. </p>
+<dl class="section author"><dt>Autor</dt><dd>Petr Molík xmolikp00 </dd></dl>
+</div><h2 class="groupheader">Dokumentace definic typů</h2>
+<a id="ae88d5c0259051080fda097b92d99d7ee"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae88d5c0259051080fda097b92d99d7ee">&#9670;&nbsp;</a></span>Token</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef struct <a class="el" href="structToken.html">Token</a> <a class="el" href="structToken.html">Token</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Struktura tokenu s načteným řčetězcem a jeho hodnotou. </p>
+<p>Uvolnění paměti má na starosti parser. </p>
+
+</div>
+</div>
+<h2 class="groupheader">Dokumentace funkcí</h2>
+<a id="a1b93061ed5713f1dbf0ff815d8407b4f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1b93061ed5713f1dbf0ff815d8407b4f">&#9670;&nbsp;</a></span>ifj_get_line()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int ifj_get_line </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Vrátí aktuální číslo řádku. </p>
+<p>Řádek se zvyšuje při čtení znaků konce řádku v lexikálním analyzátoru.</p>
+<p>Vrátí aktuální číslo řádku. </p>
+
+</div>
+</div>
+<a id="a88e8586763769c02663c4582266e5445"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a88e8586763769c02663c4582266e5445">&#9670;&nbsp;</a></span>ifj_get_token()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structToken.html">Token</a> ifj_get_token </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Vrátí další token ze vstupu. </p>
+<p>Čte znaky ze standardního vstupu a vrací postupně jednotlivé tokeny. Po dosažení konce vstupu vrací token typu T_EOF.</p>
+<p>Vrátí další token ze vstupu. </p>
+
+</div>
+</div>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Generováno programem&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+</small></address>
+</body>
+</html>

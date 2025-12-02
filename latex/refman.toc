@@ -1,0 +1,150 @@
+\@ifundefined {etoctocstyle}{\let \etoc@startlocaltoc \@gobble \let \etoc@settocdepth \@gobble \let \etoc@depthtag \@gobble \let \etoc@setlocaltop \@gobble }{}
+\babel@toc {czech}{}\relax 
+\contentsline {chapter}{\numberline {1}README}{1}{chapter.1}%
+\contentsline {chapter}{\numberline {2}Rejstřík datových struktur}{3}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Datové struktury}{3}{section.2.1}%
+\contentsline {chapter}{\numberline {3}Rejstřík souborů}{5}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Seznam souborů}{5}{section.3.1}%
+\contentsline {chapter}{\numberline {4}Dokumentace datových struktur}{7}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Dokumentace struktury Ast\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Node}{7}{section.4.1}%
+\contentsline {subsection}{\numberline {4.1.1}Detailní popis}{7}{subsection.4.1.1}%
+\contentsline {section}{\numberline {4.2}Dokumentace struktury Ast\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Node\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Assign\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Stmt}{7}{section.4.2}%
+\contentsline {section}{\numberline {4.3}Dokumentace struktury Ast\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Node\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Binary\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Expr}{8}{section.4.3}%
+\contentsline {section}{\numberline {4.4}Dokumentace struktury Ast\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Node\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Block}{8}{section.4.4}%
+\contentsline {section}{\numberline {4.5}Dokumentace struktury Ast\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Node\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Func\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Call}{8}{section.4.5}%
+\contentsline {section}{\numberline {4.6}Dokumentace struktury Ast\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Node\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Func\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Def}{9}{section.4.6}%
+\contentsline {section}{\numberline {4.7}Dokumentace struktury Ast\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Node\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}If\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Stmt}{9}{section.4.7}%
+\contentsline {section}{\numberline {4.8}Dokumentace struktury Ast\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Node\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}List}{9}{section.4.8}%
+\contentsline {subsection}{\numberline {4.8.1}Detailní popis}{10}{subsection.4.8.1}%
+\contentsline {section}{\numberline {4.9}Dokumentace struktury Ast\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Node\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Literal}{10}{section.4.9}%
+\contentsline {section}{\numberline {4.10}Dokumentace struktury Ast\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Node\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Program}{10}{section.4.10}%
+\contentsline {section}{\numberline {4.11}Dokumentace struktury Ast\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Node\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Return\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Stmt}{10}{section.4.11}%
+\contentsline {section}{\numberline {4.12}Dokumentace struktury Ast\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Node\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Var\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Decl}{11}{section.4.12}%
+\contentsline {section}{\numberline {4.13}Dokumentace struktury Ast\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Node\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Variable}{11}{section.4.13}%
+\contentsline {section}{\numberline {4.14}Dokumentace struktury Ast\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Node\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}While\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Stmt}{11}{section.4.14}%
+\contentsline {section}{\numberline {4.15}Dokumentace struktury Lexeme\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Buffer}{12}{section.4.15}%
+\contentsline {subsection}{\numberline {4.15.1}Detailní popis}{12}{subsection.4.15.1}%
+\contentsline {section}{\numberline {4.16}Dokumentace struktury stack\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}node}{12}{section.4.16}%
+\contentsline {subsection}{\numberline {4.16.1}Detailní popis}{13}{subsection.4.16.1}%
+\contentsline {section}{\numberline {4.17}Dokumentace struktury symbol\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}data}{13}{section.4.17}%
+\contentsline {subsection}{\numberline {4.17.1}Detailní popis}{13}{subsection.4.17.1}%
+\contentsline {section}{\numberline {4.18}Dokumentace struktury symstack}{13}{section.4.18}%
+\contentsline {subsection}{\numberline {4.18.1}Detailní popis}{14}{subsection.4.18.1}%
+\contentsline {section}{\numberline {4.19}Dokumentace struktury Token}{14}{section.4.19}%
+\contentsline {subsection}{\numberline {4.19.1}Detailní popis}{14}{subsection.4.19.1}%
+\contentsline {section}{\numberline {4.20}Dokumentace struktury tree\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}node}{14}{section.4.20}%
+\contentsline {subsection}{\numberline {4.20.1}Detailní popis}{15}{subsection.4.20.1}%
+\contentsline {section}{\numberline {4.21}Dokumentace unie Token\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::value}{15}{section.4.21}%
+\contentsline {chapter}{\numberline {5}Dokumentace souborů}{17}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Dokumentace souboru ast.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}c}{17}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Dokumentace souboru ast.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{17}{section.5.2}%
+\contentsline {subsection}{\numberline {5.2.1}Detailní popis}{19}{subsection.5.2.1}%
+\contentsline {subsection}{\numberline {5.2.2}Dokumentace výčtových typů}{19}{subsection.5.2.2}%
+\contentsline {subsubsection}{\numberline {5.2.2.1}AstNodeType}{19}{subsubsection.5.2.2.1}%
+\contentsline {subsection}{\numberline {5.2.3}Dokumentace funkcí}{19}{subsection.5.2.3}%
+\contentsline {subsubsection}{\numberline {5.2.3.1}add\_func\_to\_program()}{19}{subsubsection.5.2.3.1}%
+\contentsline {subsubsection}{\numberline {5.2.3.2}add\_stmt\_to\_block()}{20}{subsubsection.5.2.3.2}%
+\contentsline {subsubsection}{\numberline {5.2.3.3}add\_to\_list()}{20}{subsubsection.5.2.3.3}%
+\contentsline {subsubsection}{\numberline {5.2.3.4}create\_assign\_stmt()}{20}{subsubsection.5.2.3.4}%
+\contentsline {subsubsection}{\numberline {5.2.3.5}create\_binary\_expr()}{21}{subsubsection.5.2.3.5}%
+\contentsline {subsubsection}{\numberline {5.2.3.6}create\_block()}{21}{subsubsection.5.2.3.6}%
+\contentsline {subsubsection}{\numberline {5.2.3.7}create\_func\_call()}{22}{subsubsection.5.2.3.7}%
+\contentsline {subsubsection}{\numberline {5.2.3.8}create\_func\_def()}{22}{subsubsection.5.2.3.8}%
+\contentsline {subsubsection}{\numberline {5.2.3.9}create\_if\_stmt()}{23}{subsubsection.5.2.3.9}%
+\contentsline {subsubsection}{\numberline {5.2.3.10}create\_list()}{23}{subsubsection.5.2.3.10}%
+\contentsline {subsubsection}{\numberline {5.2.3.11}create\_literal()}{23}{subsubsection.5.2.3.11}%
+\contentsline {subsubsection}{\numberline {5.2.3.12}create\_program()}{24}{subsubsection.5.2.3.12}%
+\contentsline {subsubsection}{\numberline {5.2.3.13}create\_return\_stmt()}{24}{subsubsection.5.2.3.13}%
+\contentsline {subsubsection}{\numberline {5.2.3.14}create\_vardecl()}{24}{subsubsection.5.2.3.14}%
+\contentsline {subsubsection}{\numberline {5.2.3.15}create\_variable()}{25}{subsubsection.5.2.3.15}%
+\contentsline {subsubsection}{\numberline {5.2.3.16}create\_while\_stmt()}{25}{subsubsection.5.2.3.16}%
+\contentsline {subsubsection}{\numberline {5.2.3.17}free\_ast\_node()}{26}{subsubsection.5.2.3.17}%
+\contentsline {subsubsection}{\numberline {5.2.3.18}free\_token\_lexeme()}{26}{subsubsection.5.2.3.18}%
+\contentsline {section}{\numberline {5.3}Dokumentace souboru codegen.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}c}{26}{section.5.3}%
+\contentsline {subsection}{\numberline {5.3.1}Detailní popis}{27}{subsection.5.3.1}%
+\contentsline {subsection}{\numberline {5.3.2}Dokumentace funkcí}{27}{subsection.5.3.2}%
+\contentsline {subsubsection}{\numberline {5.3.2.1}generate\_code()}{27}{subsubsection.5.3.2.1}%
+\contentsline {section}{\numberline {5.4}Dokumentace souboru codegen.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{27}{section.5.4}%
+\contentsline {subsection}{\numberline {5.4.1}Detailní popis}{28}{subsection.5.4.1}%
+\contentsline {subsection}{\numberline {5.4.2}Dokumentace funkcí}{28}{subsection.5.4.2}%
+\contentsline {subsubsection}{\numberline {5.4.2.1}generate\_code()}{28}{subsubsection.5.4.2.1}%
+\contentsline {section}{\numberline {5.5}Dokumentace souboru err.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}c}{28}{section.5.5}%
+\contentsline {subsection}{\numberline {5.5.1}Detailní popis}{29}{subsection.5.5.1}%
+\contentsline {subsection}{\numberline {5.5.2}Dokumentace funkcí}{29}{subsection.5.5.2}%
+\contentsline {subsubsection}{\numberline {5.5.2.1}ifjexit()}{29}{subsubsection.5.5.2.1}%
+\contentsline {section}{\numberline {5.6}Dokumentace souboru err.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{29}{section.5.6}%
+\contentsline {subsection}{\numberline {5.6.1}Detailní popis}{30}{subsection.5.6.1}%
+\contentsline {subsection}{\numberline {5.6.2}Dokumentace funkcí}{30}{subsection.5.6.2}%
+\contentsline {subsubsection}{\numberline {5.6.2.1}ifjexit()}{30}{subsubsection.5.6.2.1}%
+\contentsline {section}{\numberline {5.7}Dokumentace souboru lex\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}scanner.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}c}{30}{section.5.7}%
+\contentsline {subsection}{\numberline {5.7.1}Detailní popis}{31}{subsection.5.7.1}%
+\contentsline {subsection}{\numberline {5.7.2}Dokumentace funkcí}{31}{subsection.5.7.2}%
+\contentsline {subsubsection}{\numberline {5.7.2.1}builtInFunctions()}{32}{subsubsection.5.7.2.1}%
+\contentsline {subsubsection}{\numberline {5.7.2.2}createToken()}{32}{subsubsection.5.7.2.2}%
+\contentsline {subsubsection}{\numberline {5.7.2.3}escapeChar()}{32}{subsubsection.5.7.2.3}%
+\contentsline {subsubsection}{\numberline {5.7.2.4}ifj\_get\_line()}{33}{subsubsection.5.7.2.4}%
+\contentsline {subsubsection}{\numberline {5.7.2.5}ifj\_get\_token()}{33}{subsubsection.5.7.2.5}%
+\contentsline {subsubsection}{\numberline {5.7.2.6}keywords()}{33}{subsubsection.5.7.2.6}%
+\contentsline {subsubsection}{\numberline {5.7.2.7}transition()}{33}{subsubsection.5.7.2.7}%
+\contentsline {section}{\numberline {5.8}Dokumentace souboru lex\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}\_\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}scanner.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{34}{section.5.8}%
+\contentsline {subsection}{\numberline {5.8.1}Detailní popis}{35}{subsection.5.8.1}%
+\contentsline {subsection}{\numberline {5.8.2}Dokumentace definic typů}{35}{subsection.5.8.2}%
+\contentsline {subsubsection}{\numberline {5.8.2.1}Token}{35}{subsubsection.5.8.2.1}%
+\contentsline {subsection}{\numberline {5.8.3}Dokumentace funkcí}{35}{subsection.5.8.3}%
+\contentsline {subsubsection}{\numberline {5.8.3.1}ifj\_get\_line()}{35}{subsubsection.5.8.3.1}%
+\contentsline {subsubsection}{\numberline {5.8.3.2}ifj\_get\_token()}{36}{subsubsection.5.8.3.2}%
+\contentsline {section}{\numberline {5.9}Dokumentace souboru main.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}c}{36}{section.5.9}%
+\contentsline {subsection}{\numberline {5.9.1}Detailní popis}{36}{subsection.5.9.1}%
+\contentsline {section}{\numberline {5.10}Dokumentace souboru parser.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}c}{36}{section.5.10}%
+\contentsline {subsection}{\numberline {5.10.1}Detailní popis}{37}{subsection.5.10.1}%
+\contentsline {subsection}{\numberline {5.10.2}Dokumentace k definicím maker}{37}{subsection.5.10.2}%
+\contentsline {subsubsection}{\numberline {5.10.2.1}TRACEF}{37}{subsubsection.5.10.2.1}%
+\contentsline {subsection}{\numberline {5.10.3}Dokumentace funkcí}{37}{subsection.5.10.3}%
+\contentsline {subsubsection}{\numberline {5.10.3.1}get\_type()}{37}{subsubsection.5.10.3.1}%
+\contentsline {subsubsection}{\numberline {5.10.3.2}ifj\_get\_token()}{38}{subsubsection.5.10.3.2}%
+\contentsline {subsubsection}{\numberline {5.10.3.3}ifj\_parse\_program()}{38}{subsubsection.5.10.3.3}%
+\contentsline {subsubsection}{\numberline {5.10.3.4}search\_scopes()}{38}{subsubsection.5.10.3.4}%
+\contentsline {section}{\numberline {5.11}Dokumentace souboru parser.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{39}{section.5.11}%
+\contentsline {subsection}{\numberline {5.11.1}Detailní popis}{39}{subsection.5.11.1}%
+\contentsline {subsection}{\numberline {5.11.2}Dokumentace funkcí}{39}{subsection.5.11.2}%
+\contentsline {subsubsection}{\numberline {5.11.2.1}ifj\_parse\_program()}{40}{subsubsection.5.11.2.1}%
+\contentsline {section}{\numberline {5.12}Dokumentace souboru symstack.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}c}{40}{section.5.12}%
+\contentsline {subsection}{\numberline {5.12.1}Detailní popis}{41}{subsection.5.12.1}%
+\contentsline {subsection}{\numberline {5.12.2}Dokumentace funkcí}{41}{subsection.5.12.2}%
+\contentsline {subsubsection}{\numberline {5.12.2.1}stack\_dispose()}{41}{subsubsection.5.12.2.1}%
+\contentsline {subsubsection}{\numberline {5.12.2.2}stack\_init()}{41}{subsubsection.5.12.2.2}%
+\contentsline {subsubsection}{\numberline {5.12.2.3}stack\_pop()}{42}{subsubsection.5.12.2.3}%
+\contentsline {subsubsection}{\numberline {5.12.2.4}stack\_push()}{42}{subsubsection.5.12.2.4}%
+\contentsline {subsubsection}{\numberline {5.12.2.5}stack\_top()}{42}{subsubsection.5.12.2.5}%
+\contentsline {section}{\numberline {5.13}Dokumentace souboru symstack.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{43}{section.5.13}%
+\contentsline {subsection}{\numberline {5.13.1}Detailní popis}{43}{subsection.5.13.1}%
+\contentsline {subsection}{\numberline {5.13.2}Dokumentace funkcí}{43}{subsection.5.13.2}%
+\contentsline {subsubsection}{\numberline {5.13.2.1}stack\_dispose()}{43}{subsubsection.5.13.2.1}%
+\contentsline {subsubsection}{\numberline {5.13.2.2}stack\_init()}{44}{subsubsection.5.13.2.2}%
+\contentsline {subsubsection}{\numberline {5.13.2.3}stack\_pop()}{44}{subsubsection.5.13.2.3}%
+\contentsline {subsubsection}{\numberline {5.13.2.4}stack\_push()}{44}{subsubsection.5.13.2.4}%
+\contentsline {subsubsection}{\numberline {5.13.2.5}stack\_top()}{45}{subsubsection.5.13.2.5}%
+\contentsline {section}{\numberline {5.14}Dokumentace souboru symtable.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}c}{45}{section.5.14}%
+\contentsline {subsection}{\numberline {5.14.1}Detailní popis}{46}{subsection.5.14.1}%
+\contentsline {subsection}{\numberline {5.14.2}Dokumentace funkcí}{46}{subsection.5.14.2}%
+\contentsline {subsubsection}{\numberline {5.14.2.1}balance\_tree()}{46}{subsubsection.5.14.2.1}%
+\contentsline {subsubsection}{\numberline {5.14.2.2}delete\_symbol()}{47}{subsubsection.5.14.2.2}%
+\contentsline {subsubsection}{\numberline {5.14.2.3}get\_balance()}{47}{subsubsection.5.14.2.3}%
+\contentsline {subsubsection}{\numberline {5.14.2.4}get\_height()}{47}{subsubsection.5.14.2.4}%
+\contentsline {subsubsection}{\numberline {5.14.2.5}insert\_symbol()}{48}{subsubsection.5.14.2.5}%
+\contentsline {subsubsection}{\numberline {5.14.2.6}put\_height()}{48}{subsubsection.5.14.2.6}%
+\contentsline {subsubsection}{\numberline {5.14.2.7}replace\_by\_rightmost()}{48}{subsubsection.5.14.2.7}%
+\contentsline {subsubsection}{\numberline {5.14.2.8}rotate\_left()}{49}{subsubsection.5.14.2.8}%
+\contentsline {subsubsection}{\numberline {5.14.2.9}rotate\_right()}{49}{subsubsection.5.14.2.9}%
+\contentsline {subsubsection}{\numberline {5.14.2.10}search\_symbol()}{50}{subsubsection.5.14.2.10}%
+\contentsline {subsubsection}{\numberline {5.14.2.11}tree\_dispose()}{50}{subsubsection.5.14.2.11}%
+\contentsline {subsubsection}{\numberline {5.14.2.12}tree\_init()}{50}{subsubsection.5.14.2.12}%
+\contentsline {section}{\numberline {5.15}Dokumentace souboru symtable.\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}h}{51}{section.5.15}%
+\contentsline {subsection}{\numberline {5.15.1}Detailní popis}{51}{subsection.5.15.1}%
+\contentsline {subsection}{\numberline {5.15.2}Dokumentace funkcí}{52}{subsection.5.15.2}%
+\contentsline {subsubsection}{\numberline {5.15.2.1}delete\_symbol()}{52}{subsubsection.5.15.2.1}%
+\contentsline {subsubsection}{\numberline {5.15.2.2}insert\_symbol()}{52}{subsubsection.5.15.2.2}%
+\contentsline {subsubsection}{\numberline {5.15.2.3}search\_symbol()}{52}{subsubsection.5.15.2.3}%
+\contentsline {subsubsection}{\numberline {5.15.2.4}tree\_dispose()}{53}{subsubsection.5.15.2.4}%
+\contentsline {subsubsection}{\numberline {5.15.2.5}tree\_init()}{53}{subsubsection.5.15.2.5}%
+\contentsline {chapter}{Rejst\v {r}\'{\i }k}{55}{section*.42}%

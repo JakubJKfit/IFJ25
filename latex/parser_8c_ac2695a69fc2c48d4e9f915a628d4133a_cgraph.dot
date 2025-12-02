@@ -1,0 +1,55 @@
+digraph "consume_eol"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="consume_eol",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip=" "];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid"];
+  Node2 [label="convert",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$lex__scanner_8h.html#ae062e2acfbf9a70ec1717ca172ff12de",tooltip="pomocná funkce pro vypsání tokenů"];
+  Node1 -> Node3 [color="midnightblue",fontsize="10",style="solid"];
+  Node3 [label="ifj_get_line",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$lex__scanner_8c.html#a1b93061ed5713f1dbf0ff815d8407b4f",tooltip="Vrátí číslo aktuálního řádku."];
+  Node1 -> Node4 [color="midnightblue",fontsize="10",style="solid"];
+  Node4 [label="ifjexit",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$err_8c.html#a6bf768b8fa20fc3b2c4dd990a66633ff",tooltip="Funkce vypne program."];
+  Node1 -> Node5 [color="midnightblue",fontsize="10",style="solid"];
+  Node5 [label="next",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$parser_8c.html#a49a929dd3bdc35e3d8634105e016fe4f",tooltip=" "];
+  Node5 -> Node2 [color="midnightblue",fontsize="10",style="solid"];
+  Node5 -> Node6 [color="midnightblue",fontsize="10",style="solid"];
+  Node6 [label="free_token_lexeme",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$ast_8c.html#a4b452c0a2c126ccb091d2283cbcf4f52",tooltip="Uvolní dynamicky alokované části tokenu (lexeme, string_val)."];
+  Node5 -> Node3 [color="midnightblue",fontsize="10",style="solid"];
+  Node5 -> Node7 [color="midnightblue",fontsize="10",style="solid"];
+  Node7 [label="ifj_get_token",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$parser_8c.html#a88e8586763769c02663c4582266e5445",tooltip="Vrátí další token z lexikálního analyzátoru."];
+  Node7 -> Node8 [color="midnightblue",fontsize="10",style="solid"];
+  Node8 [label="createToken",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$lex__scanner_8c.html#a56a48d3ecd9f807e19ff6097c5a04d35",tooltip="Vytvoření tokenu."];
+  Node8 -> Node9 [color="midnightblue",fontsize="10",style="solid"];
+  Node9 [label="copyString",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$lex__scanner_8c.html#afecc34cc814ed4b65319e87108a7f726",tooltip="Pomocná funkce pro kopírování řetězce a přiřazení paměti."];
+  Node9 -> Node4 [color="midnightblue",fontsize="10",style="solid"];
+  Node8 -> Node10 [color="midnightblue",fontsize="10",style="solid"];
+  Node10 [label="resetBuffer",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$lex__scanner_8c.html#ae1ee39cd12b617a1dc11b9fae4e8b37e",tooltip="Vymazání obsahu uloženého lexému."];
+  Node7 -> Node11 [color="midnightblue",fontsize="10",style="solid"];
+  Node11 [label="initBuffer",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$lex__scanner_8c.html#a8150d83909a254bba7606acfbeb5b4d6",tooltip="Přidělení paměti pro lexém."];
+  Node11 -> Node4 [color="midnightblue",fontsize="10",style="solid"];
+  Node7 -> Node12 [color="midnightblue",fontsize="10",style="solid"];
+  Node12 [label="transition",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$lex__scanner_8c.html#a9db072562fb690ae3b1ecfc6cb9f906f",tooltip="Vytvoření tokenu vestavěné funkce."];
+  Node12 -> Node13 [color="midnightblue",fontsize="10",style="solid"];
+  Node13 [label="appendChar",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$lex__scanner_8c.html#abbb13233f3f33d8f814f46f16e074716",tooltip="Přidání znaku do lexému."];
+  Node13 -> Node4 [color="midnightblue",fontsize="10",style="solid"];
+  Node12 -> Node14 [color="midnightblue",fontsize="10",style="solid"];
+  Node14 [label="builtInFunctions",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$lex__scanner_8c.html#adc15d287f9e84479dd9113681fefe513",tooltip="Vytvoření tokenu vestavěné funkce."];
+  Node14 -> Node8 [color="midnightblue",fontsize="10",style="solid"];
+  Node12 -> Node15 [color="midnightblue",fontsize="10",style="solid"];
+  Node15 [label="compress_newlines",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$lex__scanner_8c.html#aea9507a6b6e348d3a93985cb4842484e",tooltip=" "];
+  Node12 -> Node8 [color="midnightblue",fontsize="10",style="solid"];
+  Node12 -> Node16 [color="midnightblue",fontsize="10",style="solid"];
+  Node16 [label="escapeChar",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$lex__scanner_8c.html#a68066f07c6f5da6197e5893f13cb8106",tooltip="Přetypování escape sekvence."];
+  Node12 -> Node4 [color="midnightblue",fontsize="10",style="solid"];
+  Node12 -> Node17 [color="midnightblue",fontsize="10",style="solid"];
+  Node17 [label="keywords",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$lex__scanner_8c.html#a8baca25376892a8188393043a040dfe6",tooltip="Vyhodnocení klíčového slova."];
+  Node17 -> Node8 [color="midnightblue",fontsize="10",style="solid"];
+  Node12 -> Node18 [color="midnightblue",fontsize="10",style="solid"];
+  Node18 [label="removeLast",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$lex__scanner_8c.html#a1c4348c6b919f1da2cabe82812707c7c",tooltip="Odebrání posledního znaku z lexému."];
+  Node12 -> Node10 [color="midnightblue",fontsize="10",style="solid"];
+  Node1 -> Node19 [color="midnightblue",fontsize="10",style="solid"];
+  Node19 [label="skip_eol_star",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$parser_8c.html#a734d4dd6bbffa02b81944eeacb437118",tooltip=" "];
+  Node19 -> Node5 [color="midnightblue",fontsize="10",style="solid"];
+}

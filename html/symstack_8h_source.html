@@ -1,0 +1,107 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>IFJ25: Zdrojový soubor symstack.h</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">IFJ25
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generováno programem Doxygen 1.9.1 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+var searchBox = new SearchBox("searchBox", "search",false,'Hledat','.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(function() {
+  initMenu('',true,false,'search.php','Hledat');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div class="header">
+  <div class="headertitle">
+<div class="title">symstack.h</div>  </div>
+</div><!--header-->
+<div class="contents">
+<a href="symstack_8h.html">Zobrazit dokumentaci tohoto souboru.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160; </div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#ifndef SYMSTACK_H</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#define SYMSTACK_H</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160; </div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="symtable_8h.html">symtable.h</a>&quot;</span></div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160; </div>
+<div class="line"><a name="l00017"></a><span class="lineno"><a class="line" href="structstack__node.html">   17</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="structstack__node.html">stack_node</a>{</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <a class="code" href="structtree__node.html">tree_node</a> *symtable; <span class="comment">// tabulka uzlu</span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <span class="keywordtype">char</span> *identifier; <span class="comment">// identifikátor, pod kterým je uložená</span></div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <span class="keyword">struct </span><a class="code" href="structstack__node.html">stack_node</a> *next; <span class="comment">// ukazatel na další uzel</span></div>
+<div class="line"><a name="l00021"></a><span class="lineno"><a class="line" href="symstack_8h.html#a1741765370e13f143f1ac2322fb0b399">   21</a></span>&#160;}<a class="code" href="symstack_8h.html#a1741765370e13f143f1ac2322fb0b399">stack_node</a>;</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160; </div>
+<div class="line"><a name="l00026"></a><span class="lineno"><a class="line" href="structsymstack.html">   26</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct</span>{</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <a class="code" href="structstack__node.html">stack_node</a> *top;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;}<a class="code" href="structsymstack.html">symstack</a>;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keywordtype">void</span> <a class="code" href="symstack_8h.html#a8a2b484eb47e41daa8ab3b7d0b154756">stack_init</a>(<a class="code" href="structsymstack.html">symstack</a> *stack);</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keywordtype">void</span> <a class="code" href="symstack_8h.html#adcd53e91ea0d9ba940d248469cb89cf8">stack_push</a>(<a class="code" href="structsymstack.html">symstack</a> *stack, <span class="keywordtype">char</span> *identifier);</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keywordtype">void</span> <a class="code" href="symstack_8h.html#a7cfc2e5e448eaf87baa89db69bd6f22b">stack_pop</a>(<a class="code" href="structsymstack.html">symstack</a> *stack);</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<a class="code" href="structtree__node.html">tree_node</a> **<a class="code" href="symstack_8h.html#a37719224e10824d2f1e5a2eccf83d407">stack_top</a>(<a class="code" href="structsymstack.html">symstack</a> *stack);</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="keywordtype">void</span> <a class="code" href="symstack_8h.html#a35898ddbd48ed6bb7249620e39d4d0c7">stack_dispose</a>(<a class="code" href="structsymstack.html">symstack</a> *stack);</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// SYMSTACK_H</span></div>
+<div class="ttc" id="astructstack__node_html"><div class="ttname"><a href="structstack__node.html">stack_node</a></div><div class="ttdoc">uzel v zásobníku</div><div class="ttdef"><b>Definition:</b> symstack.h:17</div></div>
+<div class="ttc" id="astructsymstack_html"><div class="ttname"><a href="structsymstack.html">symstack</a></div><div class="ttdoc">zásobník, ukazatel na vrchol zásobníku</div><div class="ttdef"><b>Definition:</b> symstack.h:26</div></div>
+<div class="ttc" id="astructtree__node_html"><div class="ttname"><a href="structtree__node.html">tree_node</a></div><div class="ttdoc">Uzel stromu.</div><div class="ttdef"><b>Definition:</b> symtable.h:46</div></div>
+<div class="ttc" id="asymstack_8h_html_a1741765370e13f143f1ac2322fb0b399"><div class="ttname"><a href="symstack_8h.html#a1741765370e13f143f1ac2322fb0b399">stack_node</a></div><div class="ttdeci">struct stack_node stack_node</div><div class="ttdoc">uzel v zásobníku</div></div>
+<div class="ttc" id="asymstack_8h_html_a35898ddbd48ed6bb7249620e39d4d0c7"><div class="ttname"><a href="symstack_8h.html#a35898ddbd48ed6bb7249620e39d4d0c7">stack_dispose</a></div><div class="ttdeci">void stack_dispose(symstack *stack)</div><div class="ttdoc">Smazání zásobníku.</div><div class="ttdef"><b>Definition:</b> symstack.c:96</div></div>
+<div class="ttc" id="asymstack_8h_html_a37719224e10824d2f1e5a2eccf83d407"><div class="ttname"><a href="symstack_8h.html#a37719224e10824d2f1e5a2eccf83d407">stack_top</a></div><div class="ttdeci">tree_node ** stack_top(symstack *stack)</div><div class="ttdoc">Vracení ukazatele na kořen tabulky vrcholu zásobníku.</div><div class="ttdef"><b>Definition:</b> symstack.c:83</div></div>
+<div class="ttc" id="asymstack_8h_html_a7cfc2e5e448eaf87baa89db69bd6f22b"><div class="ttname"><a href="symstack_8h.html#a7cfc2e5e448eaf87baa89db69bd6f22b">stack_pop</a></div><div class="ttdeci">void stack_pop(symstack *stack)</div><div class="ttdoc">Odstranění vrcholu zásobníku a určení nového vrcholu.</div><div class="ttdef"><b>Definition:</b> symstack.c:68</div></div>
+<div class="ttc" id="asymstack_8h_html_a8a2b484eb47e41daa8ab3b7d0b154756"><div class="ttname"><a href="symstack_8h.html#a8a2b484eb47e41daa8ab3b7d0b154756">stack_init</a></div><div class="ttdeci">void stack_init(symstack *stack)</div><div class="ttdoc">Inicializace zásobníku.</div><div class="ttdef"><b>Definition:</b> symstack.c:37</div></div>
+<div class="ttc" id="asymstack_8h_html_adcd53e91ea0d9ba940d248469cb89cf8"><div class="ttname"><a href="symstack_8h.html#adcd53e91ea0d9ba940d248469cb89cf8">stack_push</a></div><div class="ttdeci">void stack_push(symstack *stack, char *identifier)</div><div class="ttdoc">Vložení nového uzlu do zásobníku.</div><div class="ttdef"><b>Definition:</b> symstack.c:47</div></div>
+<div class="ttc" id="asymtable_8h_html"><div class="ttname"><a href="symtable_8h.html">symtable.h</a></div><div class="ttdoc">Hlavičkový soubor pro tabulku symbolů</div></div>
+</div><!-- fragment --></div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Generováno programem&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+</small></address>
+</body>
+</html>

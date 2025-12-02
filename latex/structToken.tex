@@ -1,0 +1,42 @@
+\hypertarget{structToken}{}\doxysection{Dokumentace struktury Token}
+\label{structToken}\index{Token@{Token}}
+
+
+Struktura tokenu s načteným řčetězcem a jeho hodnotou.  
+
+
+
+
+{\ttfamily \#include $<$lex\+\_\+scanner.\+h$>$}
+
+
+
+Diagram tříd pro Token\+:
+% FIG 0
+\doxysubsection*{Datové struktry}
+\begin{DoxyCompactItemize}
+\item 
+union \mbox{\hyperlink{unionToken_1_1value}{value}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Datové položky}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{structToken_a67919af9f3a80dc0b28a0ab1e6d5bf8a}\label{structToken_a67919af9f3a80dc0b28a0ab1e6d5bf8a}} 
+\mbox{\hyperlink{lex__scanner_8h_aa520fbf142ba1e7e659590c07da31921}{Token\+Type}} {\bfseries type}
+\item 
+\mbox{\Hypertarget{structToken_a5359a15731f99e3edd4ed3f005919f56}\label{structToken_a5359a15731f99e3edd4ed3f005919f56}} 
+char $\ast$ {\bfseries lexeme}
+\item 
+\mbox{\Hypertarget{structToken_a7d8240aef470eb043c34e0692ebfe69e}\label{structToken_a7d8240aef470eb043c34e0692ebfe69e}} 
+union \mbox{\hyperlink{unionToken_1_1value}{Token\+::value}} {\bfseries value}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailní popis}
+Struktura tokenu s načteným řčetězcem a jeho hodnotou. 
+
+Uvolnění paměti má na starosti parser. 
+
+Dokumentace pro tuto strukturu (struct) byla generována z následujícího souboru\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{lex__scanner_8h}{lex\+\_\+scanner.\+h}}\end{DoxyCompactItemize}

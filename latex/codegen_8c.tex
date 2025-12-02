@@ -1,0 +1,63 @@
+\hypertarget{codegen_8c}{}\doxysection{Dokumentace souboru codegen.\+c}
+\label{codegen_8c}\index{codegen.c@{codegen.c}}
+
+
+generování cílového kódu IFJcode25  
+
+
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$string.\+h$>$}\newline
+{\ttfamily \#include $<$assert.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}codegen.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}ast.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}parser.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}err.\+h\char`\"{}}\newline
+Graf závislostí na vkládaných souborech pro codegen.\+c\+:
+% FIG 0
+\doxysubsection*{IFJ25}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{codegen_8c_a442f2c0930c81c4b264206c116620eda}\label{codegen_8c_a442f2c0930c81c4b264206c116620eda}} 
+char \mbox{\hyperlink{codegen_8c_a442f2c0930c81c4b264206c116620eda}{global\+\_\+vars}} \mbox{[}128\mbox{]}\mbox{[}256\mbox{]}
+\begin{DoxyCompactList}\small\item\em Pole pro uložení globálních proměnných. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{codegen_8c_a617a47c70795bcff659815ad0efd2266}\label{codegen_8c_a617a47c70795bcff659815ad0efd2266}} 
+int \mbox{\hyperlink{codegen_8c_a617a47c70795bcff659815ad0efd2266}{counter}} = 0
+\begin{DoxyCompactList}\small\item\em Počet globálních proměnných. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{codegen_8c_a01ee95502e7d4fb6cd92d4bcf9b3884f}\label{codegen_8c_a01ee95502e7d4fb6cd92d4bcf9b3884f}} 
+int \mbox{\hyperlink{codegen_8c_a01ee95502e7d4fb6cd92d4bcf9b3884f}{if\+\_\+label\+\_\+counter}} = 0
+\begin{DoxyCompactList}\small\item\em Čítač pro generování unikátních návěstí (if, while...) \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{codegen_8c_a1a2b3815a3a0368f1e47d189fa7e3087}\label{codegen_8c_a1a2b3815a3a0368f1e47d189fa7e3087}} 
+void \mbox{\hyperlink{codegen_8c_a1a2b3815a3a0368f1e47d189fa7e3087}{gen\+\_\+nil\+\_\+check}} ()
+\begin{DoxyCompactList}\small\item\em Generuje kontrolu na nil hodnoty pro binární operace. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{codegen_8c_a1c2b1d5b8b24325ba98a8a8b4b63a07a}\label{codegen_8c_a1c2b1d5b8b24325ba98a8a8b4b63a07a}} 
+void \mbox{\hyperlink{codegen_8c_a1c2b1d5b8b24325ba98a8a8b4b63a07a}{help\+\_\+func}} ()
+\begin{DoxyCompactList}\small\item\em vypíše kód vestavěných funkcí \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{codegen_8c_a21c0510ab7ceb6ef021080f79c4fdfe0}{generate\+\_\+code}} (\mbox{\hyperlink{structAstNode}{Ast\+Node}} $\ast$root)
+\begin{DoxyCompactList}\small\item\em Vstupní funkce pro generování kódu z AST volání z \mbox{\hyperlink{main_8c}{main.\+c}}. Nejprve spustí první průchod pro sběr globálních proměných, potom se vypíšou globální proměnné, pomocné proměnné a vestavěné funkce. Nakonec se provede hlavní průchod AST pro generování kódu. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailní popis}
+generování cílového kódu IFJcode25 
+
+\begin{DoxyAuthor}{Autor}
+Jáchym Turek xturekj01
+\end{DoxyAuthor}
+Soubor obsahuje funkce pro generování kódu z AST. Generovaný kód je vypsán na standardní výstup. Prochází strom a pro každý uzel generuje odpovídající unstrukce IFJcode25. 
+
+\doxysubsection{Dokumentace funkcí}
+\mbox{\Hypertarget{codegen_8c_a21c0510ab7ceb6ef021080f79c4fdfe0}\label{codegen_8c_a21c0510ab7ceb6ef021080f79c4fdfe0}} 
+\index{codegen.c@{codegen.c}!generate\_code@{generate\_code}}
+\index{generate\_code@{generate\_code}!codegen.c@{codegen.c}}
+\doxysubsubsection{\texorpdfstring{generate\_code()}{generate\_code()}}
+{\footnotesize\ttfamily void generate\+\_\+code (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structAstNode}{Ast\+Node}} $\ast$}]{root }\end{DoxyParamCaption})}
+
+
+
+Vstupní funkce pro generování kódu z AST volání z \mbox{\hyperlink{main_8c}{main.\+c}}. Nejprve spustí první průchod pro sběr globálních proměných, potom se vypíšou globální proměnné, pomocné proměnné a vestavěné funkce. Nakonec se provede hlavní průchod AST pro generování kódu. 
+
+
+\begin{DoxyParams}{Parametry}
+{\em root} & Kořen AST \\
+\hline
+\end{DoxyParams}

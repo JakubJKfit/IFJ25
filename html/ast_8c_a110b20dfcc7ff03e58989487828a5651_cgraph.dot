@@ -1,0 +1,13 @@
+digraph "free_ast_node"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="free_ast_node",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="Rekurzivně uvolní uzel AST a všechny jeho potomky."];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="free_list_contents",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$ast_8c.html#aa0ab8b8bf578d316b2d0cc592f7bccbe",tooltip="Uvolní položky seznamu a jeho dynamické pole."];
+  Node2 -> Node1 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node1 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="free_token_lexeme",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$ast_8c.html#a4b452c0a2c126ccb091d2283cbcf4f52",tooltip="Uvolní dynamicky alokované části tokenu (lexeme, string_val)."];
+}

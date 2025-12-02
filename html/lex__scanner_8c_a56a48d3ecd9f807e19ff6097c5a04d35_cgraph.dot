@@ -1,0 +1,14 @@
+digraph "createToken"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="createToken",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="Vytvoření tokenu."];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="copyString",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$lex__scanner_8c.html#afecc34cc814ed4b65319e87108a7f726",tooltip="Pomocná funkce pro kopírování řetězce a přiřazení paměti."];
+  Node2 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="ifjexit",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$err_8c.html#a6bf768b8fa20fc3b2c4dd990a66633ff",tooltip="Funkce vypne program."];
+  Node1 -> Node4 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="resetBuffer",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$lex__scanner_8c.html#ae1ee39cd12b617a1dc11b9fae4e8b37e",tooltip="Vymazání obsahu uloženého lexému."];
+}

@@ -1,0 +1,132 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>IFJ25: Dokumentace souboru parser.h</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">IFJ25
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generováno programem Doxygen 1.9.1 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+var searchBox = new SearchBox("searchBox", "search",false,'Hledat','.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(function() {
+  initMenu('',true,false,'search.php','Hledat');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */</script>
+<div id="main-nav"></div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+</div><!-- top -->
+<div class="header">
+  <div class="headertitle">
+<div class="title">Dokumentace souboru parser.h</div>  </div>
+</div><!--header-->
+<div class="contents">
+
+<p>Hlavičkový soubor pro syntaktický analyzátor (parser)  
+<a href="#details">...</a></p>
+<div class="textblock"><code>#include &lt;stdbool.h&gt;</code><br />
+<code>#include &quot;<a class="el" href="ast_8h_source.html">ast.h</a>&quot;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Graf závislostí na vkládaných souborech pro parser.h:</div>
+<div class="dyncontent">
+<div class="center"><img src="parser_8h__incl.png" border="0" usemap="#aparser_8h" alt=""/></div>
+</div>
+</div><div class="textblock"><div class="dynheader">
+Následující graf ukazuje, které soubory přímo nebo nepřímo vkládají tento soubor:</div>
+<div class="dyncontent">
+<div class="center"><img src="parser_8h__dep__incl.png" border="0" usemap="#aparser_8hdep" alt=""/></div>
+</div>
+</div>
+<p><a href="parser_8h_source.html">Zobrazit zdrojový text tohoto souboru.</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader">IFJ25</h2></td></tr>
+<tr class="memitem:a95ce32388985fb20f75838d3b9513d72"><td class="memItemLeft" align="right" valign="top"><a id="a95ce32388985fb20f75838d3b9513d72"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parser_8h.html#a95ce32388985fb20f75838d3b9513d72">ifj_error_code</a></td></tr>
+<tr class="memdesc:a95ce32388985fb20f75838d3b9513d72"><td class="mdescLeft">&#160;</td><td class="mdescRight">Globální kód chyby nastavovaný funkcí <a class="el" href="err_8c.html#a6bf768b8fa20fc3b2c4dd990a66633ff" title="Funkce vypne program.">ifjexit()</a>. <br /></td></tr>
+<tr class="separator:a95ce32388985fb20f75838d3b9513d72"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a47857415cd7349403de3bf884239f849"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structAstNode.html">AstNode</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parser_8h.html#a47857415cd7349403de3bf884239f849">ifj_parse_program</a> (void)</td></tr>
+<tr class="memdesc:a47857415cd7349403de3bf884239f849"><td class="mdescLeft">&#160;</td><td class="mdescRight">Vstupní bod parseru pro jazyk IFJ25.  <a href="parser_8h.html#a47857415cd7349403de3bf884239f849">...</a><br /></td></tr>
+<tr class="separator:a47857415cd7349403de3bf884239f849"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailní popis</h2>
+<div class="textblock"><p>Hlavičkový soubor pro syntaktický analyzátor (parser) </p>
+<dl class="section author"><dt>Autor</dt><dd>Jakub Jan Kupčík xkupcij00 </dd>
+<dd>
+Jan Kostečka xkostej00 </dd></dl>
+</div><h2 class="groupheader">Dokumentace funkcí</h2>
+<a id="a47857415cd7349403de3bf884239f849"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a47857415cd7349403de3bf884239f849">&#9670;&nbsp;</a></span>ifj_parse_program()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structAstNode.html">AstNode</a>* ifj_parse_program </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Vstupní bod parseru pro jazyk IFJ25. </p>
+<p>Načte vstupní program, provede syntaktickou a sémantickou analýzu a vytvoří strom AST. Při chybě volá <a class="el" href="err_8c.html#a6bf768b8fa20fc3b2c4dd990a66633ff" title="Funkce vypne program.">ifjexit()</a> a ukončí program.</p>
+<dl class="section return"><dt>Návratová hodnota</dt><dd>Ukazatel na kořenový uzel AST (AST_PROGRAM).</dd></dl>
+<p>Vstupní bod parseru pro jazyk IFJ25.</p>
+<p>Načte celý vstup pomocí lexikálního analyzátoru, provede syntaktickou analýzu, vytvoří AST a nad ním dvouprůchodovou sémantickou analýzu. Při chybě volá <a class="el" href="err_8c.html#a6bf768b8fa20fc3b2c4dd990a66633ff" title="Funkce vypne program.">ifjexit()</a> s odpovídajícím kódem chyby.</p>
+<dl class="section return"><dt>Návratová hodnota</dt><dd>Ukazatel na kořenový uzel AST (AST_PROGRAM). V případě chyby funkce nevrací a ukončí běh programu. </dd></dl>
+
+</div>
+</div>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Generováno programem&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+</small></address>
+</body>
+</html>

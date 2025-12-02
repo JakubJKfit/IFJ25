@@ -1,0 +1,39 @@
+\hypertarget{ast__printer_8c}{}\doxysection{Dokumentace souboru ast\+\_\+printer.\+c}
+\label{ast__printer_8c}\index{ast\_printer.c@{ast\_printer.c}}
+
+
+Implementace funkce pro tisk AST stromu na standardní výstup.  
+
+
+{\ttfamily \#include \char`\"{}ast\+\_\+printer.\+h\char`\"{}}\newline
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+Graf závislostí na vkládaných souborech pro ast\+\_\+printer.\+c\+:
+% FIG 0
+\doxysubsection*{Funkce}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{ast__printer_8c_a22008a1de5e1d483506ed58275447aeb}{ast\+\_\+print\+\_\+program}} (\mbox{\hyperlink{structAstNode}{Ast\+Node}} $\ast$node)
+\begin{DoxyCompactList}\small\item\em Vytiskne přehlednou reprezentaci AST stromu na stdout. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailní popis}
+Implementace funkce pro tisk AST stromu na standardní výstup. 
+
+
+
+\doxysubsection{Dokumentace funkcí}
+\mbox{\Hypertarget{ast__printer_8c_a22008a1de5e1d483506ed58275447aeb}\label{ast__printer_8c_a22008a1de5e1d483506ed58275447aeb}} 
+\index{ast\_printer.c@{ast\_printer.c}!ast\_print\_program@{ast\_print\_program}}
+\index{ast\_print\_program@{ast\_print\_program}!ast\_printer.c@{ast\_printer.c}}
+\doxysubsubsection{\texorpdfstring{ast\_print\_program()}{ast\_print\_program()}}
+{\footnotesize\ttfamily void ast\+\_\+print\+\_\+program (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structAstNode}{Ast\+Node}} $\ast$}]{node }\end{DoxyParamCaption})}
+
+
+
+Vytiskne přehlednou reprezentaci AST stromu na stdout. 
+
+
+\begin{DoxyParams}{Parametry}
+{\em node} & Kořenový uzel stromu (typu AST\+\_\+\+PROGRAM). \\
+\hline
+\end{DoxyParams}

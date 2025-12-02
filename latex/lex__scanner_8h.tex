@@ -1,0 +1,184 @@
+\hypertarget{lex__scanner_8h}{}\doxysection{Dokumentace souboru lex\+\_\+scanner.\+h}
+\label{lex__scanner_8h}\index{lex\_scanner.h@{lex\_scanner.h}}
+
+
+Lexikální analýza.  
+
+
+Následující graf ukazuje, které soubory přímo nebo nepřímo vkládají tento soubor\+:
+% FIG 0
+\doxysubsection*{Datové struktry}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structToken}{Token}}
+\begin{DoxyCompactList}\small\item\em Struktura tokenu s načteným řčetězcem a jeho hodnotou. \end{DoxyCompactList}\item 
+union \mbox{\hyperlink{unionToken_1_1value}{Token\+::value}}
+\end{DoxyCompactItemize}
+\doxysubsection*{IFJ25}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{lex__scanner_8h_a5d74787dedbc4e11c1ab15bf487e61f8}\label{lex__scanner_8h_a5d74787dedbc4e11c1ab15bf487e61f8}} 
+enum \mbox{\hyperlink{lex__scanner_8h_a5d74787dedbc4e11c1ab15bf487e61f8}{State}} \{ \newline
+{\bfseries Start}
+, {\bfseries Letter}
+, {\bfseries Zero}
+, {\bfseries Number}
+, \newline
+{\bfseries Hex}
+, {\bfseries Exponent}
+, {\bfseries Float}
+, {\bfseries Exponent\+\_\+sign}
+, \newline
+{\bfseries Exponent\+\_\+float}
+, {\bfseries Built\+In}
+, {\bfseries Built\+In\+\_\+dot}
+, {\bfseries Built\+In\+\_\+fun}
+, \newline
+{\bfseries Divide}
+, {\bfseries Lesser}
+, {\bfseries Greater}
+, {\bfseries Assign}
+, \newline
+{\bfseries Comment\+\_\+single}
+, {\bfseries Comment\+\_\+multi}
+, {\bfseries Comment\+\_\+multi\+\_\+end}
+, {\bfseries Comment\+\_\+multi\+\_\+end\+\_\+check}
+, \newline
+{\bfseries Comment\+\_\+multi\+\_\+slash}
+, {\bfseries String\+\_\+single}
+, {\bfseries String\+\_\+detect}
+, {\bfseries String\+\_\+q\+\_\+check1}
+, \newline
+{\bfseries String\+\_\+q\+\_\+check2}
+, {\bfseries String\+\_\+multi}
+, {\bfseries Id\+\_\+global0}
+, {\bfseries Id\+\_\+global}
+, \newline
+{\bfseries Not}
+, {\bfseries Error}
+ \}
+\begin{DoxyCompactList}\small\item\em Stavy konečného automatu. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{lex__scanner_8h_aa520fbf142ba1e7e659590c07da31921}\label{lex__scanner_8h_aa520fbf142ba1e7e659590c07da31921}} 
+enum \mbox{\hyperlink{lex__scanner_8h_aa520fbf142ba1e7e659590c07da31921}{Token\+Type}} \{ \newline
+{\bfseries KEYWORD\+\_\+class}
+, {\bfseries KEYWORD\+\_\+if}
+, {\bfseries KEYWORD\+\_\+else}
+, {\bfseries KEYWORD\+\_\+is}
+, \newline
+{\bfseries KEYWORD\+\_\+null}
+, {\bfseries KEYWORD\+\_\+return}
+, {\bfseries KEYWORD\+\_\+var}
+, {\bfseries KEYWORD\+\_\+while}
+, \newline
+{\bfseries KEYWORD\+\_\+\+Ifj}
+, {\bfseries KEYWORD\+\_\+static}
+, {\bfseries KEYWORD\+\_\+import}
+, {\bfseries KEYWORD\+\_\+for}
+, \newline
+{\bfseries KEYWORD\+\_\+\+Num}
+, {\bfseries KEYWORD\+\_\+\+String}
+, {\bfseries KEYWORD\+\_\+\+Null}
+, {\bfseries IDENTIFIER\+\_\+\+LOCAL}
+, \newline
+{\bfseries IDENTIFIER\+\_\+\+GLOBAL}
+, {\bfseries INT}
+, {\bfseries FLOAT}
+, {\bfseries STRING}
+, \newline
+{\bfseries TIMES}
+, {\bfseries DIVIDE}
+, {\bfseries PLUS}
+, {\bfseries MINUS}
+, \newline
+{\bfseries LESSER}
+, {\bfseries GREATER}
+, {\bfseries LESSER\+\_\+\+EQUAL}
+, {\bfseries GREATER\+\_\+\+EQUAL}
+, \newline
+{\bfseries EQUAL}
+, {\bfseries NOT\+\_\+\+EQUAL}
+, {\bfseries ASSIGN}
+, {\bfseries L\+\_\+\+ROUND}
+, \newline
+{\bfseries R\+\_\+\+ROUND}
+, {\bfseries L\+\_\+\+CURLY}
+, {\bfseries R\+\_\+\+CURLY}
+, {\bfseries IFJ\+\_\+\+READ\+\_\+\+STR}
+, \newline
+{\bfseries IFJ\+\_\+\+READ\+\_\+\+NUM}
+, {\bfseries IFJ\+\_\+\+WRITE}
+, {\bfseries IFJ\+\_\+\+FLOOR}
+, {\bfseries IFJ\+\_\+\+STR}
+, \newline
+{\bfseries IFJ\+\_\+\+LENGTH}
+, {\bfseries IFJ\+\_\+\+SUBSTRING}
+, {\bfseries IFJ\+\_\+\+STRCMP}
+, {\bfseries IFJ\+\_\+\+ORD}
+, \newline
+{\bfseries IFJ\+\_\+\+CHR}
+, {\bfseries COMMA}
+, {\bfseries EOL}
+, {\bfseries T\+\_\+\+EOF}
+ \}
+\begin{DoxyCompactList}\small\item\em Všechny typy tokenů \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{lex__scanner_8h_a2b290a57d2211585af93443ed7cf5fa3}\label{lex__scanner_8h_a2b290a57d2211585af93443ed7cf5fa3}} 
+typedef enum \mbox{\hyperlink{lex__scanner_8h_a5d74787dedbc4e11c1ab15bf487e61f8}{State}} \mbox{\hyperlink{lex__scanner_8h_a2b290a57d2211585af93443ed7cf5fa3}{State}}
+\begin{DoxyCompactList}\small\item\em Stavy konečného automatu. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{lex__scanner_8h_a223ce5df2488277839246d7ebf52a7f8}\label{lex__scanner_8h_a223ce5df2488277839246d7ebf52a7f8}} 
+typedef enum \mbox{\hyperlink{lex__scanner_8h_aa520fbf142ba1e7e659590c07da31921}{Token\+Type}} \mbox{\hyperlink{lex__scanner_8h_a223ce5df2488277839246d7ebf52a7f8}{Token\+Type}}
+\begin{DoxyCompactList}\small\item\em Všechny typy tokenů \end{DoxyCompactList}\item 
+typedef struct \mbox{\hyperlink{structToken}{Token}} \mbox{\hyperlink{lex__scanner_8h_ae88d5c0259051080fda097b92d99d7ee}{Token}}
+\begin{DoxyCompactList}\small\item\em Struktura tokenu s načteným řčetězcem a jeho hodnotou. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structToken}{Token}} \mbox{\hyperlink{lex__scanner_8h_a88e8586763769c02663c4582266e5445}{ifj\+\_\+get\+\_\+token}} (void)
+\begin{DoxyCompactList}\small\item\em Vrátí další token ze vstupu. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{lex__scanner_8h_a1b93061ed5713f1dbf0ff815d8407b4f}{ifj\+\_\+get\+\_\+line}} (void)
+\begin{DoxyCompactList}\small\item\em Vrátí aktuální číslo řádku. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailní popis}
+Lexikální analýza. 
+
+\begin{DoxyAuthor}{Autor}
+Petr Molík xmolikp00 
+\end{DoxyAuthor}
+
+
+\doxysubsection{Dokumentace definic typů}
+\mbox{\Hypertarget{lex__scanner_8h_ae88d5c0259051080fda097b92d99d7ee}\label{lex__scanner_8h_ae88d5c0259051080fda097b92d99d7ee}} 
+\index{lex\_scanner.h@{lex\_scanner.h}!Token@{Token}}
+\index{Token@{Token}!lex\_scanner.h@{lex\_scanner.h}}
+\doxysubsubsection{\texorpdfstring{Token}{Token}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{structToken}{Token}} \mbox{\hyperlink{structToken}{Token}}}
+
+
+
+Struktura tokenu s načteným řčetězcem a jeho hodnotou. 
+
+Uvolnění paměti má na starosti parser. 
+
+\doxysubsection{Dokumentace funkcí}
+\mbox{\Hypertarget{lex__scanner_8h_a1b93061ed5713f1dbf0ff815d8407b4f}\label{lex__scanner_8h_a1b93061ed5713f1dbf0ff815d8407b4f}} 
+\index{lex\_scanner.h@{lex\_scanner.h}!ifj\_get\_line@{ifj\_get\_line}}
+\index{ifj\_get\_line@{ifj\_get\_line}!lex\_scanner.h@{lex\_scanner.h}}
+\doxysubsubsection{\texorpdfstring{ifj\_get\_line()}{ifj\_get\_line()}}
+{\footnotesize\ttfamily int ifj\+\_\+get\+\_\+line (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Vrátí aktuální číslo řádku. 
+
+Řádek se zvyšuje při čtení znaků konce řádku v lexikálním analyzátoru.
+
+Vrátí aktuální číslo řádku. \mbox{\Hypertarget{lex__scanner_8h_a88e8586763769c02663c4582266e5445}\label{lex__scanner_8h_a88e8586763769c02663c4582266e5445}} 
+\index{lex\_scanner.h@{lex\_scanner.h}!ifj\_get\_token@{ifj\_get\_token}}
+\index{ifj\_get\_token@{ifj\_get\_token}!lex\_scanner.h@{lex\_scanner.h}}
+\doxysubsubsection{\texorpdfstring{ifj\_get\_token()}{ifj\_get\_token()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structToken}{Token}} ifj\+\_\+get\+\_\+token (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Vrátí další token ze vstupu. 
+
+Čte znaky ze standardního vstupu a vrací postupně jednotlivé tokeny. Po dosažení konce vstupu vrací token typu T\+\_\+\+EOF.
+
+Vrátí další token ze vstupu. 

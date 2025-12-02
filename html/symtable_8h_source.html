@@ -1,0 +1,126 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>IFJ25: Zdrojový soubor symtable.h</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">IFJ25
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generováno programem Doxygen 1.9.1 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+var searchBox = new SearchBox("searchBox", "search",false,'Hledat','.html');
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(function() {
+  initMenu('',true,false,'search.php','Hledat');
+  $(document).ready(function() { init_search(); });
+});
+/* @license-end */</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div class="header">
+  <div class="headertitle">
+<div class="title">symtable.h</div>  </div>
+</div><!--header-->
+<div class="contents">
+<a href="symtable_8h.html">Zobrazit dokumentaci tohoto souboru.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160; </div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#ifndef SYMTABLE_H</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#define SYMTABLE_H</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160; </div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &lt;stdbool.h&gt;</span></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
+<div class="line"><a name="l00016"></a><span class="lineno"><a class="line" href="symtable_8h.html#a74eaa226a532f6c18f3d02a1d93f26f1">   16</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">enum</span>{</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    VARIABLE_ID,</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    FUNC_ID</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;}<a class="code" href="symtable_8h.html#a74eaa226a532f6c18f3d02a1d93f26f1">symbol_id_type</a>;</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
+<div class="line"><a name="l00024"></a><span class="lineno"><a class="line" href="symtable_8h.html#aa050af49744c720a049776c79a906766">   24</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">enum</span>{</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    Undefined,</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    Null,</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    String,</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    Num</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;}<a class="code" href="symtable_8h.html#aa050af49744c720a049776c79a906766">symbol_data_type</a>;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
+<div class="line"><a name="l00034"></a><span class="lineno"><a class="line" href="structsymbol__data.html">   34</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct</span>{</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <a class="code" href="symtable_8h.html#a74eaa226a532f6c18f3d02a1d93f26f1">symbol_id_type</a> id_type;</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <a class="code" href="symtable_8h.html#aa050af49744c720a049776c79a906766">symbol_data_type</a> data_type;</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keywordtype">char</span> *identifier;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="keywordtype">int</span> arity;</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="keywordtype">int</span> offset; <span class="comment">// Uroven vnorenosti</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;} <a class="code" href="structsymbol__data.html">symbol_data</a>;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
+<div class="line"><a name="l00046"></a><span class="lineno"><a class="line" href="structtree__node.html">   46</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="structtree__node.html">tree_node</a>{</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <a class="code" href="structsymbol__data.html">symbol_data</a> data;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keyword">struct </span><a class="code" href="structtree__node.html">tree_node</a> *left;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keyword">struct </span><a class="code" href="structtree__node.html">tree_node</a> *right;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="keywordtype">int</span> height;</div>
+<div class="line"><a name="l00051"></a><span class="lineno"><a class="line" href="symtable_8h.html#a6dae47dcd4d115ec4657410802efb75b">   51</a></span>&#160;}<a class="code" href="symtable_8h.html#a6dae47dcd4d115ec4657410802efb75b">tree_node</a>;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="keywordtype">void</span> <a class="code" href="symtable_8h.html#a5b13542ebb7a39109f9f4cc9e44e763e">tree_init</a>(<a class="code" href="structtree__node.html">tree_node</a> **tree);</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="symtable_8h.html#a84ec8006d1cf9da2caf604ad808a1583">search_symbol</a>(<a class="code" href="structtree__node.html">tree_node</a> *node, <span class="keywordtype">char</span> *identifier,<a class="code" href="structsymbol__data.html">symbol_data</a> **found);</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="keywordtype">void</span> <a class="code" href="symtable_8h.html#a693cd9362cd35614004238c7fea96289">insert_symbol</a>(<a class="code" href="structtree__node.html">tree_node</a> **tree, <a class="code" href="structsymbol__data.html">symbol_data</a> *data);</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="keywordtype">void</span> <a class="code" href="symtable_8h.html#a0d76ed27b8ae0e138c5d30734b69371f">delete_symbol</a>(<a class="code" href="structtree__node.html">tree_node</a> **tree, <span class="keywordtype">char</span> *identifier);</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="keywordtype">void</span> <a class="code" href="symtable_8h.html#ae799b5dc9375c28ffbe01412826d6dfb">tree_dispose</a>(<a class="code" href="structtree__node.html">tree_node</a> **tree);</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// SYMTABLE_H</span></div>
+<div class="ttc" id="astructsymbol__data_html"><div class="ttname"><a href="structsymbol__data.html">symbol_data</a></div><div class="ttdoc">Data uloženého symbolu.</div><div class="ttdef"><b>Definition:</b> symtable.h:34</div></div>
+<div class="ttc" id="astructtree__node_html"><div class="ttname"><a href="structtree__node.html">tree_node</a></div><div class="ttdoc">Uzel stromu.</div><div class="ttdef"><b>Definition:</b> symtable.h:46</div></div>
+<div class="ttc" id="asymtable_8h_html_a0d76ed27b8ae0e138c5d30734b69371f"><div class="ttname"><a href="symtable_8h.html#a0d76ed27b8ae0e138c5d30734b69371f">delete_symbol</a></div><div class="ttdeci">void delete_symbol(tree_node **tree, char *identifier)</div><div class="ttdoc">Smazání symbolu z tabulky.</div><div class="ttdef"><b>Definition:</b> symtable.c:267</div></div>
+<div class="ttc" id="asymtable_8h_html_a5b13542ebb7a39109f9f4cc9e44e763e"><div class="ttname"><a href="symtable_8h.html#a5b13542ebb7a39109f9f4cc9e44e763e">tree_init</a></div><div class="ttdeci">void tree_init(tree_node **tree)</div><div class="ttdoc">Inicializace stromu.</div><div class="ttdef"><b>Definition:</b> symtable.c:55</div></div>
+<div class="ttc" id="asymtable_8h_html_a693cd9362cd35614004238c7fea96289"><div class="ttname"><a href="symtable_8h.html#a693cd9362cd35614004238c7fea96289">insert_symbol</a></div><div class="ttdeci">void insert_symbol(tree_node **tree, symbol_data *data)</div><div class="ttdoc">Vložení symbolu do tabulky.</div><div class="ttdef"><b>Definition:</b> symtable.c:209</div></div>
+<div class="ttc" id="asymtable_8h_html_a6dae47dcd4d115ec4657410802efb75b"><div class="ttname"><a href="symtable_8h.html#a6dae47dcd4d115ec4657410802efb75b">tree_node</a></div><div class="ttdeci">struct tree_node tree_node</div><div class="ttdoc">Uzel stromu.</div></div>
+<div class="ttc" id="asymtable_8h_html_a74eaa226a532f6c18f3d02a1d93f26f1"><div class="ttname"><a href="symtable_8h.html#a74eaa226a532f6c18f3d02a1d93f26f1">symbol_id_type</a></div><div class="ttdeci">symbol_id_type</div><div class="ttdoc">Uložení symbolu jako identifikátor funkce nebo proměnné</div><div class="ttdef"><b>Definition:</b> symtable.h:16</div></div>
+<div class="ttc" id="asymtable_8h_html_a84ec8006d1cf9da2caf604ad808a1583"><div class="ttname"><a href="symtable_8h.html#a84ec8006d1cf9da2caf604ad808a1583">search_symbol</a></div><div class="ttdeci">bool search_symbol(tree_node *node, char *identifier, symbol_data **found)</div><div class="ttdoc">Vyhledání daného symbolu v tabulce.</div><div class="ttdef"><b>Definition:</b> symtable.c:183</div></div>
+<div class="ttc" id="asymtable_8h_html_aa050af49744c720a049776c79a906766"><div class="ttname"><a href="symtable_8h.html#aa050af49744c720a049776c79a906766">symbol_data_type</a></div><div class="ttdeci">symbol_data_type</div><div class="ttdoc">Datový typ uloženého symbolu, návratové pro funkce.</div><div class="ttdef"><b>Definition:</b> symtable.h:24</div></div>
+<div class="ttc" id="asymtable_8h_html_ae799b5dc9375c28ffbe01412826d6dfb"><div class="ttname"><a href="symtable_8h.html#ae799b5dc9375c28ffbe01412826d6dfb">tree_dispose</a></div><div class="ttdeci">void tree_dispose(tree_node **tree)</div><div class="ttdoc">Smazání tabulky symbolů a uvolnění paměti.</div><div class="ttdef"><b>Definition:</b> symtable.c:302</div></div>
+</div><!-- fragment --></div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Generováno programem&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+</small></address>
+</body>
+</html>
